@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function App() {
-  // Game states
   const [gameState, setGameState] = useState('start'); // 'start', 'select', 'battle', 'results'
   const [cars, setCars] = useState([]);
   const [selectedCars, setSelectedCars] = useState([]);
