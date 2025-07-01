@@ -18,14 +18,14 @@ export default function App() {
 
   // Mock car data
   const mockCars = [
-    { id: 1, name: 'Tesla Model S', description: 'All-electric luxury sedan.', notes: '', isCustom: false },
-    { id: 2, name: 'Porsche 911', description: 'Iconic sports car.', notes: '', isCustom: false },
-    { id: 3, name: 'Toyota Camry', description: 'Reliable mid-size sedan.', notes: '', isCustom: false },
-    { id: 4, name: 'Ford F-150', description: 'America\'s best-selling truck.', notes: '', isCustom: false },
-    { id: 5, name: 'Subaru WRX STI', description: 'High-performance rally-inspired sedan.', notes: '', isCustom: false },
-    { id: 6, name: 'BMW M3', description: 'Premium sports sedan.', notes: '', isCustom: false },
-    { id: 7, name: 'Honda Civic Type R', description: 'Affordable hot hatch.', notes: '', isCustom: false },
-    { id: 8, name: 'Mercedes-Benz S-Class', description: 'Luxury flagship sedan.', notes: '', isCustom: false }
+    { id: 1, name: 'Honda BR-V', description: '', notes: '', isCustom: false },
+    { id: 2, name: 'Nissan Serena', description: '', notes: '', isCustom: false },
+    { id: 3, name: 'Oshan x7', description: '', notes: '', isCustom: false },
+    { id: 4, name: 'Kia Sorento', description: '', notes: '', isCustom: false },
+    { id: 5, name: 'Kia Carnival', description: '', notes: '', isCustom: false },
+    { id: 6, name: 'Toyota Sienta', description: '', notes: '', isCustom: false },
+    { id: 7, name: 'something', description: '', notes: '', isCustom: false },
+    { id: 8, name: 'something', description: '', notes: '', isCustom: false }
   ];
 
   // Load saved selections
