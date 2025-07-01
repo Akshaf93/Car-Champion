@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 
 export default function App() {
-  const [gameState, setGameState] = useState('start');
+  // Game states
+  const [gameState, setGameState] = useState('start'); // 'start', 'select', 'battle', 'results'
   const [cars, setCars] = useState([]);
   const [selectedCars, setSelectedCars] = useState([]);
   const [currentRound, setCurrentRound] = useState([]);
@@ -11,102 +12,82 @@ export default function App() {
   const [winner, setWinner] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
 
-  // Form state for adding new car
-  const [newCar, setNewCar] = useState({
-    name: '',
-    description: '',
-    notes: '',
-    image: ''
-  });
-
-  // Load data from localStorage on mount
-  useEffect(() => {
-    const savedCars = JSON.parse(localStorage.getItem('cars')) || mockCars;
-    const savedSelected = JSON.parse(localStorage.getItem('selectedCars')) || [...savedCars];
-
-    setCars(savedCars);
-    setSelectedCars(savedSelected);
-  }, []);
-
-  // Save selected cars and notes to localStorage
-  useEffect(() => {
-    localStorage.setItem('selectedCars', JSON.stringify(selectedCars));
-  }, [selectedCars]);
-
   // Mock car data
   const mockCars = [
     {
       id: 1,
       name: 'Tesla Model S',
-      image: 'https://placehold.co/600x400?text=Tesla+Model+S',
-      description: 'All-electric luxury sedan.',
+      image: '/images/tesla-model-s.jpg',
+      description: 'All-electric luxury sedan with cutting-edge technology and exceptional performance.',
       notes: '',
       isCustom: false
     },
     {
       id: 2,
       name: 'Porsche 911',
-      image: ' https://placehold.co/600x400?text=Porsche+911',
-      description: 'Iconic sports car.',
+      image: '/images/porsche-911.jpg',
+      description: 'Iconic sports car with timeless design and thrilling driving dynamics.',
       notes: '',
       isCustom: false
     },
     {
       id: 3,
       name: 'Toyota Camry',
-      image: ' https://placehold.co/600x400?text=Toyota+Camry',
-      description: 'Reliable mid-size sedan.',
+      image: '/images/toyota-camry.jpg',
+      description: 'Reliable mid-size sedan with proven dependability and comfortable ride.',
       notes: '',
       isCustom: false
     },
     {
       id: 4,
       name: 'Ford F-150',
-      image: ' https://placehold.co/600x400?text=Ford+F-150',
-      description: 'America\'s best-selling truck.',
+      image: '/images/ford-f150.jpg',
+      description: 'America\'s best-selling truck with impressive towing capacity and versatility.',
       notes: '',
       isCustom: false
     },
     {
       id: 5,
       name: 'Subaru WRX STI',
-      image: ' https://placehold.co/600x400?text=Subaru+WRX+STI',
-      description: 'High-performance rally-inspired sedan.',
+      image: '/images/subaru-wrx-sti.jpg',
+      description: 'High-performance all-wheel drive sports sedan with rally racing heritage.',
       notes: '',
       isCustom: false
     },
     {
       id: 6,
       name: 'BMW M3',
-      image: ' https://placehold.co/600x400?text=BMW+M3',
-      description: 'Premium sports sedan.',
+      image: '/images/bmw-m3.jpg',
+      description: 'Premium sports sedan with precise handling and powerful engine performance.',
       notes: '',
       isCustom: false
     },
     {
       id: 7,
       name: 'Honda Civic Type R',
-      image: ' https://placehold.co/600x400?text=Honda+Civic+Type+R',
-      description: 'Affordable hot hatch.',
+      image: '/images/honda-civic-type-r.jpg',
+      description: 'Affordable hot hatch with track-ready performance and sharp handling.',
       notes: '',
       isCustom: false
     },
     {
       id: 8,
       name: 'Mercedes-Benz S-Class',
-      image: ' https://placehold.co/600x400?text=Mercedes-Benz+S-Class',
-      description: 'Luxury flagship sedan.',
+      image: '/images/mercedes-benz-s-class.jpg',
+      description: 'Luxury flagship sedan with opulent interior and advanced technology features.',
       notes: '',
       isCustom: false
-    }
+    },
   ];
 
-  // Format car name
-  const formatCarName = (name) =>
-    name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  // Initialize game with mock data
+  useEffect(() => {
+    setCars(mockCars);
+  }, []);
 
   // Start the tournament
   const startTournament = () => {
+    setSelectedCars([...mockCars]);
     setGameState('confirmEdit');
   };
 
@@ -115,14 +96,18 @@ export default function App() {
     setDarkMode(!darkMode);
   };
 
+  // Format car name
+  const formatCarName = (name) =>
+    name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+
   // Pad selected cars with "Bye" if necessary
   const padToNextPowerOfTwo = (cars) => {
     const nextPower = Math.pow(2, Math.ceil(Math.log2(cars.length)));
     const padding = Array.from({ length: nextPower - cars.length }).map((_, i) => ({
       id: `bye-${i}`,
       name: 'Bye',
-      image: ' https://placehold.co/600x400?text=Bye',
-      description: 'Automatically advances.',
+      image: '/images/bye.jpg',
+      description: 'Automatically advances to the next round.',
       notes: '',
       isBye: true
     }));
@@ -178,24 +163,18 @@ export default function App() {
 
   // Add custom car
   const handleAddCustomCar = () => {
-    if (!newCar.name.trim()) return;
-
     const id = Date.now(); // unique ID
     const newCarEntry = {
       id,
-      ...newCar,
-      image: newCar.image || ` https://placehold.co/600x400?text=${encodeURIComponent(newCar.name)}`,
+      name: 'New Car',
+      image: '/images/default-car.jpg',
+      description: 'Add details about this car.',
+      notes: '',
       isCustom: true
     };
     const updatedCars = [...cars, newCarEntry];
     setCars(updatedCars);
     setSelectedCars(prev => [...prev, newCarEntry]);
-    setNewCar({
-      name: '',
-      description: '',
-      notes: '',
-      image: ''
-    });
   };
 
   // Update car notes
@@ -208,9 +187,7 @@ export default function App() {
 
   // Reset game
   const resetGame = () => {
-    localStorage.clear();
-    setSelectedCars([...mockCars]);
-    setCars(mockCars);
+    setSelectedCars([]);
     setCurrentRound([]);
     setCurrentBattle(null);
     setBattleResults([]);
@@ -298,9 +275,24 @@ export default function App() {
     };
 
     const handleAddCar = () => {
-      if (newCar.name.trim()) {
-        handleAddCustomCar();
-      }
+      if (!newCar.name.trim()) return;
+
+      const id = Date.now(); // unique ID
+      const newCarEntry = {
+        id,
+        ...newCar,
+        image: newCar.image || '/images/default-car.jpg',
+        isCustom: true
+      };
+      const updatedCars = [...cars, newCarEntry];
+      setCars(updatedCars);
+      setSelectedCars(prev => [...prev, newCarEntry]);
+      setNewCar({
+        name: '',
+        description: '',
+        notes: '',
+        image: ''
+      });
     };
 
     return (
@@ -438,7 +430,7 @@ export default function App() {
               onClick={() => currentBattle[1] && selectWinner(currentBattle[1])}
             >
               <img
-                src={currentBattle[1]?.image || ' https://placehold.co/600x400?text=Bye'}
+                src={currentBattle[1]?.image || '/images/bye.jpg'}
                 alt={currentBattle[1]?.name || 'Bye'}
                 className="w-full h-64 object-cover"
               />
@@ -514,11 +506,11 @@ export default function App() {
     >
       {darkMode ? (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 6.343l-.707.707m12.728 12.728l-.707-.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 12.728l-.707-.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
       ) : (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0112 21a9.003 9.003 0 008.354-5.646z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
         </svg>
       )}
     </button>
@@ -532,7 +524,7 @@ export default function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <div className="flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9h14M5 15h14M5 11h14M5 13h14M12 2L12 4M12 20v2M21 12h2M1 12h2M19 12c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M9 13h6M9 17h6M5 11l6 6l6-6" />
               </svg>
               <h1 className="ml-2 text-xl font-bold text-gray-900 dark:text-white">Car Champion</h1>
             </div>
@@ -562,7 +554,7 @@ export default function App() {
         <footer className="bg-white dark:bg-gray-800 shadow-inner mt-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <p className="text-center text-gray-500 dark:text-gray-400 text-sm">
-              © 2023 Car Champion. Data is stored locally using browser memory. No server needed.
+              © 2023 Car Champion. All cars are for demonstration purposes only.
             </p>
           </div>
         </footer>
