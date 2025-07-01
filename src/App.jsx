@@ -1,169 +1,130 @@
 import { useState, useEffect } from 'react';
 
 export default function App() {
-  const [gameState, setGameState] = useState('start'); // 'start', 'confirmEdit', 'edit', 'loading', 'battle', 'results'
+  // Game states: start → confirmEdit → edit → battle → results
+  const [gameState, setGameState] = useState('start');
+  
+  // Car data
   const [cars, setCars] = useState([]);
   const [selectedCars, setSelectedCars] = useState([]);
-  const [currentRound, setCurrentRound] = useState([]);
-  const [currentBattle, setCurrentBattle] = useState(null);
-  const [battleResults, setBattleResults] = useState([]);
-  const [currentStep, setCurrentStep] = useState(0);
-  const [winner, setWinner] = useState(null);
-  const [darkMode, setDarkMode] = useState(false);
+
+  // Tournament state
+  const [currentRound, setCurrentRound] = useState([]);     // Current round cars
+  const [battles, setBattles] = useState([]);              // Array of battles for current round
+  const [battleIndex, setBattleIndex] = useState(0);        // Which battle we're on
+  const [roundWinners, setRoundWinners] = useState([]);    // Winners of current round
+  const [winner, setWinner] = useState(null);             // Final champion
+  const [darkMode, setDarkMode] = useState(false);         // Dark mode toggle
 
   // Mock car data
   const mockCars = [
-    {
-      id: 1,
-      name: 'Tesla Model S',
-      description: 'All-electric luxury sedan.',
-      notes: '',
-      isCustom: false
-    },
-    {
-      id: 2,
-      name: 'Porsche 911',
-      description: 'Iconic sports car.',
-      notes: '',
-      isCustom: false
-    },
-    {
-      id: 3,
-      name: 'Toyota Camry',
-      description: 'Reliable mid-size sedan.',
-      notes: '',
-      isCustom: false
-    },
-    {
-      id: 4,
-      name: 'Ford F-150',
-      description: 'America\'s best-selling truck.',
-      notes: '',
-      isCustom: false
-    },
-    {
-      id: 5,
-      name: 'Subaru WRX STI',
-      description: 'High-performance rally-inspired sedan.',
-      notes: '',
-      isCustom: false
-    },
-    {
-      id: 6,
-      name: 'BMW M3',
-      description: 'Premium sports sedan.',
-      notes: '',
-      isCustom: false
-    },
-    {
-      id: 7,
-      name: 'Honda Civic Type R',
-      description: 'Affordable hot hatch.',
-      notes: '',
-      isCustom: false
-    },
-    {
-      id: 8,
-      name: 'Mercedes-Benz S-Class',
-      description: 'Luxury flagship sedan.',
-      notes: '',
-      isCustom: false
-    }
+    { id: 1, name: 'Tesla Model S', description: 'All-electric luxury sedan.', notes: '', isCustom: false },
+    { id: 2, name: 'Porsche 911', description: 'Iconic sports car.', notes: '', isCustom: false },
+    { id: 3, name: 'Toyota Camry', description: 'Reliable mid-size sedan.', notes: '', isCustom: false },
+    { id: 4, name: 'Ford F-150', description: 'America\'s best-selling truck.', notes: '', isCustom: false },
+    { id: 5, name: 'Subaru WRX STI', description: 'High-performance rally-inspired sedan.', notes: '', isCustom: false },
+    { id: 6, name: 'BMW M3', description: 'Premium sports sedan.', notes: '', isCustom: false },
+    { id: 7, name: 'Honda Civic Type R', description: 'Affordable hot hatch.', notes: '', isCustom: false },
+    { id: 8, name: 'Mercedes-Benz S-Class', description: 'Luxury flagship sedan.', notes: '', isCustom: false }
   ];
 
-  // Load saved cars and selectedCars from localStorage
+  // Load saved selections
   useEffect(() => {
-    const savedCars = JSON.parse(localStorage.getItem('cars')) || mockCars;
-    const savedSelected = JSON.parse(localStorage.getItem('selectedCars')) || [...savedCars];
-
-    setCars(savedCars);
+    const savedSelected = JSON.parse(localStorage.getItem('selectedCars')) || [...mockCars];
     setSelectedCars(savedSelected);
   }, []);
 
-  // Save selected cars to localStorage
-  useEffect(() => {
-    localStorage.setItem('selectedCars', JSON.stringify(selectedCars));
-  }, [selectedCars]);
-
-  // Format car name
+  // Format car names
   const formatCarName = (name) =>
     name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
-  // Start the tournament
+  // Pad list to next power of two
+  const padToNextPowerOfTwo = (carList) => {
+    const nextPower = Math.pow(2, Math.ceil(Math.log2(carList.length)));
+    const padding = Array.from({ length: nextPower - carList.length }).map((_, i) => ({
+      id: `bye-${i}`,
+      name: 'Bye',
+      description: 'Automatically advances.',
+      notes: '',
+      isBye: true
+    }));
+    return [...carList, ...padding];
+  };
+
+  // Generate battles
+  const generateBattles = (roundCars) => {
+    const newBattles = [];
+    for (let i = 0; i < roundCars.length; i += 2) {
+      if (i + 1 < roundCars.length) {
+        newBattles.push([roundCars[i], roundCars[i + 1]]);
+      } else {
+        newBattles.push([roundCars[i]]); // Odd one out
+      }
+    }
+    return newBattles;
+  };
+
+  // Start tournament flow
   const startTournament = () => {
     setGameState('confirmEdit');
   };
 
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
-  // Pad selected cars with "Bye" if necessary
-  const padToNextPowerOfTwo = (cars) => {
-    const nextPower = Math.pow(2, Math.ceil(Math.log2(cars.length)));
-    const padding = Array.from({ length: nextPower - cars.length }).map((_, i) => ({
-      id: `bye-${i}`,
-      name: 'Bye',
-      description: 'Automatically advances to the next round.',
-      isBye: true
-    }));
-    return [...cars, ...padding];
-  };
-
-  // Begin the tournament
+  // Confirm edit -> begin tournament
   const beginTournament = () => {
+    if (selectedCars.length < 2) {
+      alert("Please select at least 2 cars.");
+      return;
+    }
+
     const paddedCars = padToNextPowerOfTwo(selectedCars);
+    const initialBattles = generateBattles(paddedCars);
+
     setCurrentRound(paddedCars);
-    setGameState('loading');
+    setBattles(initialBattles);
+    setBattleIndex(0);
+    setRoundWinners([]);
+    setGameState('battle');
   };
 
-  // Start the next battle
-  const startNextBattle = () => {
-    if (currentRound.length > 1) {
-      const nextBattles = [];
-      for (let i = 0; i < currentRound.length; i += 2) {
-        if (i + 1 < currentRound.length) {
-          nextBattles.push([currentRound[i], currentRound[i + 1]]);
-        } else {
-          nextBattles.push([currentRound[i]]);
-        }
+  // Select winner of current battle
+  const selectWinner = (car) => {
+    const updatedWinners = [...roundWinners, car];
+
+    if (updatedWinners.length < battles.length) {
+      setRoundWinners(updatedWinners);
+      setBattleIndex(battleIndex + 1);
+    } else {
+      // Round complete → move to next round or end game
+      setRoundWinners([...updatedWinners]);
+      const nextRound = updatedWinners;
+
+      if (nextRound.length === 1) {
+        setWinner(nextRound[0]);
+        setGameState('results');
+      } else {
+        const nextBattles = generateBattles(nextRound);
+        setCurrentRound(nextRound);
+        setBattles(nextBattles);
+        setBattleIndex(0);
+        setRoundWinners([]);
       }
-
-      setCurrentStep(0);
-      setCurrentBattle(nextBattles[0]);
-      setGameState('battle');
-    } else {
-      setWinner(currentRound[0]);
-      setGameState('results');
     }
   };
 
-  // Effect to trigger battle after setting currentRound
-  useEffect(() => {
-    if (gameState === 'loading' && currentRound.length > 0) {
-      setTimeout(() => {
-        startNextBattle();
-      }, 500);
-    }
-  }, [gameState, currentRound]);
-
-  // Handle car selection
-  const toggleCarSelection = (car) => {
-    const isSelected = selectedCars.some(c => c.id === car.id);
-    if (isSelected) {
-      setSelectedCars(prev => prev.filter(c => c.id !== car.id));
-    } else {
-      setSelectedCars(prev => [...prev, car]);
-    }
+  // Reset game
+  const resetGame = () => {
+    localStorage.clear();
+    setSelectedCars([...mockCars]);
+    setCars(mockCars);
+    setCurrentRound([]);
+    setBattles([]);
+    setRoundWinners([]);
+    setWinner(null);
+    setGameState('start');
   };
 
   // Add custom car
-  const [newCar, setNewCar] = useState({
-    name: '',
-    description: '',
-    notes: ''
-  });
+  const [newCar, setNewCar] = useState({ name: '', description: '', notes: '' });
 
   const handleAddCustomCar = () => {
     if (!newCar.name.trim()) return;
@@ -174,17 +135,12 @@ export default function App() {
       ...newCar,
       isCustom: true
     };
-    const updatedCars = [...cars, newCarEntry];
-    setCars(updatedCars);
     setSelectedCars(prev => [...prev, newCarEntry]);
-    setNewCar({
-      name: '',
-      description: '',
-      notes: ''
-    });
+    setCars(prev => [...prev, newCarEntry]);
+    setNewCar({ name: '', description: '', notes: '' });
   };
 
-  // Update car notes
+  // Update note
   const updateNote = (id, note) => {
     const updated = selectedCars.map(car =>
       car.id === id ? { ...car, notes: note } : car
@@ -192,39 +148,22 @@ export default function App() {
     setSelectedCars(updated);
   };
 
-  // Reset game
-  const resetGame = () => {
-    localStorage.clear();
-    setSelectedCars([...mockCars]);
-    setCars(mockCars);
-    setCurrentRound([]);
-    setCurrentBattle(null);
-    setBattleResults([]);
-    setCurrentStep(0);
-    setWinner(null);
-    setGameState('start');
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
   };
 
-  // Handle selecting a winner
-  const selectWinner = (car) => {
-    const results = [...battleResults];
-    results.push(car);
-    setBattleResults(results);
-
-    if (currentStep + 1 < Math.ceil(currentRound.length / 2)) {
-      setCurrentStep(currentStep + 1);
-      setCurrentBattle([
-        currentRound[currentStep * 2 + 2],
-        currentRound[currentStep * 2 + 3]
-      ]);
+  // Handle car selection in edit screen
+  const toggleCarSelection = (car) => {
+    const isSelected = selectedCars.some(c => c.id === car.id);
+    if (isSelected) {
+      setSelectedCars(prev => prev.filter(c => c.id !== car.id));
     } else {
-      setCurrentRound(results);
-      setBattleResults([]);
-      startNextBattle();
+      setSelectedCars(prev => [...prev, car]);
     }
   };
 
-  // Render loading screen
+  // Render Loading Screen
   const renderLoadingScreen = () => (
     <div style={{
       display: 'flex',
@@ -242,7 +181,7 @@ export default function App() {
         animation: 'spin 1s linear infinite',
         marginBottom: '1rem'
       }}></div>
-      <p>Loading...</p>
+      <p>Loading tournament...</p>
       <style>{`
         @keyframes spin {
           to { transform: rotate(360deg); }
@@ -256,8 +195,8 @@ export default function App() {
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center',
       justifyContent: 'center',
+      alignItems: 'center',
       minHeight: '100vh',
       textAlign: 'center',
       backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
@@ -270,12 +209,9 @@ export default function App() {
         fontWeight: 'bold',
         background: 'linear-gradient(to right, #4f46e5, #9333ea)',
         WebkitBackgroundClip: 'text',
-        color: 'transparent',
-        marginBottom: '1.5rem'
-      }}>
-        Car Champion
-      </h1>
-      <p style={{ fontSize: '1.25rem', maxWidth: '600px', marginBottom: '2rem' }}>
+        color: 'transparent'
+      }}>Car Champion</h1>
+      <p style={{ fontSize: '1.25rem', maxWidth: '600px', margin: '1rem 0' }}>
         We've auto-selected all available cars. Would you like to edit the list before starting?
       </p>
       <button
@@ -319,7 +255,6 @@ export default function App() {
       alignItems: 'center',
       justifyContent: 'center',
       minHeight: '100vh',
-      textAlign: 'center',
       backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
       color: darkMode ? '#cbd5e0' : '#2d3748',
       transition: 'background-color 0.3s, color 0.3s',
@@ -329,7 +264,7 @@ export default function App() {
         Ready to Begin?
       </h2>
       <p style={{ fontSize: '1.25rem', marginBottom: '2rem' }}>
-        You've selected {selectedCars.length} cars. Would you like to add or remove any cars?
+        You've selected {selectedCars.length} cars. Would you like to add or remove any?
       </p>
       <div style={{ display: 'flex', gap: '1rem' }}>
         <button
@@ -372,16 +307,14 @@ export default function App() {
     const handleAddCar = () => {
       if (!newCar.name.trim()) return;
 
-      const id = Date.now();
+      const id = Date.now(); // unique ID
       const newCarEntry = {
         id,
         ...newCar,
         isCustom: true
       };
-
-      const updatedCars = [...cars, newCarEntry];
-      setCars(updatedCars);
       setSelectedCars(prev => [...prev, newCarEntry]);
+      setCars(prev => [...prev, newCarEntry]);
       setNewCar({ name: '', description: '', notes: '' });
     };
 
@@ -403,7 +336,12 @@ export default function App() {
         {/* Selected Cars */}
         <div style={{ marginBottom: '2rem' }}>
           <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>Selected Cars</h3>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '1rem',
+            justifyContent: 'center'
+          }}>
             {selectedCars.map(car => (
               <div key={car.id} style={{
                 backgroundColor: darkMode ? '#2d3748' : 'white',
@@ -531,7 +469,12 @@ export default function App() {
 
   // Battle screen
   const renderBattleScreen = () => {
-    if (!currentBattle) return renderLoadingScreen();
+    const [left, right] = battles[battleIndex] || [];
+
+    if (!left) {
+      console.warn("No left car found", { battleIndex, battles });
+      return <p>No cars to compare.</p>;
+    }
 
     return (
       <div style={{
@@ -547,7 +490,7 @@ export default function App() {
           textAlign: 'center',
           marginBottom: '2rem'
         }}>
-          Round {Math.log2(selectedCars.length / currentRound.length) + 1}
+          Round {Math.round(Math.log2(selectedCars.length / currentRound.length)) + 1}
         </h2>
 
         <div style={{
@@ -558,7 +501,7 @@ export default function App() {
         }}>
           {/* Left car */}
           <div
-            onClick={() => selectWinner(currentBattle[0])}
+            onClick={() => selectWinner(left)}
             style={{
               cursor: 'pointer',
               backgroundColor: darkMode ? '#2d3748' : 'white',
@@ -571,15 +514,15 @@ export default function App() {
             }}
           >
             <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
-              {formatCarName(currentBattle[0].name)}
+              {formatCarName(left.name)}
             </h3>
             <p style={{ margin: '1rem 0' }}>
-              {currentBattle[0].description}
+              {left.description}
             </p>
             <div style={{ marginTop: '1rem' }}>
               <h4 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Your Notes:</h4>
               <p style={{ fontStyle: 'italic' }}>
-                {currentBattle[0].notes || 'No notes added.'}
+                {left.notes || 'No notes added.'}
               </p>
             </div>
           </div>
@@ -593,15 +536,15 @@ export default function App() {
               borderRadius: '0.5rem',
               textAlign: 'center'
             }}>
-              <p>Select the car you think is better based on your preferences</p>
+              <p>Select the better car based on your preferences</p>
             </div>
           </div>
 
           {/* Right car */}
           <div
-            onClick={() => currentBattle[1] && selectWinner(currentBattle[1])}
+            onClick={() => right && selectWinner(right)}
             style={{
-              cursor: currentBattle[1] ? 'pointer' : 'default',
+              cursor: right ? 'pointer' : 'default',
               backgroundColor: darkMode ? '#2d3748' : 'white',
               padding: '1.5rem',
               borderRadius: '0.5rem',
@@ -612,17 +555,17 @@ export default function App() {
             }}
           >
             <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
-              {currentBattle[1] ? formatCarName(currentBattle[1].name) : 'Bye'}
+              {right ? formatCarName(right.name) : 'Bye'}
             </h3>
-            {currentBattle[1] && (
+            {right && (
               <>
                 <p style={{ margin: '1rem 0' }}>
-                  {currentBattle[1].description}
+                  {right.description}
                 </p>
                 <div style={{ marginTop: '1rem' }}>
                   <h4 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Your Notes:</h4>
                   <p style={{ fontStyle: 'italic' }}>
-                    {currentBattle[1]?.notes || 'No notes added.'}
+                    {right.notes || 'No notes added.'}
                   </p>
                 </div>
               </>
@@ -644,9 +587,11 @@ export default function App() {
         transition: 'background-color 0.3s, color 0.3s'
       }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-            Tournament Complete!
-          </h2>
+          <h2 style={{
+            fontSize: '2.5rem',
+            fontWeight: 'bold',
+            marginBottom: '1rem'
+          }}>Tournament Complete!</h2>
           <p style={{ fontSize: '1.25rem', marginBottom: '2rem' }}>
             After a fierce competition, we've determined the best car.
           </p>
@@ -666,7 +611,7 @@ export default function App() {
             {formatCarName(winner?.name || 'Unknown')}
           </h3>
           <p style={{ marginBottom: '2rem' }}>
-            {winner?.description || 'No car selected.'}
+            {winner?.description || 'No car was selected as champion.'}
           </p>
           <div style={{ marginTop: '1rem' }}>
             <h4 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Your Notes:</h4>
@@ -762,7 +707,6 @@ export default function App() {
         </p>
       </footer>
 
-      {/* Dark Mode Toggle */}
       <DarkModeToggle />
     </div>
   );
