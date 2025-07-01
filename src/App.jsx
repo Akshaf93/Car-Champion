@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function App() {
-  const [gameState, setGameState] = useState('start'); // 'start', 'select', 'battle', 'results'
+  const [gameState, setGameState] = useState('start'); // 'start', 'confirmEdit', 'edit', 'loading', 'battle', 'results'
   const [cars, setCars] = useState([]);
   const [selectedCars, setSelectedCars] = useState([]);
   const [currentRound, setCurrentRound] = useState([]);
@@ -16,68 +16,81 @@ export default function App() {
     {
       id: 1,
       name: 'Tesla Model S',
-      description: 'All-electric luxury sedan with cutting-edge technology and exceptional performance.',
+      description: 'All-electric luxury sedan.',
       notes: '',
       isCustom: false
     },
     {
       id: 2,
       name: 'Porsche 911',
-      description: 'Iconic sports car with timeless design and thrilling driving dynamics.',
+      description: 'Iconic sports car.',
       notes: '',
       isCustom: false
     },
     {
       id: 3,
       name: 'Toyota Camry',
-      description: 'Reliable mid-size sedan with proven dependability and comfortable ride.',
+      description: 'Reliable mid-size sedan.',
       notes: '',
       isCustom: false
     },
     {
       id: 4,
       name: 'Ford F-150',
-      description: 'America\'s best-selling truck with impressive towing capacity and versatility.',
+      description: 'America\'s best-selling truck.',
       notes: '',
       isCustom: false
     },
     {
       id: 5,
       name: 'Subaru WRX STI',
-      description: 'High-performance all-wheel drive sports sedan with rally racing heritage.',
+      description: 'High-performance rally-inspired sedan.',
       notes: '',
       isCustom: false
     },
     {
       id: 6,
       name: 'BMW M3',
-      description: 'Premium sports sedan with precise handling and powerful engine performance.',
+      description: 'Premium sports sedan.',
       notes: '',
       isCustom: false
     },
     {
       id: 7,
       name: 'Honda Civic Type R',
-      description: 'Affordable hot hatch with track-ready performance and sharp handling.',
+      description: 'Affordable hot hatch.',
       notes: '',
       isCustom: false
     },
     {
       id: 8,
       name: 'Mercedes-Benz S-Class',
-      description: 'Luxury flagship sedan with opulent interior and advanced technology features.',
+      description: 'Luxury flagship sedan.',
       notes: '',
       isCustom: false
-    },
+    }
   ];
 
+  // Load saved cars and selectedCars from localStorage
   useEffect(() => {
-    setCars(mockCars);
+    const savedCars = JSON.parse(localStorage.getItem('cars')) || mockCars;
+    const savedSelected = JSON.parse(localStorage.getItem('selectedCars')) || [...savedCars];
+
+    setCars(savedCars);
+    setSelectedCars(savedSelected);
   }, []);
+
+  // Save selected cars to localStorage
+  useEffect(() => {
+    localStorage.setItem('selectedCars', JSON.stringify(selectedCars));
+  }, [selectedCars]);
+
+  // Format car name
+  const formatCarName = (name) =>
+    name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
   // Start the tournament
   const startTournament = () => {
-    setSelectedCars([...mockCars]);
     setGameState('confirmEdit');
   };
 
@@ -86,10 +99,6 @@ export default function App() {
     setDarkMode(!darkMode);
   };
 
-  // Format car name
-  const formatCarName = (name) =>
-    name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-
   // Pad selected cars with "Bye" if necessary
   const padToNextPowerOfTwo = (cars) => {
     const nextPower = Math.pow(2, Math.ceil(Math.log2(cars.length)));
@@ -97,7 +106,6 @@ export default function App() {
       id: `bye-${i}`,
       name: 'Bye',
       description: 'Automatically advances to the next round.',
-      notes: '',
       isBye: true
     }));
     return [...cars, ...padding];
@@ -186,7 +194,9 @@ export default function App() {
 
   // Reset game
   const resetGame = () => {
-    setSelectedCars([]);
+    localStorage.clear();
+    setSelectedCars([...mockCars]);
+    setCars(mockCars);
     setCurrentRound([]);
     setCurrentBattle(null);
     setBattleResults([]);
@@ -216,17 +226,23 @@ export default function App() {
 
   // Render loading screen
   const renderLoadingScreen = () => (
-    <div style={{ textAlign: 'center', marginTop: '100px' }}>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '100vh'
+    }}>
       <div style={{
-        display: 'inline-block',
         width: '16px',
         height: '16px',
         border: '2px solid #7c3aed',
         borderTop: '2px solid transparent',
         borderRadius: '50%',
         animation: 'spin 1s linear infinite',
+        marginBottom: '1rem'
       }}></div>
-      <p style={{ marginTop: '16px', fontSize: '1rem' }}>Preparing the tournament...</p>
+      <p>Loading...</p>
       <style>{`
         @keyframes spin {
           to { transform: rotate(360deg); }
@@ -238,15 +254,16 @@ export default function App() {
   // Start screen
   const renderStartScreen = () => (
     <div style={{
-      minHeight: '100vh',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
       alignItems: 'center',
-      padding: '16px',
+      justifyContent: 'center',
+      minHeight: '100vh',
+      textAlign: 'center',
       backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
       color: darkMode ? '#cbd5e0' : '#2d3748',
-      transition: 'background-color 0.3s, color 0.3s'
+      transition: 'background-color 0.3s, color 0.3s',
+      padding: '2rem'
     }}>
       <h1 style={{
         fontSize: '2.5rem',
@@ -254,30 +271,42 @@ export default function App() {
         background: 'linear-gradient(to right, #4f46e5, #9333ea)',
         WebkitBackgroundClip: 'text',
         color: 'transparent',
+        marginBottom: '1.5rem'
       }}>
         Car Champion
       </h1>
-      <p style={{
-        fontSize: '1.25rem',
-        marginBottom: '2rem',
-        maxWidth: '600px',
-        textAlign: 'center'
-      }}>
+      <p style={{ fontSize: '1.25rem', maxWidth: '600px', marginBottom: '2rem' }}>
         We've auto-selected all available cars. Would you like to edit the list before starting?
       </p>
       <button
         onClick={startTournament}
         style={{
-          padding: '1rem 2rem',
+          padding: '0.75rem 2rem',
           backgroundColor: '#6675ef',
           color: 'white',
           border: 'none',
           borderRadius: '0.5rem',
-          fontSize: '1.125rem',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          fontSize: '1.125rem'
         }}
       >
         Start Tournament
+      </button>
+
+      {/* Dark Mode Toggle */}
+      <button
+        onClick={toggleDarkMode}
+        style={{
+          position: 'fixed',
+          bottom: '1rem',
+          right: '1rem',
+          padding: '0.75rem',
+          borderRadius: '9999px',
+          backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
+          cursor: 'pointer'
+        }}
+      >
+        {darkMode ? '☀️' : '🌙'}
       </button>
     </div>
   );
@@ -285,28 +314,21 @@ export default function App() {
   // Confirm Edit Screen
   const renderConfirmEditScreen = () => (
     <div style={{
-      minHeight: '100vh',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
       alignItems: 'center',
-      padding: '16px',
+      justifyContent: 'center',
+      minHeight: '100vh',
+      textAlign: 'center',
       backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
       color: darkMode ? '#cbd5e0' : '#2d3748',
-      transition: 'background-color 0.3s, color 0.3s'
+      transition: 'background-color 0.3s, color 0.3s',
+      padding: '2rem'
     }}>
-      <h2 style={{
-        fontSize: '2rem',
-        fontWeight: 'bold',
-        marginBottom: '1rem'
-      }}>
+      <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
         Ready to Begin?
       </h2>
-      <p style={{
-        fontSize: '1.25rem',
-        marginBottom: '2rem',
-        textAlign: 'center'
-      }}>
+      <p style={{ fontSize: '1.25rem', marginBottom: '2rem' }}>
         You've selected {selectedCars.length} cars. Would you like to add or remove any cars?
       </p>
       <div style={{ display: 'flex', gap: '1rem' }}>
@@ -350,22 +372,17 @@ export default function App() {
     const handleAddCar = () => {
       if (!newCar.name.trim()) return;
 
-      const id = Date.now(); // unique ID
+      const id = Date.now();
       const newCarEntry = {
         id,
         ...newCar,
-        description: newCar.description || 'No description provided.',
-        notes: '',
         isCustom: true
       };
+
       const updatedCars = [...cars, newCarEntry];
       setCars(updatedCars);
       setSelectedCars(prev => [...prev, newCarEntry]);
-      setNewCar({
-        name: '',
-        description: '',
-        notes: ''
-      });
+      setNewCar({ name: '', description: '', notes: '' });
     };
 
     return (
@@ -381,16 +398,12 @@ export default function App() {
           fontWeight: 'bold',
           textAlign: 'center',
           marginBottom: '2rem'
-        }}>
-          Customize Your Car List
-        </h2>
+        }}>Customize Your Car List</h2>
 
         {/* Selected Cars */}
         <div style={{ marginBottom: '2rem' }}>
-          <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-            Selected Cars
-          </h3>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+          <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>Selected Cars</h3>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
             {selectedCars.map(car => (
               <div key={car.id} style={{
                 backgroundColor: darkMode ? '#2d3748' : 'white',
@@ -401,9 +414,7 @@ export default function App() {
                 maxWidth: '400px'
               }}>
                 <h4 style={{ fontWeight: 'bold' }}>{formatCarName(car.name)}</h4>
-                <p style={{ fontSize: '0.875rem', margin: '0.5rem 0' }}>
-                  {car.description}
-                </p>
+                <p style={{ margin: '0.5rem 0' }}>{car.description}</p>
                 <textarea
                   placeholder="Add your notes..."
                   value={car.notes || ''}
@@ -413,9 +424,9 @@ export default function App() {
                     padding: '0.5rem',
                     border: darkMode ? '1px solid #4a5568' : '1px solid #cbd5e0',
                     borderRadius: '0.375rem',
-                    marginTop: '0.5rem',
                     backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
-                    color: darkMode ? 'white' : 'black'
+                    color: darkMode ? 'white' : 'black',
+                    marginTop: '0.5rem'
                   }}
                 />
                 {car.isCustom && (
@@ -440,11 +451,9 @@ export default function App() {
           </div>
         </div>
 
-        {/* Add New Car */}
+        {/* Add New Car Form */}
         <div style={{ marginBottom: '2rem' }}>
-          <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-            Add New Car
-          </h3>
+          <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>Add New Car</h3>
           <div style={{
             backgroundColor: darkMode ? '#2d3748' : 'white',
             padding: '1.5rem',
@@ -461,8 +470,8 @@ export default function App() {
                 width: '100%',
                 padding: '0.75rem',
                 marginBottom: '1rem',
-                borderRadius: '0.375rem',
                 border: darkMode ? '1px solid #4a5568' : '1px solid #cbd5e0',
+                borderRadius: '0.375rem',
                 backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
                 color: darkMode ? 'white' : 'black'
               }}
@@ -477,14 +486,14 @@ export default function App() {
                 width: '100%',
                 padding: '0.75rem',
                 marginBottom: '1rem',
-                borderRadius: '0.375rem',
                 border: darkMode ? '1px solid #4a5568' : '1px solid #cbd5e0',
+                borderRadius: '0.375rem',
                 backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
                 color: darkMode ? 'white' : 'black'
               }}
             />
             <button
-              onClick={handleAddCar}
+              onClick={handleAddCustomCar}
               disabled={!newCar.name.trim()}
               style={{
                 padding: '0.5rem 1rem',
@@ -541,7 +550,12 @@ export default function App() {
           Round {Math.log2(selectedCars.length / currentRound.length) + 1}
         </h2>
 
-        <div style={{ display: 'flex', gap: '2rem', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={{
+          display: 'flex',
+          gap: '2rem',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}>
           {/* Left car */}
           <div
             onClick={() => selectWinner(currentBattle[0])}
@@ -551,7 +565,6 @@ export default function App() {
               padding: '1.5rem',
               borderRadius: '0.5rem',
               boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-              flex: '1',
               minWidth: '300px',
               maxWidth: '600px',
               textAlign: 'center'
@@ -560,7 +573,7 @@ export default function App() {
             <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
               {formatCarName(currentBattle[0].name)}
             </h3>
-            <p style={{ fontSize: '1rem', margin: '1rem 0' }}>
+            <p style={{ margin: '1rem 0' }}>
               {currentBattle[0].description}
             </p>
             <div style={{ marginTop: '1rem' }}>
@@ -593,7 +606,6 @@ export default function App() {
               padding: '1.5rem',
               borderRadius: '0.5rem',
               boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-              flex: '1',
               minWidth: '300px',
               maxWidth: '600px',
               textAlign: 'center'
@@ -604,13 +616,13 @@ export default function App() {
             </h3>
             {currentBattle[1] && (
               <>
-                <p style={{ fontSize: '1rem', margin: '1rem 0' }}>
+                <p style={{ margin: '1rem 0' }}>
                   {currentBattle[1].description}
                 </p>
                 <div style={{ marginTop: '1rem' }}>
                   <h4 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Your Notes:</h4>
                   <p style={{ fontStyle: 'italic' }}>
-                    {currentBattle[1].notes || 'No notes added.'}
+                    {currentBattle[1]?.notes || 'No notes added.'}
                   </p>
                 </div>
               </>
@@ -651,15 +663,15 @@ export default function App() {
         }}>
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏆</div>
           <h3 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-            {formatCarName(winner.name)}
+            {formatCarName(winner?.name || 'Unknown')}
           </h3>
-          <p style={{ fontSize: '1rem', marginBottom: '2rem' }}>
-            {winner.description}
+          <p style={{ marginBottom: '2rem' }}>
+            {winner?.description || 'No car selected.'}
           </p>
           <div style={{ marginTop: '1rem' }}>
             <h4 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Your Notes:</h4>
             <p style={{ fontStyle: 'italic' }}>
-              {winner.notes || 'No notes added.'}
+              {winner?.notes || 'No notes added.'}
             </p>
           </div>
           <button
@@ -700,7 +712,7 @@ export default function App() {
   );
 
   return (
-    <div style={{ minHeight: '100vh', fontFamily: 'Arial, sans-serif' }}>
+    <div style={{ fontFamily: 'Arial, sans-serif' }}>
       {/* Header */}
       <header style={{
         backgroundColor: darkMode ? '#2d3748' : 'white',
@@ -714,20 +726,17 @@ export default function App() {
           <span style={{ fontSize: '1.5rem', marginRight: '0.5rem' }}>🚗</span>
           <h1 style={{ fontWeight: 'bold' }}>Car Champion</h1>
         </div>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <button
-            onClick={resetGame}
-            style={{
-              backgroundColor: 'transparent',
-              color: darkMode ? '#cbd5e0' : '#2d3748',
-              border: 'none',
-              cursor: 'pointer'
-            }}
-          >
-            New Tournament
-          </button>
-          <DarkModeToggle />
-        </div>
+        <button
+          onClick={resetGame}
+          style={{
+            backgroundColor: 'transparent',
+            color: darkMode ? '#cbd5e0' : '#2d3748',
+            border: 'none',
+            cursor: 'pointer'
+          }}
+        >
+          New Tournament
+        </button>
       </header>
 
       {/* Main Content */}
@@ -752,6 +761,9 @@ export default function App() {
           © 2023 Car Champion. All cars are for demonstration purposes only.
         </p>
       </footer>
+
+      {/* Dark Mode Toggle */}
+      <DarkModeToggle />
     </div>
   );
 }
