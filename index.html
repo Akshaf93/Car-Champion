@@ -4,8 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Car Champion</title>
-
-  <!-- Reset browser defaults -->
   <style>
     * {
       margin: 0;
@@ -14,32 +12,16 @@
     }
 
     html, body {
+      width: 100%;
       height: 100%;
-      width: 100%;
       font-family: Arial, sans-serif;
-      overflow-x: hidden;
-      background-color: #f7fafc; /* Light mode */
+      background-color: #f7fafc; /* Light mode fallback */
       color: #2d3748;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    .dark-mode {
-      background-color: #1a202c; /* Dark mode */
-      color: #cbd5e0;
-    }
-
-    main {
-      min-height: 100vh;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      overflow-x: hidden;
     }
   </style>
 </head>
-<body class="dark-mode">
+<body>
   <div id="root"></div>
-  <script src="/build/bundle.js"></script>
 </body>
 </html>
