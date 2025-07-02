@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 
 export default function App() {
-  // --- State ---
   const [gameState, setGameState] = useState('start');
   const [selectedCars, setSelectedCars] = useState([]);
   const [currentRound, setCurrentRound] = useState([]);
@@ -11,7 +10,6 @@ export default function App() {
   const [winner, setWinner] = useState(null);
   const [newCar, setNewCar] = useState({ name: '', description: '', notes: '' });
 
-  // --- Demo Cars ---
   const mockCars = [
     { id: 1, name: 'Honda BR-V', description: 'Spacious compact SUV with family-friendly features.', notes: '', isCustom: false },
     { id: 2, name: 'Kia Carnival', description: 'Luxury MPV with bold design and premium interior.', notes: '', isCustom: false },
@@ -23,13 +21,11 @@ export default function App() {
     { id: 8, name: 'Chery Tiggo 8 Pro', description: 'Premium SUV with aggressive styling and smart tech.', notes: '', isCustom: false }
   ];
 
-  // --- Load on Mount ---
   useEffect(() => {
     const savedSelected = JSON.parse(localStorage.getItem('selectedCars')) || [...mockCars];
     setSelectedCars(savedSelected);
   }, []);
 
-  // --- Utility ---
   const formatCarName = (name) =>
     name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
@@ -57,7 +53,6 @@ export default function App() {
     return newBattles;
   };
 
-  // --- Actions ---
   const startTournament = () => setGameState('confirmEdit');
   const beginTournament = () => {
     if (selectedCars.length < 2) {
@@ -116,13 +111,23 @@ export default function App() {
     setNewCar({ name: '', description: '', notes: '' });
   };
 
-  // --- Styles ---
   const gradient = 'linear-gradient(120deg, #6546e5 0%, #a347e8 50%, #ff5773 100%)';
   const cardBg = 'rgba(30, 16, 60, 0.90)';
-  const lightCardBg = 'rgba(255,255,255,0.95)';
   const accent = '#ff5773';
 
-  // --- Render ---
+  // Shared centering style
+  const center = {
+    minHeight: 'calc(100vh - 0px)',
+    minWidth: '100vw',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '2vw',
+    position: 'relative',
+    textAlign: 'center',
+  };
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -136,12 +141,10 @@ export default function App() {
       {/* HEADER */}
       <header style={{
         width: '100%',
-        padding: '2rem 4vw 1rem 4vw',
+        padding: '2rem 0 1rem 0',
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         alignItems: 'center',
-        zIndex: 2,
-        position: 'relative',
         background: 'transparent'
       }}>
         <span style={{
@@ -156,31 +159,11 @@ export default function App() {
             marginRight: '1rem'
           }}>🏆</span> CAR
         </span>
-        <nav style={{
-          display: 'flex',
-          gap: '2.5rem',
-          fontWeight: 700,
-          textTransform: 'uppercase',
-          letterSpacing: '0.07em',
-          fontSize: '1.1rem'
-        }}>
-          <span style={{opacity: 0.85, cursor: 'pointer'}}>About</span>
-          <span style={{opacity: 0.85, cursor: 'pointer'}}>Compare</span>
-          <span style={{opacity: 0.85, cursor: 'pointer'}}>Sign Up</span>
-        </nav>
       </header>
 
       {/* HERO / LANDING */}
       {gameState === 'start' && (
-        <main style={{
-          minHeight: 'calc(100vh - 120px)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '0 4vw',
-          position: 'relative'
-        }}>
+        <main style={center}>
           <div style={{
             fontSize: 'clamp(2.8rem, 7vw, 5.5rem)',
             fontWeight: 900,
@@ -228,10 +211,10 @@ export default function App() {
 
       {/* CONFIRM EDIT */}
       {gameState === 'confirmEdit' && (
-        <main style={{display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '70vh', justifyContent: 'center'}}>
+        <main style={center}>
           <h2 style={{fontSize: '2.5rem', fontWeight: 900, letterSpacing: '0.06em', marginBottom: '1rem'}}>Ready to Begin?</h2>
           <p style={{fontSize: '1.25rem', marginBottom: '2rem'}}>You've selected {selectedCars.length} cars. Would you like to add or remove any?</p>
-          <div style={{display: 'flex', gap: '1.5rem'}}>
+          <div style={{display: 'flex', gap: '1.5rem', justifyContent: 'center'}}>
             <button
               onClick={() => setGameState('edit')}
               style={{
@@ -266,248 +249,235 @@ export default function App() {
 
       {/* EDIT SCREEN */}
       {gameState === 'edit' && (
-        <main style={{
-          minHeight: '70vh',
-          padding: '2rem',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }}>
-          <h2 style={{fontSize: '2rem', fontWeight: 'bold', marginBottom: '1.5rem'}}>Customize Your Car List</h2>
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '1.5rem',
-            justifyContent: 'center'
-          }}>
-            {selectedCars.map(car => (
-              <div key={car.id} style={{
-                background: cardBg,
-                borderRadius: '1rem',
-                boxShadow: '0 6px 24px #4921a355',
-                padding: '1.5rem',
-                minWidth: '230px',
-                maxWidth: '340px',
-                color: '#fff',
-                fontSize: '1.08rem',
-                position: 'relative'
-              }}>
-                <h4 style={{ fontWeight: 'bold', margin: 0 }}>{formatCarName(car.name)}</h4>
-                <p style={{ margin: '0.75rem 0' }}>{car.description}</p>
-                <textarea
-                  placeholder="Add your notes..."
-                  value={car.notes || ''}
-                  onChange={(e) => updateNote(car.id, e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '0.5rem 1rem',
-                    border: 'none',
-                    borderRadius: '0.375rem',
-                    backgroundColor: '#3a2770',
-                    color: 'white',
-                    resize: 'none',
-                    minHeight: '60px',
-                    marginBottom: '1rem',
-                    fontFamily: 'inherit'
-                  }}
-                />
-                {car.isCustom && (
-                  <button
-                    onClick={() => setSelectedCars(selectedCars.filter(c => c.id !== car.id))}
+        <main style={center}>
+          <div>
+            <h2 style={{fontSize: '2rem', fontWeight: 'bold', marginBottom: '1.5rem'}}>Customize Your Car List</h2>
+            <div style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '1.5rem',
+              justifyContent: 'center'
+            }}>
+              {selectedCars.map(car => (
+                <div key={car.id} style={{
+                  background: cardBg,
+                  borderRadius: '1rem',
+                  boxShadow: '0 6px 24px #4921a355',
+                  padding: '1.5rem',
+                  minWidth: '230px',
+                  maxWidth: '340px',
+                  color: '#fff',
+                  fontSize: '1.08rem',
+                  position: 'relative'
+                }}>
+                  <h4 style={{ fontWeight: 'bold', margin: 0 }}>{formatCarName(car.name)}</h4>
+                  <p style={{ margin: '0.75rem 0' }}>{car.description}</p>
+                  <textarea
+                    placeholder="Add your notes..."
+                    value={car.notes || ''}
+                    onChange={(e) => updateNote(car.id, e.target.value)}
                     style={{
-                      color: accent,
+                      width: '100%',
+                      padding: '0.5rem 1rem',
                       border: 'none',
-                      background: 'transparent',
-                      cursor: 'pointer',
-                      fontWeight: 700,
-                      position: 'absolute',
-                      right: '1.5rem', top: '1.2rem'
+                      borderRadius: '0.375rem',
+                      backgroundColor: '#3a2770',
+                      color: 'white',
+                      resize: 'none',
+                      minHeight: '60px',
+                      marginBottom: '1rem',
+                      fontFamily: 'inherit'
                     }}
-                  >✕</button>
-                )}
-              </div>
-            ))}
-          </div>
-          <div style={{ margin: '2.5rem 0 1.5rem 0', width: '100%', maxWidth: 400 }}>
-            <input
-              type="text"
-              name="name"
-              placeholder="Car Name"
-              value={newCar.name}
-              onChange={e => setNewCar({...newCar, name: e.target.value})}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                marginBottom: '0.5rem',
-                border: 'none',
-                borderRadius: '0.5rem',
-                background: '#f7f0ff',
-                color: '#2d1850'
-              }}
-            />
-            <input
-              type="text"
-              name="description"
-              placeholder="Description"
-              value={newCar.description}
-              onChange={e => setNewCar({...newCar, description: e.target.value})}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                marginBottom: '0.5rem',
-                border: 'none',
-                borderRadius: '0.5rem',
-                background: '#f7f0ff',
-                color: '#2d1850'
-              }}
-            />
+                  />
+                  {car.isCustom && (
+                    <button
+                      onClick={() => setSelectedCars(selectedCars.filter(c => c.id !== car.id))}
+                      style={{
+                        color: accent,
+                        border: 'none',
+                        background: 'transparent',
+                        cursor: 'pointer',
+                        fontWeight: 700,
+                        position: 'absolute',
+                        right: '1.5rem', top: '1.2rem'
+                      }}
+                    >✕</button>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div style={{ margin: '2.5rem 0 1.5rem 0', width: '100%', maxWidth: 400 }}>
+              <input
+                type="text"
+                name="name"
+                placeholder="Car Name"
+                value={newCar.name}
+                onChange={e => setNewCar({...newCar, name: e.target.value})}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  marginBottom: '0.5rem',
+                  border: 'none',
+                  borderRadius: '0.5rem',
+                  background: '#f7f0ff',
+                  color: '#2d1850'
+                }}
+              />
+              <input
+                type="text"
+                name="description"
+                placeholder="Description"
+                value={newCar.description}
+                onChange={e => setNewCar({...newCar, description: e.target.value})}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  marginBottom: '0.5rem',
+                  border: 'none',
+                  borderRadius: '0.5rem',
+                  background: '#f7f0ff',
+                  color: '#2d1850'
+                }}
+              />
+              <button
+                onClick={handleAddCustomCar}
+                disabled={!newCar.name.trim()}
+                style={{
+                  padding: '0.7em 2.2em',
+                  borderRadius: '2em',
+                  border: 'none',
+                  background: 'linear-gradient(90deg, #ff7b6c 0%, #ffb86c 100%)',
+                  color: '#fff',
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  cursor: !newCar.name.trim() ? 'not-allowed' : 'pointer',
+                  opacity: !newCar.name.trim() ? 0.5 : 1,
+                  marginTop: 6
+                }}
+              >Add Car</button>
+            </div>
             <button
-              onClick={handleAddCustomCar}
-              disabled={!newCar.name.trim()}
+              onClick={beginTournament}
               style={{
-                padding: '0.7em 2.2em',
-                borderRadius: '2em',
-                border: 'none',
+                marginTop: 20,
+                padding: '1em 2.5em',
+                borderRadius: '2.5em',
                 background: 'linear-gradient(90deg, #ff7b6c 0%, #ffb86c 100%)',
                 color: '#fff',
-                fontWeight: 700,
-                fontSize: '1rem',
-                cursor: !newCar.name.trim() ? 'not-allowed' : 'pointer',
-                opacity: !newCar.name.trim() ? 0.5 : 1,
-                marginTop: 6
+                fontWeight: 800,
+                fontSize: '1.2rem',
+                border: 'none',
+                boxShadow: '0 2px 8px #4921a377',
+                letterSpacing: '0.08em',
+                cursor: 'pointer'
               }}
-            >Add Car</button>
+            >START TOURNAMENT</button>
           </div>
-          <button
-            onClick={beginTournament}
-            style={{
-              marginTop: 20,
-              padding: '1em 2.5em',
-              borderRadius: '2.5em',
-              background: 'linear-gradient(90deg, #ff7b6c 0%, #ffb86c 100%)',
-              color: '#fff',
-              fontWeight: 800,
-              fontSize: '1.2rem',
-              border: 'none',
-              boxShadow: '0 2px 8px #4921a377',
-              letterSpacing: '0.08em',
-              cursor: 'pointer'
-            }}
-          >START TOURNAMENT</button>
         </main>
       )}
 
       {/* TOURNAMENT BATTLE SCREEN */}
       {gameState === 'battle' && (
-        <main style={{
-          minHeight: '70vh',
-          padding: '2rem 1rem 1rem 1rem',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }}>
-          <div style={{ fontSize: '2.2rem', fontWeight: 800, margin: '0 0 2rem 0' }}>
-            Round {Math.round(Math.log2(mockCars.length / currentRound.length)) + 1}
-          </div>
-          <div style={{
-            display: 'flex',
-            gap: '2.5rem',
-            flexWrap: 'wrap',
-            justifyContent: 'center'
-          }}>
-            {(battles[battleIndex] || []).map((car, i) => (
-              <div
-                key={car.id}
-                style={{
-                  background: cardBg,
-                  borderRadius: '1.5rem',
-                  boxShadow: '0 6px 24px #4921a355',
-                  padding: '1.8rem',
-                  minWidth: '230px',
-                  maxWidth: '330px',
-                  color: '#fff',
-                  fontSize: '1.12rem',
-                  cursor: 'pointer',
-                  transition: 'transform 0.25s',
-                  textAlign: 'center'
-                }}
-                onClick={() => selectWinner(car)}
-                onMouseOver={e => {e.currentTarget.style.transform='scale(1.03)';}}
-                onMouseOut={e => {e.currentTarget.style.transform='scale(1)';}}
-              >
-                <div style={{fontWeight: 700, fontSize: '1.35rem', marginBottom: 6}}>{formatCarName(car.name)}</div>
-                <div style={{marginBottom: 12}}>{car.description}</div>
-                <div style={{fontStyle: 'italic', opacity: 0.85}}>{car.notes || 'No notes.'}</div>
-              </div>
-            ))}
-          </div>
-          {battles[battleIndex] && battles[battleIndex].length === 2 &&
+        <main style={center}>
+          <div>
+            <div style={{ fontSize: '2.2rem', fontWeight: 800, margin: '0 0 2rem 0' }}>
+              Round {Math.round(Math.log2(mockCars.length / currentRound.length)) + 1}
+            </div>
             <div style={{
-              fontSize: '2.2rem',
-              fontWeight: 700,
-              margin: '2vw 0',
-              color: accent,
-              animation: 'pulse 1.5s infinite'
-            }}>VS</div>
-          }
+              display: 'flex',
+              gap: '2.5rem',
+              flexWrap: 'wrap',
+              justifyContent: 'center'
+            }}>
+              {(battles[battleIndex] || []).map((car, i) => (
+                <div
+                  key={car.id}
+                  style={{
+                    background: cardBg,
+                    borderRadius: '1.5rem',
+                    boxShadow: '0 6px 24px #4921a355',
+                    padding: '1.8rem',
+                    minWidth: '230px',
+                    maxWidth: '330px',
+                    color: '#fff',
+                    fontSize: '1.12rem',
+                    cursor: 'pointer',
+                    transition: 'transform 0.25s',
+                    textAlign: 'center'
+                  }}
+                  onClick={() => selectWinner(car)}
+                  onMouseOver={e => {e.currentTarget.style.transform='scale(1.03)';}}
+                  onMouseOut={e => {e.currentTarget.style.transform='scale(1)';}}
+                >
+                  <div style={{fontWeight: 700, fontSize: '1.35rem', marginBottom: 6}}>{formatCarName(car.name)}</div>
+                  <div style={{marginBottom: 12}}>{car.description}</div>
+                  <div style={{fontStyle: 'italic', opacity: 0.85}}>{car.notes || 'No notes.'}</div>
+                </div>
+              ))}
+            </div>
+            {battles[battleIndex] && battles[battleIndex].length === 2 &&
+              <div style={{
+                fontSize: '2.2rem',
+                fontWeight: 700,
+                margin: '2vw 0',
+                color: accent,
+                animation: 'pulse 1.5s infinite'
+              }}>VS</div>
+            }
+          </div>
         </main>
       )}
 
       {/* RESULTS / WINNER */}
       {gameState === 'results' && (
-        <main style={{
-          minHeight: '70vh',
-          padding: '2rem',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <div style={{
-            fontSize: '2.5rem',
-            fontWeight: 900,
-            marginBottom: '1.2rem',
-            textShadow: '0 2px 18px #4921a3cc'
-          }}>
-            🏆 Winner: {formatCarName(winner?.name || 'Unknown')}
-          </div>
-          <div style={{
-            background: cardBg,
-            borderRadius: '1.5rem',
-            boxShadow: '0 6px 24px #4921a355',
-            padding: '2.5rem 2rem',
-            minWidth: '260px',
-            maxWidth: '420px',
-            color: '#fff',
-            fontSize: '1.14rem',
-            marginBottom: '2rem'
-          }}>
-            <div style={{marginBottom: 12}}>{winner?.description || ''}</div>
-            <div style={{fontStyle: 'italic', opacity: 0.85}}>
-              {winner?.notes ? <>Your notes: {winner.notes}</> : 'No notes for this car.'}
+        <main style={center}>
+          <div>
+            <div style={{
+              fontSize: '2.5rem',
+              fontWeight: 900,
+              marginBottom: '1.2rem',
+              textShadow: '0 2px 18px #4921a3cc'
+            }}>
+              🏆 Winner: {formatCarName(winner?.name || 'Unknown')}
             </div>
-          </div>
-          <button
-            onClick={resetGame}
-            style={{
-              marginTop: 10,
-              padding: '1.2em 3em',
-              fontSize: '2rem',
-              fontWeight: 800,
-              borderRadius: '2.5em',
-              border: 'none',
-              background: 'linear-gradient(90deg, #ff7b6c 0%, #ffb86c 100%)',
+            <div style={{
+              background: cardBg,
+              borderRadius: '1.5rem',
+              boxShadow: '0 6px 24px #4921a355',
+              padding: '2.5rem 2rem',
+              minWidth: '260px',
+              maxWidth: '420px',
               color: '#fff',
-              boxShadow: '0 8px 32px #4921a399, 0 2px 8px #ffb86c77',
-              cursor: 'pointer',
-              letterSpacing: '0.08em',
-              transition: 'transform 0.2s, box-shadow 0.2s'
-            }}
-            onMouseOver={e => {e.currentTarget.style.transform='scale(1.05)';}}
-            onMouseOut={e => {e.currentTarget.style.transform='scale(1)';}}
-          >
-            NEW TOURNAMENT
-          </button>
+              fontSize: '1.14rem',
+              marginBottom: '2rem'
+            }}>
+              <div style={{marginBottom: 12}}>{winner?.description || ''}</div>
+              <div style={{fontStyle: 'italic', opacity: 0.85}}>
+                {winner?.notes ? <>Your notes: {winner.notes}</> : 'No notes for this car.'}
+              </div>
+            </div>
+            <button
+              onClick={resetGame}
+              style={{
+                marginTop: 10,
+                padding: '1.2em 3em',
+                fontSize: '2rem',
+                fontWeight: 800,
+                borderRadius: '2.5em',
+                border: 'none',
+                background: 'linear-gradient(90deg, #ff7b6c 0%, #ffb86c 100%)',
+                color: '#fff',
+                boxShadow: '0 8px 32px #4921a399, 0 2px 8px #ffb86c77',
+                cursor: 'pointer',
+                letterSpacing: '0.08em',
+                transition: 'transform 0.2s, box-shadow 0.2s'
+              }}
+              onMouseOver={e => {e.currentTarget.style.transform='scale(1.05)';}}
+              onMouseOut={e => {e.currentTarget.style.transform='scale(1)';}}
+            >
+              NEW TOURNAMENT
+            </button>
+          </div>
         </main>
       )}
 
