@@ -747,13 +747,17 @@ export default function App() {
 
       {/* Main Content */}
       <main>
+        <div style={{ color: darkMode ? 'white' : 'black', padding: '2rem' }}>
+          Current State: {gameState}
+        </div>
+      
         {gameState === 'start' && renderStartScreen()}
         {gameState === 'confirmEdit' && renderConfirmEditScreen()}
         {gameState === 'edit' && renderEditScreen()}
         {gameState === 'loading' && renderLoadingScreen()}
         {gameState === 'battle' && renderBattleScreen()}
         {gameState === 'results' && renderResultsScreen()}
-      </main>
+    </main>
 
       {/* Footer */}
       <footer style={{
