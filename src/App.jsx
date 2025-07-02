@@ -163,14 +163,16 @@ export default function App() {
       backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
       color: darkMode ? '#cbd5e0' : '#2d3748',
       transition: 'background-color 0.3s, color 0.3s',
+      backgroundImage: darkMode ? 'linear-gradient(to bottom, #2d3748, #1a202c)' : 'linear-gradient(to bottom, #f7fafc, #e2e8f0)',
       padding: '2rem'
     }}>
       <h1 style={{
-        fontSize: '2.5rem',
+        fontSize: '3rem',
         fontWeight: 'bold',
         background: 'linear-gradient(to right, #4f46e5, #9333ea)',
         WebkitBackgroundClip: 'text',
-        color: 'transparent'
+        color: 'transparent',
+        marginBottom: '1rem'
       }}>Car Champion</h1>
       <p style={{ fontSize: '1.25rem', maxWidth: '600px', margin: '1rem 0' }}>
         We've auto-selected all available cars. Would you like to edit the list before starting?
@@ -706,7 +708,9 @@ export default function App() {
       fontFamily: 'Arial, sans-serif',
       backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
       color: darkMode ? '#cbd5e0' : '#2d3748',
-      transition: 'background-color 0.3s, color 0.3s'
+      transition: 'background-color 0.3s, color 0.3s',
+      minHeight: '100vh',
+      overflowX: 'hidden'
     }}>
       {/* Header */}
       <header style={{
