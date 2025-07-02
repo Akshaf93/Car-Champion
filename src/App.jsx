@@ -1,3 +1,4 @@
+// src/App.jsx
 import { useState, useEffect } from 'react';
 
 export default function App() {
@@ -160,12 +161,11 @@ export default function App() {
       alignItems: 'center',
       minHeight: '100vh',
       textAlign: 'center',
-      background: darkMode 
-        ? 'linear-gradient(to bottom, #1a202c, #2d3748), url("https://images.unsplash.com/photo-1556767526-9a19a1a646de?ixid=M3wzNjM5Nzd8MHwxfHNlYXJjaHwxfHxpY2UlMjBjYXIlMjBmb250ZXIlMjBmaW5hbmNpYWwlMjBzdGlja3xlbnwwfHx8fDE3MTU5NTE3MDk3fDA&ixlib=rb-4.0.3&w=400") center/cover fixed'
+      backgroundColor: darkMode 
+        ? 'linear-gradient(to bottom, #1a202c, #2d3748), url("https://images.unsplash.com/photo-1556767526-9a19a1a646de?ixid=M3wzNjM5Nzd8MHwxfHNlYXJjaHwxfHxpY2UlMjBjYXIlMjBmb250ZXIlMjBmaW5hbmNpYWwlMjBzdGlja3xlbnwwfHx8fDE3MTU5NTE3MDk3fDA&ixlib=rb-4.0.3&w=400") center/cover fixed' 
         : 'linear-gradient(to bottom, #f7fafc, #e2e8f0), url(" https://images.unsplash.com/photo-1556767526-9a19a1a646de?ixid=M3wzNjM5Nzd8MHwxfHNlYXJjaHwxfHxpY2UlMjBjYXIlMjBmb250ZXIlMjBmaW5hbmNpYWwlMjBzdGlja3xlbnwwfHx8fDE3MTU5NTE3MDk3fDA&ixlib=rb-4.0.3&w=400") center/cover fixed',
       color: darkMode ? '#cbd5e0' : '#2d3748',
       transition: 'background-color 0.3s, color 0.3s',
-      backgroundImage: darkMode ? 'linear-gradient(to bottom, #2d3748, #1a202c)' : 'linear-gradient(to bottom, #f7fafc, #e2e8f0)',
       padding: '2rem'
     }}>
       <h1 style={{
@@ -705,7 +705,6 @@ export default function App() {
     );
   };
 
- 
   return (
     <div 
       style={{
@@ -724,14 +723,35 @@ export default function App() {
       <header 
         style={{
           backgroundColor: darkMode ? '#1a202c' : 'white',
-          boxShadow: 'none', // Remove header shadow
+          boxShadow: 'none',
           padding: '1rem 2rem',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center'
         }}
       >
-        {/* ... rest of header ... */}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <span style={{
+            fontSize: '1.5rem',
+            marginRight: '0.5rem',
+            color: darkMode ? '#facc15' : '#d946ef'
+          }}>🚗</span>
+          <h1 style={{
+            fontWeight: 'bold',
+            color: darkMode ? 'white' : 'black'
+          }}>Car Champion</h1>
+        </div>
+        <button
+          onClick={resetGame}
+          style={{
+            backgroundColor: 'transparent',
+            color: darkMode ? '#cbd5e0' : '#2d3748',
+            border: 'none',
+            cursor: 'pointer'
+          }}
+        >
+          New Tournament
+        </button>
       </header>
 
       {/* Main Content */}
@@ -743,7 +763,12 @@ export default function App() {
           overflowY: 'auto'
         }}
       >
-        {/* ... rest of content ... */}
+        {gameState === 'start' && renderStartScreen()}
+        {gameState === 'confirmEdit' && renderConfirmEditScreen()}
+        {gameState === 'edit' && renderEditScreen()}
+        {gameState === 'loading' && renderLoadingScreen()}
+        {gameState === 'battle' && renderBattleScreen()}
+        {gameState === 'results' && renderResultsScreen()}
       </main>
 
       {/* Footer */}
@@ -757,7 +782,10 @@ export default function App() {
           margin: 0
         }}
       >
-        {/* ... rest of footer ... */}
+        <p style={{
+          fontSize: '0.875rem',
+          color: darkMode ? '#a0aec0' : '#718096'
+        }}>© 2023 Car Champion. All cars are for demonstration only.</p>
       </footer>
     </div>
   );
