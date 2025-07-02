@@ -706,30 +706,30 @@ export default function App() {
   };
 
   return (
-    <div 
-      style={{
-        fontFamily: 'Arial, sans-serif',
-        backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
-        color: darkMode ? '#cbd5e0' : '#2d3748',
-        transition: 'background-color 0.3s, color 0.3s',
-        minHeight: '100vh',
-        overflow: 'hidden',
-        margin: 0,
-        padding: 0,
-        width: '100vw'
-      }}
-    >
+     <div style={{
+      fontFamily: 'Arial, sans-serif',
+      backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+      color: darkMode ? '#cbd5e0' : '#2d3748',
+      minHeight: '100vh',
+      minWidth: '100vw',
+      margin: 0,
+      padding: 0,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
       {/* Header */}
-      <header 
-        style={{
-          backgroundColor: darkMode ? '#1a202c' : 'white',
-          boxShadow: 'none',
-          padding: '1rem 2rem',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}
-      >
+      <header style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        maxWidth: '100%',
+        padding: '1rem 2rem',
+        backgroundColor: 'transparent',
+        boxShadow: 'none'
+    }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span style={{
             fontSize: '1.5rem',
@@ -755,14 +755,14 @@ export default function App() {
       </header>
 
       {/* Main Content */}
-      <main 
-        style={{ 
-          flex: 1, 
-          display: 'flex',
-          flexDirection: 'column',
-          overflowY: 'auto'
-        }}
-      >
+      <main style={{
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%'
+    }}>
         {gameState === 'start' && renderStartScreen()}
         {gameState === 'confirmEdit' && renderConfirmEditScreen()}
         {gameState === 'edit' && renderEditScreen()}
@@ -772,20 +772,16 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer 
-        style={{
-          marginTop: '2rem',
-          paddingTop: '1rem',
-          paddingBottom: '1rem',
-          textAlign: 'center',
-          backgroundColor: darkMode ? '#1a202c' : '#edf2f7',
-          margin: 0
-        }}
-      >
+      <footer style={{
+      textAlign: 'center',
+      padding: '1rem',
+      width: '100%',
+      backgroundColor: 'transparent'
+    }}>
         <p style={{
           fontSize: '0.875rem',
           color: darkMode ? '#a0aec0' : '#718096'
-        }}>© 2023 Car Champion. All cars are for demonstration only.</p>
+        }}>© 2025 Car Champion. All cars are for demonstration only.</p>
       </footer>
     </div>
   );
