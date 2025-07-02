@@ -3,29 +3,31 @@ import { useState, useEffect } from 'react';
 export default function App() {
   // Game states: start → confirmEdit → edit → battle → results
   const [gameState, setGameState] = useState('start');
-  
+
   // Car data
   const [cars, setCars] = useState([]);
   const [selectedCars, setSelectedCars] = useState([]);
 
   // Tournament state
-  const [currentRound, setCurrentRound] = useState([]);     // Current round cars
-  const [battles, setBattles] = useState([]);              // Array of battles for current round
+  const [currentRound, setCurrentRound] = useState([]);     // Cars in current round
+  const [battles, setBattles] = useState([]);              // Battles array for current round
   const [battleIndex, setBattleIndex] = useState(0);        // Which battle we're on
   const [roundWinners, setRoundWinners] = useState([]);    // Winners of current round
-  const [winner, setWinner] = useState(null);             // Final champion
-  const [darkMode, setDarkMode] = useState(false);         // Dark mode toggle
+  const [winner, setWinner] = useState(null);
 
-  // Mock car data
+  // Dark mode defaults to true now
+  const [darkMode, setDarkMode] = useState(true);
+
+  // Mock cars
   const mockCars = [
-    { id: 1, name: 'Honda BR-V', description: '', notes: '', isCustom: false },
-    { id: 2, name: 'Nissan Serena', description: '', notes: '', isCustom: false },
-    { id: 3, name: 'Oshan x7', description: '', notes: '', isCustom: false },
-    { id: 4, name: 'Kia Sorento', description: '', notes: '', isCustom: false },
-    { id: 5, name: 'Kia Carnival', description: '', notes: '', isCustom: false },
-    { id: 6, name: 'Toyota Sienta', description: '', notes: '', isCustom: false },
-    { id: 7, name: 'something', description: '', notes: '', isCustom: false },
-    { id: 8, name: 'something', description: '', notes: '', isCustom: false }
+    { id: 1, name: 'Honda BR-V', description: 'Spacious compact SUV with family-friendly features.', notes: '', isCustom: false },
+    { id: 2, name: 'Kia Carnival', description: 'Luxury MPV with bold design and premium interior.', notes: '', isCustom: false },
+    { id: 3, name: 'Kia Sorento', description: 'Reliable mid-size SUV with hybrid option.', notes: '', isCustom: false },
+    { id: 4, name: 'Toyota Sienna', description: 'Hybrid-powered minivan with advanced tech.', notes: '', isCustom: false },
+    { id: 5, name: 'Oshan X7', description: 'Stylish crossover with modern tech and comfort.', notes: '', isCustom: false },
+    { id: 6, name: 'Nissan Serena', description: 'Smooth-driving commuter van with sliding doors.', notes: '', isCustom: false },
+    { id: 7, name: 'Toyota Prius Alpha', description: 'Eco-friendly hatchback with hybrid efficiency.', notes: '', isCustom: false },
+    { id: 8, name: 'Chery Tiggo 8 Pro', description: 'Premium SUV with aggressive styling and smart tech.', notes: '', isCustom: false }
   ];
 
   // Load saved selections
@@ -38,13 +40,13 @@ export default function App() {
   const formatCarName = (name) =>
     name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
-  // Pad list to next power of two
+  // Pad to next power of two
   const padToNextPowerOfTwo = (carList) => {
     const nextPower = Math.pow(2, Math.ceil(Math.log2(carList.length)));
     const padding = Array.from({ length: nextPower - carList.length }).map((_, i) => ({
       id: `bye-${i}`,
       name: 'Bye',
-      description: 'Automatically advances.',
+      description: 'Automatically advances to the next round.',
       notes: '',
       isBye: true
     }));
@@ -94,16 +96,13 @@ export default function App() {
       setRoundWinners(updatedWinners);
       setBattleIndex(battleIndex + 1);
     } else {
-      // Round complete → move to next round or end game
-      setRoundWinners([...updatedWinners]);
-      const nextRound = updatedWinners;
-
-      if (nextRound.length === 1) {
-        setWinner(nextRound[0]);
+      const finalWinners = [...updatedWinners];
+      if (finalWinners.length === 1) {
+        setWinner(finalWinners[0]);
         setGameState('results');
       } else {
-        const nextBattles = generateBattles(nextRound);
-        setCurrentRound(nextRound);
+        const nextBattles = generateBattles(finalWinners);
+        setCurrentRound(finalWinners);
         setBattles(nextBattles);
         setBattleIndex(0);
         setRoundWinners([]);
@@ -348,8 +347,12 @@ export default function App() {
                 boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
                 padding: '1rem',
                 borderRadius: '0.5rem',
-                width: '100%',
-                maxWidth: '400px'
+                minWidth: '250px',
+                maxWidth: '400px',
+                cursor: 'pointer',
+                transition: 'transform 0.3s, box-shadow 0.3s',
+                transform: 'translateY(0)',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
               }}>
                 <h4 style={{ fontWeight: 'bold' }}>{formatCarName(car.name)}</h4>
                 <p style={{ margin: '0.5rem 0' }}>{car.description}</p>
@@ -453,7 +456,7 @@ export default function App() {
             onClick={beginTournament}
             style={{
               padding: '0.75rem 1.5rem',
-              backgroundColor: '#6675ef',
+              backgroundColor: '#10b981',
               color: 'white',
               border: 'none',
               borderRadius: '0.5rem',
@@ -510,7 +513,18 @@ export default function App() {
               boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
               minWidth: '300px',
               maxWidth: '600px',
-              textAlign: 'center'
+              textAlign: 'center',
+              transition: 'all 0.3s',
+              transform: 'translateY(0)',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'scale(1.03)';
+              e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
             }}
           >
             <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
@@ -551,7 +565,22 @@ export default function App() {
               boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
               minWidth: '300px',
               maxWidth: '600px',
-              textAlign: 'center'
+              textAlign: 'center',
+              transition: 'all 0.3s',
+              transform: 'translateY(0)',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+            }}
+            onMouseOver={(e) => {
+              if (right) {
+                e.currentTarget.style.transform = 'scale(1.03)';
+                e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
+              }
+            }}
+            onMouseOut={(e) => {
+              if (right) {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+              }
             }}
           >
             <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
@@ -604,8 +633,20 @@ export default function App() {
           maxWidth: '600px',
           margin: '0 auto',
           padding: '2rem',
-          textAlign: 'center'
-        }}>
+          textAlign: 'center',
+          transition: 'all 0.3s',
+          transform: 'translateY(0)',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.transform = 'scale(1.03)';
+          e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+        }}
+        >
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏆</div>
           <h3 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
             {formatCarName(winner?.name || 'Unknown')}
@@ -669,7 +710,10 @@ export default function App() {
       }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span style={{ fontSize: '1.5rem', marginRight: '0.5rem' }}>🚗</span>
-          <h1 style={{ fontWeight: 'bold' }}>Car Champion</h1>
+          <h1 style={{
+            fontWeight: 'bold',
+            color: darkMode ? 'white' : 'black'
+          }}>Car Champion</h1>
         </div>
         <button
           onClick={resetGame}
@@ -694,7 +738,6 @@ export default function App() {
         {gameState === 'results' && renderResultsScreen()}
       </main>
 
-      {/* Footer */}
       <footer style={{
         marginTop: '2rem',
         paddingTop: '1rem',
