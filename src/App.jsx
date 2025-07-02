@@ -1,24 +1,15 @@
 import { useState, useEffect } from 'react';
 
 export default function App() {
-  // Game states: start → confirmEdit → edit → battle → results
   const [gameState, setGameState] = useState('start');
-
-  // Car data
-  const [cars, setCars] = useState([]);
   const [selectedCars, setSelectedCars] = useState([]);
-
-  // Tournament state
-  const [currentRound, setCurrentRound] = useState([]);     // Cars in current round
-  const [battles, setBattles] = useState([]);              // Battles array for current round
-  const [battleIndex, setBattleIndex] = useState(0);        // Which battle we're on
-  const [roundWinners, setRoundWinners] = useState([]);    // Winners of current round
+  const [currentRound, setCurrentRound] = useState([]);
+  const [battles, setBattles] = useState([]);
+  const [battleIndex, setBattleIndex] = useState(0);
+  const [roundWinners, setRoundWinners] = useState([]);
   const [winner, setWinner] = useState(null);
+  const [darkMode, setDarkMode] = useState(true); // Default to dark
 
-  // Dark mode defaults to true now
-  const [darkMode, setDarkMode] = useState(true);
-
-  // Mock cars
   const mockCars = [
     { id: 1, name: 'Honda BR-V', description: 'Spacious compact SUV with family-friendly features.', notes: '', isCustom: false },
     { id: 2, name: 'Kia Carnival', description: 'Luxury MPV with bold design and premium interior.', notes: '', isCustom: false },
@@ -30,17 +21,15 @@ export default function App() {
     { id: 8, name: 'Chery Tiggo 8 Pro', description: 'Premium SUV with aggressive styling and smart tech.', notes: '', isCustom: false }
   ];
 
-  // Load saved selections
+  // Load saved state
   useEffect(() => {
     const savedSelected = JSON.parse(localStorage.getItem('selectedCars')) || [...mockCars];
     setSelectedCars(savedSelected);
   }, []);
 
-  // Format car names
   const formatCarName = (name) =>
     name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
-  // Pad to next power of two
   const padToNextPowerOfTwo = (carList) => {
     const nextPower = Math.pow(2, Math.ceil(Math.log2(carList.length)));
     const padding = Array.from({ length: nextPower - carList.length }).map((_, i) => ({
@@ -53,7 +42,6 @@ export default function App() {
     return [...carList, ...padding];
   };
 
-  // Generate battles
   const generateBattles = (roundCars) => {
     const newBattles = [];
     for (let i = 0; i < roundCars.length; i += 2) {
@@ -66,12 +54,10 @@ export default function App() {
     return newBattles;
   };
 
-  // Start tournament flow
   const startTournament = () => {
     setGameState('confirmEdit');
   };
 
-  // Confirm edit -> begin tournament
   const beginTournament = () => {
     if (selectedCars.length < 2) {
       alert("Please select at least 2 cars.");
@@ -88,7 +74,6 @@ export default function App() {
     setGameState('battle');
   };
 
-  // Select winner of current battle
   const selectWinner = (car) => {
     const updatedWinners = [...roundWinners, car];
 
@@ -110,11 +95,9 @@ export default function App() {
     }
   };
 
-  // Reset game
   const resetGame = () => {
     localStorage.clear();
     setSelectedCars([...mockCars]);
-    setCars(mockCars);
     setCurrentRound([]);
     setBattles([]);
     setRoundWinners([]);
@@ -122,60 +105,40 @@ export default function App() {
     setGameState('start');
   };
 
-  // Add custom car
+  const toggleDarkMode = () => setDarkMode(!darkMode);
+
+  const updateNote = (id, note) => {
+    const updated = selectedCars.map(car => car.id === id ? { ...car, notes: note } : car);
+    setSelectedCars(updated);
+  };
+
   const [newCar, setNewCar] = useState({ name: '', description: '', notes: '' });
 
   const handleAddCustomCar = () => {
     if (!newCar.name.trim()) return;
 
-    const id = Date.now(); // unique ID
-    const newCarEntry = {
-      id,
-      ...newCar,
-      isCustom: true
-    };
+    const id = Date.now();
+    const newCarEntry = { id, ...newCar, isCustom: true };
     setSelectedCars(prev => [...prev, newCarEntry]);
-    setCars(prev => [...prev, newCarEntry]);
     setNewCar({ name: '', description: '', notes: '' });
   };
 
-  // Update note
-  const updateNote = (id, note) => {
-    const updated = selectedCars.map(car =>
-      car.id === id ? { ...car, notes: note } : car
-    );
-    setSelectedCars(updated);
-  };
-
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
-  // Handle car selection in edit screen
-  const toggleCarSelection = (car) => {
-    const isSelected = selectedCars.some(c => c.id === car.id);
-    if (isSelected) {
-      setSelectedCars(prev => prev.filter(c => c.id !== car.id));
-    } else {
-      setSelectedCars(prev => [...prev, car]);
-    }
-  };
-
-  // Render Loading Screen
   const renderLoadingScreen = () => (
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center',
       justifyContent: 'center',
-      minHeight: '100vh'
+      alignItems: 'center',
+      minHeight: '100vh',
+      backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+      color: darkMode ? '#cbd5e0' : '#2d3748',
+      transition: 'background-color 0.3s, color 0.3s'
     }}>
       <div style={{
-        width: '16px',
-        height: '16px',
-        border: '2px solid #7c3aed',
-        borderTop: '2px solid transparent',
+        width: '24px',
+        height: '24px',
+        border: '3px solid #7c3aed',
+        borderTop: '3px solid transparent',
         borderRadius: '50%',
         animation: 'spin 1s linear infinite',
         marginBottom: '1rem'
@@ -189,7 +152,6 @@ export default function App() {
     </div>
   );
 
-  // Start screen
   const renderStartScreen = () => (
     <div style={{
       display: 'flex',
@@ -222,7 +184,9 @@ export default function App() {
           border: 'none',
           borderRadius: '0.5rem',
           cursor: 'pointer',
-          fontSize: '1.125rem'
+          fontSize: '1.125rem',
+          transition: 'background-color 0.3s',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
         }}
       >
         Start Tournament
@@ -238,7 +202,9 @@ export default function App() {
           padding: '0.75rem',
           borderRadius: '9999px',
           backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+          transition: 'background-color 0.3s, box-shadow 0.3s'
         }}
       >
         {darkMode ? '☀️' : '🌙'}
@@ -246,7 +212,6 @@ export default function App() {
     </div>
   );
 
-  // Confirm Edit Screen
   const renderConfirmEditScreen = () => (
     <div style={{
       display: 'flex',
@@ -259,13 +224,19 @@ export default function App() {
       transition: 'background-color 0.3s, color 0.3s',
       padding: '2rem'
     }}>
-      <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-        Ready to Begin?
-      </h2>
-      <p style={{ fontSize: '1.25rem', marginBottom: '2rem' }}>
-        You've selected {selectedCars.length} cars. Would you like to add or remove any?
-      </p>
-      <div style={{ display: 'flex', gap: '1rem' }}>
+      <h2 style={{
+        fontSize: '2rem',
+        fontWeight: 'bold',
+        marginBottom: '1rem'
+      }}>Ready to Begin?</h2>
+      <p style={{
+        fontSize: '1.25rem',
+        marginBottom: '2rem'
+      }}>You've selected {selectedCars.length} cars. Would you like to add or remove any?</p>
+      <div style={{
+        display: 'flex',
+        gap: '1rem'
+      }}>
         <button
           onClick={() => setGameState('edit')}
           style={{
@@ -274,7 +245,10 @@ export default function App() {
             color: 'white',
             border: 'none',
             borderRadius: '0.5rem',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+            transition: 'background-color 0.3s, transform 0.2s',
+            ':hover': { transform: 'scale(1.02)' }
           }}
         >
           Edit Cars
@@ -287,7 +261,10 @@ export default function App() {
             color: 'white',
             border: 'none',
             borderRadius: '0.5rem',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+            transition: 'background-color 0.3s, transform 0.2s',
+            ':hover': { transform: 'scale(1.02)' }
           }}
         >
           Start Tournament
@@ -296,7 +273,6 @@ export default function App() {
     </div>
   );
 
-  // Edit Screen
   const renderEditScreen = () => {
     const handleChange = (e) => {
       const { name, value } = e.target;
@@ -306,14 +282,9 @@ export default function App() {
     const handleAddCar = () => {
       if (!newCar.name.trim()) return;
 
-      const id = Date.now(); // unique ID
-      const newCarEntry = {
-        id,
-        ...newCar,
-        isCustom: true
-      };
+      const id = Date.now();
+      const newCarEntry = { id, ...newCar, isCustom: true };
       setSelectedCars(prev => [...prev, newCarEntry]);
-      setCars(prev => [...prev, newCarEntry]);
       setNewCar({ name: '', description: '', notes: '' });
     };
 
@@ -334,50 +305,63 @@ export default function App() {
 
         {/* Selected Cars */}
         <div style={{ marginBottom: '2rem' }}>
-          <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>Selected Cars</h3>
+          <h3 style={{
+            fontSize: '1.5rem',
+            fontWeight: 'bold',
+            marginBottom: '1rem'
+          }}>Selected Cars</h3>
           <div style={{
             display: 'flex',
             flexWrap: 'wrap',
-            gap: '1rem',
+            gap: '1.5rem',
             justifyContent: 'center'
           }}>
             {selectedCars.map(car => (
               <div key={car.id} style={{
                 backgroundColor: darkMode ? '#2d3748' : 'white',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                padding: '1rem',
                 borderRadius: '0.5rem',
-                minWidth: '250px',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                padding: '1.5rem',
+                minWidth: '280px',
                 maxWidth: '400px',
                 cursor: 'pointer',
-                transition: 'transform 0.3s, box-shadow 0.3s',
+                transition: 'all 0.3s',
                 transform: 'translateY(0)',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-              }}>
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'scale(1.02)';
+                e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+              }}
+              >
                 <h4 style={{ fontWeight: 'bold' }}>{formatCarName(car.name)}</h4>
-                <p style={{ margin: '0.5rem 0' }}>{car.description}</p>
+                <p style={{ margin: '0.75rem 0' }}>{car.description}</p>
                 <textarea
                   placeholder="Add your notes..."
                   value={car.notes || ''}
                   onChange={(e) => updateNote(car.id, e.target.value)}
                   style={{
                     width: '100%',
-                    padding: '0.5rem',
-                    border: darkMode ? '1px solid #4a5568' : '1px solid #cbd5e0',
+                    padding: '0.5rem 1rem',
+                    border: 'none',
                     borderRadius: '0.375rem',
                     backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
                     color: darkMode ? 'white' : 'black',
-                    marginTop: '0.5rem'
+                    resize: 'none',
+                    minHeight: '60px',
+                    marginBottom: '1rem'
                   }}
                 />
                 {car.isCustom && (
                   <button
                     onClick={() => {
                       setSelectedCars(selectedCars.filter(c => c.id !== car.id));
-                      setCars(cars.filter(c => c.id !== car.id));
                     }}
                     style={{
-                      marginTop: '0.5rem',
                       color: '#ef4444',
                       border: 'none',
                       backgroundColor: 'transparent',
@@ -394,12 +378,17 @@ export default function App() {
 
         {/* Add New Car Form */}
         <div style={{ marginBottom: '2rem' }}>
-          <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>Add New Car</h3>
+          <h3 style={{
+            fontSize: '1.5rem',
+            fontWeight: 'bold',
+            marginBottom: '1rem'
+          }}>Add New Car</h3>
           <div style={{
             backgroundColor: darkMode ? '#2d3748' : 'white',
             padding: '1.5rem',
             borderRadius: '0.5rem',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+            boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+            transition: 'background-color 0.3s'
           }}>
             <input
               type="text"
@@ -411,10 +400,11 @@ export default function App() {
                 width: '100%',
                 padding: '0.75rem',
                 marginBottom: '1rem',
-                border: darkMode ? '1px solid #4a5568' : '1px solid #cbd5e0',
+                border: 'none',
                 borderRadius: '0.375rem',
                 backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
-                color: darkMode ? 'white' : 'black'
+                color: darkMode ? 'white' : 'black',
+                outline: 'none'
               }}
             />
             <input
@@ -427,10 +417,11 @@ export default function App() {
                 width: '100%',
                 padding: '0.75rem',
                 marginBottom: '1rem',
-                border: darkMode ? '1px solid #4a5568' : '1px solid #cbd5e0',
+                border: 'none',
                 borderRadius: '0.375rem',
                 backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
-                color: darkMode ? 'white' : 'black'
+                color: darkMode ? 'white' : 'black',
+                outline: 'none'
               }}
             />
             <button
@@ -460,7 +451,10 @@ export default function App() {
               color: 'white',
               border: 'none',
               borderRadius: '0.5rem',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+              transition: 'background-color 0.3s, transform 0.2s',
+              ':hover': { transform: 'scale(1.02)' }
             }}
           >
             Start Tournament
@@ -470,14 +464,10 @@ export default function App() {
     );
   };
 
-  // Battle screen
   const renderBattleScreen = () => {
     const [left, right] = battles[battleIndex] || [];
 
-    if (!left) {
-      console.warn("No left car found", { battleIndex, battles });
-      return <p>No cars to compare.</p>;
-    }
+    if (!left) return <p>No cars to compare.</p>;
 
     return (
       <div style={{
@@ -493,7 +483,7 @@ export default function App() {
           textAlign: 'center',
           marginBottom: '2rem'
         }}>
-          Round {Math.round(Math.log2(selectedCars.length / currentRound.length)) + 1}
+          Round {Math.round(Math.log2(mockCars.length / currentRound.length)) + 1}
         </h2>
 
         <div style={{
@@ -510,16 +500,15 @@ export default function App() {
               backgroundColor: darkMode ? '#2d3748' : 'white',
               padding: '1.5rem',
               borderRadius: '0.5rem',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
               minWidth: '300px',
               maxWidth: '600px',
               textAlign: 'center',
-              transition: 'all 0.3s',
+              transition: 'transform 0.3s, box-shadow 0.3s',
               transform: 'translateY(0)',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
             }}
             onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'scale(1.03)';
+              e.currentTarget.style.transform = 'scale(1.02)';
               e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
             }}
             onMouseOut={(e) => {
@@ -541,18 +530,24 @@ export default function App() {
             </div>
           </div>
 
-          {/* VS separator */}
-          <div style={{ textAlign: 'center', margin: '2rem 0' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>VS</div>
-            <div style={{
-              backgroundColor: darkMode ? '#2d3748' : '#edf2f7',
-              padding: '1rem',
-              borderRadius: '0.5rem',
-              textAlign: 'center'
-            }}>
-              <p>Select the better car based on your preferences</p>
-            </div>
+          {/* VS separator with animation */}
+          <div style={{
+            textAlign: 'center',
+            margin: '2rem 0',
+            animation: 'pulse 1.5s infinite',
+            fontSize: '2rem',
+            fontWeight: 'bold',
+            color: darkMode ? '#facc15' : '#d946ef',
+            transition: 'color 0.3s'
+          }}>
+            VS
           </div>
+          <style>{`
+            @keyframes pulse {
+              0%, 100% { opacity: 1; }
+              50% { opacity: 0.8; }
+            }
+          `}</style>
 
           {/* Right car */}
           <div
@@ -562,17 +557,16 @@ export default function App() {
               backgroundColor: darkMode ? '#2d3748' : 'white',
               padding: '1.5rem',
               borderRadius: '0.5rem',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
               minWidth: '300px',
               maxWidth: '600px',
               textAlign: 'center',
-              transition: 'all 0.3s',
+              transition: 'transform 0.3s, box-shadow 0.3s',
               transform: 'translateY(0)',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
             }}
             onMouseOver={(e) => {
               if (right) {
-                e.currentTarget.style.transform = 'scale(1.03)';
+                e.currentTarget.style.transform = 'scale(1.02)';
                 e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
               }
             }}
@@ -605,7 +599,6 @@ export default function App() {
     );
   };
 
-  // Results screen
   const renderResultsScreen = () => {
     return (
       <div style={{
@@ -615,15 +608,19 @@ export default function App() {
         color: darkMode ? '#cbd5e0' : '#2d3748',
         transition: 'background-color 0.3s, color 0.3s'
       }}>
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div style={{
+          textAlign: 'center',
+          marginBottom: '2rem'
+        }}>
           <h2 style={{
             fontSize: '2.5rem',
             fontWeight: 'bold',
             marginBottom: '1rem'
           }}>Tournament Complete!</h2>
-          <p style={{ fontSize: '1.25rem', marginBottom: '2rem' }}>
-            After a fierce competition, we've determined the best car.
-          </p>
+          <p style={{
+            fontSize: '1.25rem',
+            marginBottom: '2rem'
+          }}>After a fierce competition, we've determined the best car.</p>
         </div>
 
         <div style={{
@@ -636,10 +633,10 @@ export default function App() {
           textAlign: 'center',
           transition: 'all 0.3s',
           transform: 'translateY(0)',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
         }}
         onMouseOver={(e) => {
-          e.currentTarget.style.transform = 'scale(1.03)';
+          e.currentTarget.style.transform = 'scale(1.02)';
           e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
         }}
         onMouseOut={(e) => {
@@ -647,19 +644,41 @@ export default function App() {
           e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
         }}
         >
-          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏆</div>
-          <h3 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-            {formatCarName(winner?.name || 'Unknown')}
-          </h3>
-          <p style={{ marginBottom: '2rem' }}>
-            {winner?.description || 'No car was selected as champion.'}
-          </p>
-          <div style={{ marginTop: '1rem' }}>
-            <h4 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Your Notes:</h4>
+          <div style={{
+            fontSize: '3rem',
+            marginBottom: '1rem',
+            animation: 'bounce 1s infinite'
+          }}>🏆</div>
+          <style>{`
+            @keyframes bounce {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-10px); }
+            }
+          `}</style>
+
+          <h3 style={{
+            fontSize: '2rem',
+            fontWeight: 'bold',
+            marginBottom: '1rem'
+          }}>{formatCarName(winner?.name || 'Unknown')}</h3>
+
+          <p style={{
+            marginBottom: '2rem'
+          }}>{winner?.description || 'No car was selected as champion.'}</p>
+
+          <div style={{
+            marginTop: '1rem',
+            marginBottom: '2rem'
+          }}>
+            <h4 style={{
+              fontWeight: 'bold',
+              marginBottom: '0.5rem'
+            }}>Your Notes:</h4>
             <p style={{ fontStyle: 'italic' }}>
               {winner?.notes || 'No notes added.'}
             </p>
           </div>
+
           <button
             onClick={resetGame}
             style={{
@@ -669,7 +688,10 @@ export default function App() {
               color: 'white',
               border: 'none',
               borderRadius: '0.5rem',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+              transition: 'background-color 0.3s, transform 0.2s',
+              ':hover': { transform: 'scale(1.02)' }
             }}
           >
             Play Again
@@ -679,29 +701,16 @@ export default function App() {
     );
   };
 
-  // Dark Mode Toggle Component
-  const DarkModeToggle = () => (
-    <button
-      onClick={toggleDarkMode}
-      style={{
-        position: 'fixed',
-        bottom: '1rem',
-        right: '1rem',
-        padding: '0.75rem',
-        borderRadius: '9999px',
-        backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
-        cursor: 'pointer'
-      }}
-    >
-      {darkMode ? '☀️' : '🌙'}
-    </button>
-  );
-
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif' }}>
+    <div style={{
+      fontFamily: 'Arial, sans-serif',
+      backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+      color: darkMode ? '#cbd5e0' : '#2d3748',
+      transition: 'background-color 0.3s, color 0.3s'
+    }}>
       {/* Header */}
       <header style={{
-        backgroundColor: darkMode ? '#2d3748' : 'white',
+        backgroundColor: darkMode ? '#1a202c' : 'white',
         boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
         padding: '1rem 2rem',
         display: 'flex',
@@ -709,7 +718,11 @@ export default function App() {
         alignItems: 'center'
       }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ fontSize: '1.5rem', marginRight: '0.5rem' }}>🚗</span>
+          <span style={{
+            fontSize: '1.5rem',
+            marginRight: '0.5rem',
+            color: darkMode ? '#facc15' : '#d946ef'
+          }}>🚗</span>
           <h1 style={{
             fontWeight: 'bold',
             color: darkMode ? 'white' : 'black'
@@ -738,19 +751,19 @@ export default function App() {
         {gameState === 'results' && renderResultsScreen()}
       </main>
 
+      {/* Footer */}
       <footer style={{
         marginTop: '2rem',
         paddingTop: '1rem',
         paddingBottom: '1rem',
         textAlign: 'center',
-        backgroundColor: darkMode ? '#2d3748' : '#edf2f7'
+        backgroundColor: darkMode ? '#1a202c' : '#edf2f7'
       }}>
-        <p style={{ fontSize: '0.875rem', color: darkMode ? '#a0aec0' : '#718096' }}>
-          © 2023 Car Champion. All cars are for demonstration purposes only.
-        </p>
+        <p style={{
+          fontSize: '0.875rem',
+          color: darkMode ? '#a0aec0' : '#718096'
+        }}>© 2023 Car Champion. All cars are for demonstration only.</p>
       </footer>
-
-      <DarkModeToggle />
     </div>
   );
 }
