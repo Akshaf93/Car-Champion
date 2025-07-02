@@ -1,4 +1,3 @@
-// src/App.jsx
 import { useState, useEffect } from 'react';
 
 export default function App() {
@@ -161,11 +160,10 @@ export default function App() {
       alignItems: 'center',
       minHeight: '100vh',
       textAlign: 'center',
-      backgroundColor: darkMode 
-        ? 'linear-gradient(to bottom, #1a202c, #2d3748), url("https://images.unsplash.com/photo-1556767526-9a19a1a646de?ixid=M3wzNjM5Nzd8MHwxfHNlYXJjaHwxfHxpY2UlMjBjYXIlMjBmb250ZXIlMjBmaW5hbmNpYWwlMjBzdGlja3xlbnwwfHx8fDE3MTU5NTE3MDk3fDA&ixlib=rb-4.0.3&w=400") center/cover fixed' 
-        : 'linear-gradient(to bottom, #f7fafc, #e2e8f0), url(" https://images.unsplash.com/photo-1556767526-9a19a1a646de?ixid=M3wzNjM5Nzd8MHwxfHNlYXJjaHwxfHxpY2UlMjBjYXIlMjBmb250ZXIlMjBmaW5hbmNpYWwlMjBzdGlja3xlbnwwfHx8fDE3MTU5NTE3MDk3fDA&ixlib=rb-4.0.3&w=400") center/cover fixed',
+      backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
       color: darkMode ? '#cbd5e0' : '#2d3748',
       transition: 'background-color 0.3s, color 0.3s',
+      backgroundImage: darkMode ? 'linear-gradient(to bottom, #2d3748, #1a202c)' : 'linear-gradient(to bottom, #f7fafc, #e2e8f0)',
       padding: '2rem'
     }}>
       <h1 style={{
@@ -706,30 +704,23 @@ export default function App() {
   };
 
   return (
-    <div 
-      style={{
-        fontFamily: 'Arial, sans-serif',
-        backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
-        color: darkMode ? '#cbd5e0' : '#2d3748',
-        transition: 'background-color 0.3s, color 0.3s',
-        minHeight: '100vh',
-        overflow: 'hidden',
-        margin: 0,
-        padding: 0,
-        width: '100vw'
-      }}
-    >
+    <div style={{
+      fontFamily: 'Arial, sans-serif',
+      backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+      color: darkMode ? '#cbd5e0' : '#2d3748',
+      transition: 'background-color 0.3s, color 0.3s',
+      minHeight: '100vh',
+      overflowX: 'hidden'
+    }}>
       {/* Header */}
-      <header 
-        style={{
-          backgroundColor: darkMode ? '#1a202c' : 'white',
-          boxShadow: 'none',
-          padding: '1rem 2rem',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}
-      >
+      <header style={{
+        backgroundColor: darkMode ? '#1a202c' : 'white',
+        boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
+        padding: '1rem 2rem',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span style={{
             fontSize: '1.5rem',
@@ -755,14 +746,7 @@ export default function App() {
       </header>
 
       {/* Main Content */}
-      <main 
-        style={{ 
-          flex: 1, 
-          display: 'flex',
-          flexDirection: 'column',
-          overflowY: 'auto'
-        }}
-      >
+      <main>
         {gameState === 'start' && renderStartScreen()}
         {gameState === 'confirmEdit' && renderConfirmEditScreen()}
         {gameState === 'edit' && renderEditScreen()}
@@ -772,16 +756,13 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer 
-        style={{
-          marginTop: '2rem',
-          paddingTop: '1rem',
-          paddingBottom: '1rem',
-          textAlign: 'center',
-          backgroundColor: darkMode ? '#1a202c' : '#edf2f7',
-          margin: 0
-        }}
-      >
+      <footer style={{
+        marginTop: '2rem',
+        paddingTop: '1rem',
+        paddingBottom: '1rem',
+        textAlign: 'center',
+        backgroundColor: darkMode ? '#1a202c' : '#edf2f7'
+      }}>
         <p style={{
           fontSize: '0.875rem',
           color: darkMode ? '#a0aec0' : '#718096'
