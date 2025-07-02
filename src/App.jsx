@@ -162,7 +162,7 @@ export default function App() {
       textAlign: 'center',
       background: darkMode 
         ? 'linear-gradient(to bottom, #1a202c, #2d3748), url("https://images.unsplash.com/photo-1556767526-9a19a1a646de?ixid=M3wzNjM5Nzd8MHwxfHNlYXJjaHwxfHxpY2UlMjBjYXIlMjBmb250ZXIlMjBmaW5hbmNpYWwlMjBzdGlja3xlbnwwfHx8fDE3MTU5NTE3MDk3fDA&ixlib=rb-4.0.3&w=400") center/cover fixed'
-        : 'linear-gradient(to bottom, #f7fafc, #e2e8f0), url(" https://images.unsplash.com/photo-1556767526-9a19a1a646de?ixid=M3wzNjM5Nzd8MHwxfHNlYXJjaHwxfHxpY2UlMjBjYXIlMjBmb250ZXIlMjBmaW5hbmNpYWwlMjBzdGlja3xlbnwwfHx8fDE3MTU5NTE3MDk3fDA&ixlib=rb-4.0.3&w=400") center/cover fixed',,
+        : 'linear-gradient(to bottom, #f7fafc, #e2e8f0), url(" https://images.unsplash.com/photo-1556767526-9a19a1a646de?ixid=M3wzNjM5Nzd8MHwxfHNlYXJjaHwxfHxpY2UlMjBjYXIlMjBmb250ZXIlMjBmaW5hbmNpYWwlMjBzdGlja3xlbnwwfHx8fDE3MTU5NTE3MDk3fDA&ixlib=rb-4.0.3&w=400") center/cover fixed',
       color: darkMode ? '#cbd5e0' : '#2d3748',
       transition: 'background-color 0.3s, color 0.3s',
       backgroundImage: darkMode ? 'linear-gradient(to bottom, #2d3748, #1a202c)' : 'linear-gradient(to bottom, #f7fafc, #e2e8f0)',
