@@ -706,7 +706,7 @@ const renderStartScreen = () => (
       
         backgroundColor: darkMode ? '#2d3748' : 'white',
         boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
-        padding: '1rem 2rem',
+        padding: '1rem 1rem',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center'
