@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 export default function App() {
   // Game states: start → confirmEdit → edit → battle → results
   const [gameState, setGameState] = useState('start');
-
   // Car data
   const [cars, setCars] = useState([]);
   const [selectedCars, setSelectedCars] = useState([]);
@@ -11,11 +10,10 @@ export default function App() {
   // Tournament state
   const [currentRound, setCurrentRound] = useState([]);     // Cars in current round
   const [battles, setBattles] = useState([]);              // Battles array for current round
-  const [battleIndex, setBattleIndex] = useState(0);        // Which battle we're on
+  const [battleIndex, setBattleIndex] = useState(0);         // Which battle we're on
   const [roundWinners, setRoundWinners] = useState([]);    // Winners of current round
   const [winner, setWinner] = useState(null);
-
-  // Dark mode defaults to true now
+  // Dark mode defaults to true
   const [darkMode, setDarkMode] = useState(true);
 
   // Mock cars
@@ -30,7 +28,7 @@ export default function App() {
     { id: 8, name: 'Chery Tiggo 8 Pro', description: 'Premium SUV with aggressive styling and smart tech.', notes: '', isCustom: false }
   ];
 
-  // Load saved selections
+  // Load saved selections (including notes)
   useEffect(() => {
     const savedSelected = JSON.parse(localStorage.getItem('selectedCars')) || [...mockCars];
     setSelectedCars(savedSelected);
@@ -110,11 +108,9 @@ export default function App() {
     }
   };
 
-  // Reset game
+  // Reset game but keep notes and selected cars
   const resetGame = () => {
-    localStorage.clear();
-    setSelectedCars([...mockCars]);
-    setCars(mockCars);
+    localStorage.removeItem('tournamentData'); // Clear tournament-specific data
     setCurrentRound([]);
     setBattles([]);
     setRoundWinners([]);
@@ -145,6 +141,7 @@ export default function App() {
       car.id === id ? { ...car, notes: note } : car
     );
     setSelectedCars(updated);
+    localStorage.setItem('selectedCars', JSON.stringify(updated));
   };
 
   // Toggle dark mode
@@ -190,63 +187,61 @@ export default function App() {
   );
 
   // Start screen
-  // Start screen
-const renderStartScreen = () => (
-  <div style={{
-    minHeight: '100vh',
-    padding: '2rem', // Reduced padding
-    backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
-    color: darkMode ? '#cbd5e0' : '#2d3748',
-    transition: 'background-color 0.3s, color 0.3s',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }}>
-    <h1 style={{
-      fontSize: '2.5rem',
-      fontWeight: 'bold',
-      textAlign: 'center', // Centered title
-      marginBottom: '1rem',
-      background: 'linear-gradient(to right, #4f46e5, #9333ea)',
-      WebkitBackgroundClip: 'text',
-      color: 'transparent'
-    }}>Car Champion</h1>
-    <p style={{ fontSize: '1.25rem', maxWidth: '600px', margin: '1rem 0', textAlign: 'center' }}>
-      We've auto-selected all available cars. Would you like to edit the list before starting?
-    </p>
-    <button
-      onClick={startTournament}
-      style={{
-        padding: '0.75rem 2rem',
-        backgroundColor: '#6675ef',
-        color: 'white',
-        border: 'none',
-        borderRadius: '0.5rem',
-        cursor: 'pointer',
-        fontSize: '1.125rem'
-      }}
-    >
-      Start Tournament
-    </button>
+  const renderStartScreen = () => (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '100vh',
+      textAlign: 'center',
+      backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+      color: darkMode ? '#cbd5e0' : '#2d3748',
+      transition: 'background-color 0.3s, color 0.3s',
+      padding: '2rem'
+    }}>
+      <h1 style={{
+        fontSize: '2.5rem',
+        fontWeight: 'bold',
+        background: 'linear-gradient(to right, #4f46e5, #9333ea)',
+        WebkitBackgroundClip: 'text',
+        color: 'transparent'
+      }}>Car Champion</h1>
+      <p style={{ fontSize: '1.25rem', maxWidth: '600px', margin: '1rem 0' }}>
+        We've auto-selected all available cars. Would you like to edit the list before starting?
+      </p>
+      <button
+        onClick={startTournament}
+        style={{
+          padding: '0.75rem 2rem',
+          backgroundColor: '#6675ef',
+          color: 'white',
+          border: 'none',
+          borderRadius: '0.5rem',
+          cursor: 'pointer',
+          fontSize: '1.125rem'
+        }}
+      >
+        Start Tournament
+      </button>
 
-    {/* Dark Mode Toggle */}
-    <button
-      onClick={toggleDarkMode}
-      style={{
-        position: 'fixed',
-        bottom: '1rem',
-        right: '1rem',
-        padding: '0.75rem',
-        borderRadius: '9999px',
-        backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
-        cursor: 'pointer'
-      }}
-    >
-      {darkMode ? '☀️' : '🌙'}
-    </button>
-  </div>
-);
+      {/* Dark Mode Toggle */}
+      <button
+        onClick={toggleDarkMode}
+        style={{
+          position: 'fixed',
+          bottom: '1rem',
+          right: '1rem',
+          padding: '0.75rem',
+          borderRadius: '9999px',
+          backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
+          cursor: 'pointer'
+        }}
+      >
+        {darkMode ? '☀️' : '🌙'}
+      </button>
+    </div>
+  );
 
   // Confirm Edit Screen
   const renderConfirmEditScreen = () => (
@@ -298,7 +293,7 @@ const renderStartScreen = () => (
     </div>
   );
 
-  // Edit Screen
+  // Edit Screen (with side-by-side layout)
   const renderEditScreen = () => {
     const handleChange = (e) => {
       const { name, value } = e.target;
@@ -334,7 +329,7 @@ const renderStartScreen = () => (
           marginBottom: '2rem'
         }}>Customize Your Car List</h2>
 
-        {/* Selected Cars */}
+        {/* Selected Cars - Now displayed side by side */}
         <div style={{ marginBottom: '2rem' }}>
           <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>Selected Cars</h3>
           <div style={{
@@ -350,12 +345,19 @@ const renderStartScreen = () => (
                 padding: '1rem',
                 borderRadius: '0.5rem',
                 minWidth: '250px',
-                maxWidth: '400px',
+                maxWidth: '300px',
                 cursor: 'pointer',
-                transition: 'transform 0.3s, box-shadow 0.3s',
-                transform: 'translateY(0)',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-              }}>
+                transition: 'transform 0.3s, box-shadow 0.3s'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'scale(1.03)';
+                e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+              }}
+              >
                 <h4 style={{ fontWeight: 'bold' }}>{formatCarName(car.name)}</h4>
                 <p style={{ margin: '0.5rem 0' }}>{car.description}</p>
                 <textarea
@@ -369,7 +371,9 @@ const renderStartScreen = () => (
                     borderRadius: '0.375rem',
                     backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
                     color: darkMode ? 'white' : 'black',
-                    marginTop: '0.5rem'
+                    marginTop: '0.5rem',
+                    resize: 'vertical',
+                    minHeight: '60px'
                   }}
                 />
                 {car.isCustom && (
@@ -501,7 +505,8 @@ const renderStartScreen = () => (
         <div style={{
           display: 'flex',
           gap: '2rem',
-          flexDirection: 'column',
+          flexDirection: 'row',
+          justifyContent: 'center',
           alignItems: 'center'
         }}>
           {/* Left car */}
@@ -514,19 +519,9 @@ const renderStartScreen = () => (
               borderRadius: '0.5rem',
               boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
               minWidth: '300px',
-              maxWidth: '600px',
+              maxWidth: '400px',
               textAlign: 'center',
-              transition: 'all 0.3s',
-              transform: 'translateY(0)',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'scale(1.03)';
-              e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+              transition: 'all 0.3s'
             }}
           >
             <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
@@ -566,23 +561,9 @@ const renderStartScreen = () => (
               borderRadius: '0.5rem',
               boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
               minWidth: '300px',
-              maxWidth: '600px',
+              maxWidth: '400px',
               textAlign: 'center',
-              transition: 'all 0.3s',
-              transform: 'translateY(0)',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-            }}
-            onMouseOver={(e) => {
-              if (right) {
-                e.currentTarget.style.transform = 'scale(1.03)';
-                e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
-              }
-            }}
-            onMouseOut={(e) => {
-              if (right) {
-                e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
-              }
+              transition: 'all 0.3s'
             }}
           >
             <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
@@ -636,19 +617,8 @@ const renderStartScreen = () => (
           margin: '0 auto',
           padding: '2rem',
           textAlign: 'center',
-          transition: 'all 0.3s',
-          transform: 'translateY(0)',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-        }}
-        onMouseOver={(e) => {
-          e.currentTarget.style.transform = 'scale(1.03)';
-          e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
-        }}
-        onMouseOut={(e) => {
-          e.currentTarget.style.transform = 'scale(1)';
-          e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
-        }}
-        >
+          transition: 'all 0.3s'
+        }}>
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏆</div>
           <h3 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
             {formatCarName(winner?.name || 'Unknown')}
@@ -700,30 +670,27 @@ const renderStartScreen = () => (
   );
 
   return (
-    <div style={{ fontFamily: "'Righteous', sans-serif'" }}>
+    <div style={{ fontFamily: 'Arial, sans-serif' }}>
       {/* Header */}
       <header style={{
-      
         backgroundColor: darkMode ? '#2d3748' : 'white',
         boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
-        padding: '1rem 0',
+        padding: '1rem 2rem',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center'
       }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ fontSize: '1.5rem', marginRight: '0.5rem', paddingLeft: '1rem' }}>🚗</span>
-          <h1 style={{
-            fontWeight: 'bold',
-            color: darkMode ? 'white' : 'black'
-          }}>Car Champion</h1>
+          <span style={{ fontSize: '1.5rem', marginRight: '0.5rem' }}>🚗</span>
+          <h1 style={{ fontWeight: 'bold', color: darkMode ? 'white' : 'black' }}>
+            Car Champion
+          </h1>
         </div>
         <button
           onClick={resetGame}
           style={{
-            marginRight : '1rem',
-            backgroundColor: darkMode ? '#281940' : '#bbd4f0',
-            color: darkMode ? '#cbd5e0' : '#2d3748',
+            backgroundColor: darkMode ? '#183D3D' : '#5C8374',
+            color: 'white',
             border: 'none',
             cursor: 'pointer'
           }}
@@ -733,7 +700,11 @@ const renderStartScreen = () => (
       </header>
 
       {/* Main Content */}
-      <main>
+      <main style={{
+        backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+        color: darkMode ? '#cbd5e0' : '#2d3748',
+        transition: 'background-color 0.3s, color 0.3s'
+      }}>
         {gameState === 'start' && renderStartScreen()}
         {gameState === 'confirmEdit' && renderConfirmEditScreen()}
         {gameState === 'edit' && renderEditScreen()}
@@ -750,7 +721,7 @@ const renderStartScreen = () => (
         backgroundColor: darkMode ? '#2d3748' : '#edf2f7'
       }}>
         <p style={{ fontSize: '0.875rem', color: darkMode ? '#a0aec0' : '#718096' }}>
-          © 2025 Car Champion. All cars are for demonstration purposes only.
+          © 2023 Car Champion. All cars are for demonstration purposes only.
         </p>
       </footer>
 
