@@ -708,7 +708,7 @@ const renderStartScreen = () => (
         boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
         padding: '1rem 1rem',
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         alignItems: 'center'
       }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
