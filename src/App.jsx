@@ -706,7 +706,7 @@ const renderStartScreen = () => (
         width: '100%',
         backgroundColor: darkMode ? '#2d3748' : 'white',
         boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
-        padding: '1rem 0',
+        padding: '1rem 2rem',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center'
@@ -732,11 +732,7 @@ const renderStartScreen = () => (
       </header>
 
       {/* Main Content */}
-      <main style={{
-      maxWidth: '800px',
-      margin: '0 auto',
-      padding: '0 1rem'
-      }}>
+      <main>
         {gameState === 'start' && renderStartScreen()}
         {gameState === 'confirmEdit' && renderConfirmEditScreen()}
         {gameState === 'edit' && renderEditScreen()}
