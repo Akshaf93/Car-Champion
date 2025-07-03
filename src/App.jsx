@@ -700,7 +700,7 @@ const renderStartScreen = () => (
   );
 
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif' }}>
+    <div style={{ fontFamily: 'Inter, sans-serif' }}>
       {/* Header */}
       <header style={{
       
@@ -750,7 +750,7 @@ const renderStartScreen = () => (
         backgroundColor: darkMode ? '#2d3748' : '#edf2f7'
       }}>
         <p style={{ fontSize: '0.875rem', color: darkMode ? '#a0aec0' : '#718096' }}>
-          © 2023 Car Champion. All cars are for demonstration purposes only.
+          © 2025 Car Champion. All cars are for demonstration purposes only.
         </p>
       </footer>
 
