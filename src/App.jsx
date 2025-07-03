@@ -703,6 +703,7 @@ const renderStartScreen = () => (
     <div style={{ fontFamily: 'Arial, sans-serif' }}>
       {/* Header */}
       <header style={{
+        width: '100%',
         backgroundColor: darkMode ? '#2d3748' : 'white',
         boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
         padding: '1rem 2rem',
