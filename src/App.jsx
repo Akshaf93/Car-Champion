@@ -732,7 +732,11 @@ const renderStartScreen = () => (
       </header>
 
       {/* Main Content */}
-      <main>
+      <main style={{
+      maxWidth: '800px',
+      margin: '0 auto',
+      padding: '0 1rem'
+      }}>
         {gameState === 'start' && renderStartScreen()}
         {gameState === 'confirmEdit' && renderConfirmEditScreen()}
         {gameState === 'edit' && renderEditScreen()}
