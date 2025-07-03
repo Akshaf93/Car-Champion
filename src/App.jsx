@@ -712,7 +712,7 @@ const renderStartScreen = () => (
         alignItems: 'center'
       }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ fontSize: '1.5rem', marginRight: '0.5rem', marginLeft: '0.5rem' }}>🚗</span>
+          <span style={{ fontSize: '1.5rem', marginRight: '0.5rem', paddingLeft: '1rem' }}>🚗</span>
           <h1 style={{
             fontWeight: 'bold',
             color: darkMode ? 'white' : 'black'
@@ -721,6 +721,7 @@ const renderStartScreen = () => (
         <button
           onClick={resetGame}
           style={{
+            paddingRight: '1rem'
             backgroundColor: darkMode ? '#281940' : '#bbd4f0',
             color: darkMode ? '#cbd5e0' : '#2d3748',
             border: 'none',
