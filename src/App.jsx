@@ -700,7 +700,7 @@ const renderStartScreen = () => (
   );
 
   return (
-    <div style={{ fontFamily: 'Righteous', sans-serif' }}>
+    <div style={{ fontFamily: "'Righteous', sans-serif'" }}>
       {/* Header */}
       <header style={{
       
