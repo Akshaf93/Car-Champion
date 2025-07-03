@@ -706,7 +706,7 @@ const renderStartScreen = () => (
         width: '100%',
         backgroundColor: darkMode ? '#2d3748' : 'white',
         boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
-        padding: '1rem 2rem',
+        padding: '1rem 0',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center'
@@ -722,7 +722,7 @@ const renderStartScreen = () => (
           onClick={resetGame}
           style={{
             backgroundColor: 'transparent',
-            color: darkMode ? '#cbd5e0' : '#2d3748',
+            color: darkMode ? '#bbd4f0' : '#420c4d',
             border: 'none',
             cursor: 'pointer'
           }}
