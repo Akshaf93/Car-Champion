@@ -721,7 +721,7 @@ const renderStartScreen = () => (
         <button
           onClick={resetGame}
           style={{
-            paddingRight: '1rem',
+            paddingRight: '3rem',
             backgroundColor: darkMode ? '#281940' : '#bbd4f0',
             color: darkMode ? '#cbd5e0' : '#2d3748',
             border: 'none',
