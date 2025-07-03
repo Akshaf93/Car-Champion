@@ -190,61 +190,63 @@ export default function App() {
   );
 
   // Start screen
-  const renderStartScreen = () => (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      minHeight: '100vh',
-      textAlign: 'center',
-      backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
-      color: darkMode ? '#cbd5e0' : '#2d3748',
-      transition: 'background-color 0.3s, color 0.3s',
-      padding: '2rem'
-    }}>
-      <h1 style={{
-        fontSize: '2.5rem',
-        fontWeight: 'bold',
-        background: 'linear-gradient(to right, #4f46e5, #9333ea)',
-        WebkitBackgroundClip: 'text',
-        color: 'transparent'
-      }}>Car Champion</h1>
-      <p style={{ fontSize: '1.25rem', maxWidth: '600px', margin: '1rem 0' }}>
-        We've auto-selected all available cars. Would you like to edit the list before starting?
-      </p>
-      <button
-        onClick={startTournament}
-        style={{
-          padding: '0.75rem 2rem',
-          backgroundColor: '#6675ef',
-          color: 'white',
-          border: 'none',
-          borderRadius: '0.5rem',
-          cursor: 'pointer',
-          fontSize: '1.125rem'
-        }}
-      >
-        Start Tournament
-      </button>
+  // Start screen
+const renderStartScreen = () => (
+  <div style={{
+    minHeight: '100vh',
+    padding: '2rem', // Reduced padding
+    backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+    color: darkMode ? '#cbd5e0' : '#2d3748',
+    transition: 'background-color 0.3s, color 0.3s',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }}>
+    <h1 style={{
+      fontSize: '2.5rem',
+      fontWeight: 'bold',
+      textAlign: 'center', // Centered title
+      marginBottom: '1rem',
+      background: 'linear-gradient(to right, #4f46e5, #9333ea)',
+      WebkitBackgroundClip: 'text',
+      color: 'transparent'
+    }}>Car Champion</h1>
+    <p style={{ fontSize: '1.25rem', maxWidth: '600px', margin: '1rem 0', textAlign: 'center' }}>
+      We've auto-selected all available cars. Would you like to edit the list before starting?
+    </p>
+    <button
+      onClick={startTournament}
+      style={{
+        padding: '0.75rem 2rem',
+        backgroundColor: '#6675ef',
+        color: 'white',
+        border: 'none',
+        borderRadius: '0.5rem',
+        cursor: 'pointer',
+        fontSize: '1.125rem'
+      }}
+    >
+      Start Tournament
+    </button>
 
-      {/* Dark Mode Toggle */}
-      <button
-        onClick={toggleDarkMode}
-        style={{
-          position: 'fixed',
-          bottom: '1rem',
-          right: '1rem',
-          padding: '0.75rem',
-          borderRadius: '9999px',
-          backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
-          cursor: 'pointer'
-        }}
-      >
-        {darkMode ? '☀️' : '🌙'}
-      </button>
-    </div>
-  );
+    {/* Dark Mode Toggle */}
+    <button
+      onClick={toggleDarkMode}
+      style={{
+        position: 'fixed',
+        bottom: '1rem',
+        right: '1rem',
+        padding: '0.75rem',
+        borderRadius: '9999px',
+        backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
+        cursor: 'pointer'
+      }}
+    >
+      {darkMode ? '☀️' : '🌙'}
+    </button>
+  </div>
+);
 
   // Confirm Edit Screen
   const renderConfirmEditScreen = () => (
