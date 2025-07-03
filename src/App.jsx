@@ -706,13 +706,13 @@ const renderStartScreen = () => (
       
         backgroundColor: darkMode ? '#2d3748' : 'white',
         boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
-        padding: '1rem 1rem',
+        padding: '1rem 0',
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center'
       }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ fontSize: '1.5rem', marginRight: '0.5rem' }}>🚗</span>
+          <span style={{ fontSize: '1.5rem', marginRight: '0.5rem', marginLeft: '0.5rem' }}>🚗</span>
           <h1 style={{
             fontWeight: 'bold',
             color: darkMode ? 'white' : 'black'
