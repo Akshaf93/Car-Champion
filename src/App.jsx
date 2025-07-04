@@ -507,8 +507,9 @@ const renderStartScreen = () => (
         <div style={{
           display: 'flex',
           gap: '2rem',
-          flexDirection: 'column',
-          alignItems: 'center'
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'centre'
         }}>
           {/* Left car */}
           <div
