@@ -1,3 +1,4 @@
+import './global.css';
 import { useState, useEffect } from 'react';
 
 export default function App() {
@@ -174,8 +175,7 @@ export default function App() {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: '100vh'
+      justifyContent: 'center'
     }}>
       <div style={{
         width: '16px',
@@ -199,7 +199,6 @@ export default function App() {
   // Start screen
 const renderStartScreen = () => (
   <div style={{
-    minHeight: '100vh',
     padding: '2rem', // Reduced padding
     backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
     color: darkMode ? '#cbd5e0' : '#2d3748',
@@ -327,7 +326,6 @@ const renderStartScreen = () => (
 
     return (
       <div style={{
-        minHeight: '100vh',
         padding: '2rem',
         backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
         color: darkMode ? '#cbd5e0' : '#2d3748',
@@ -489,7 +487,6 @@ const renderStartScreen = () => (
 
     return (
       <div style={{
-        minHeight: '100vh',
         padding: '2rem',
         backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
         color: darkMode ? '#cbd5e0' : '#2d3748',
@@ -623,7 +620,6 @@ const renderStartScreen = () => (
   const renderResultsScreen = () => {
     return (
       <div style={{
-        minHeight: '100vh',
         padding: '2rem',
         backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
         color: darkMode ? '#cbd5e0' : '#2d3748',
@@ -714,7 +710,12 @@ const renderStartScreen = () => (
   );
 
   return (
-    <div style={{ fontFamily: "'Righteous', sans-serif'" }}>
+    <div style={{
+        fontFamily: "'Righteous', sans-serif'",
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
       {/* Header */}
       <header style={{
       
