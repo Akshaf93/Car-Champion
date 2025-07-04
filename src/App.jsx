@@ -508,9 +508,10 @@ const renderStartScreen = () => (
           display: 'flex',
           gap: '2rem',
           flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'centre'
+          justifyContent: 'center',    // Center the cards horizontally
+          alignItems: 'flex-start'     // Align tops; use 'center' for vertical centering if preferred
         }}>
+  
           {/* Left car */}
           <div
             onClick={() => selectWinner(left)}
