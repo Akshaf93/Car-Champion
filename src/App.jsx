@@ -540,7 +540,7 @@ const renderStartScreen = () => (
               <h4 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Your Notes:</h4>
               <p style={{ fontStyle: 'italic' }}>
                 <span style={{ whiteSpace: 'pre-line' }}>
-                {car.notes || 'No notes added.'}
+                {left.notes || 'No notes added.'}
               </span>
               </p>
             </div>
@@ -600,7 +600,7 @@ const renderStartScreen = () => (
                   <h4 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Your Notes:</h4>
                   <p style={{ fontStyle: 'italic' }}>
                     <span style={{ whiteSpace: 'pre-line' }}>
-                    {car.notes || 'No notes added.'}
+                    {right.notes || 'No notes added.'}
                   </span>
                   </p>
                 </div>
