@@ -112,15 +112,20 @@ export default function App() {
 
   // Reset game
   const resetGame = () => {
-    localStorage.clear();
+  // Do NOT clear localStorage
+  const savedSelected = JSON.parse(localStorage.getItem('selectedCars'));
+  if (savedSelected && savedSelected.length > 0) {
+    setSelectedCars(savedSelected);
+  } else {
     setSelectedCars([...mockCars]);
-    setCars(mockCars);
-    setCurrentRound([]);
-    setBattles([]);
-    setRoundWinners([]);
-    setWinner(null);
-    setGameState('start');
-  };
+  }
+  setCars(mockCars);
+  setCurrentRound([]);
+  setBattles([]);
+  setRoundWinners([]);
+  setWinner(null);
+  setGameState('start');
+};
 
   // Add custom car
   const [newCar, setNewCar] = useState({ name: '', description: '', notes: '' });
