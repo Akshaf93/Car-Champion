@@ -19,9 +19,12 @@ export default function App() {
   // Dark mode defaults to true now
   const [darkMode, setDarkMode] = useState(true);
 
-  // For expanded notes on a specific car card in edit mode
+  // Note modal state
   const [expandedNoteCarId, setExpandedNoteCarId] = useState(null);
   const [editingNote, setEditingNote] = useState('');
+
+  // Add car state
+  const [newCar, setNewCar] = useState({ name: '', description: '', notes: '' });
 
   // Mock cars
   const mockCars = [
@@ -121,8 +124,6 @@ export default function App() {
     setGameState('start');
   };
 
-  const [newCar, setNewCar] = useState({ name: '', description: '', notes: '' });
-
   const handleAddCustomCar = () => {
     if (!newCar.name.trim()) return;
     const id = Date.now();
@@ -136,7 +137,23 @@ export default function App() {
     setNewCar({ name: '', description: '', notes: '' });
   };
 
-  // Notes update (used in expanded notes screen)
+  // Notes modal logic
+  const openNoteModal = (car) => {
+    setExpandedNoteCarId(car.id);
+    setEditingNote(car.notes || '');
+  };
+
+  const closeNoteModal = () => {
+    setExpandedNoteCarId(null);
+    setEditingNote('');
+  };
+
+  const handleSaveNote = (car) => {
+    updateNote(car.id, editingNote);
+    closeNoteModal();
+  };
+
+  // Update note for a car
   const updateNote = (id, note) => {
     const updated = selectedCars.map(car =>
       car.id === id ? { ...car, notes: note } : car
@@ -145,14 +162,8 @@ export default function App() {
     localStorage.setItem('selectedCars', JSON.stringify(updated));
   };
 
-  // Inline note update (for compatibility, not used in expanded mode)
-  const updateNoteInline = (id, note) => {
-    updateNote(id, note);
-  };
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
+  // Dark mode toggle
+  const toggleDarkMode = () => setDarkMode(!darkMode);
 
   // Render Loading Screen
   const renderLoadingScreen = () => (
@@ -294,41 +305,7 @@ export default function App() {
   );
 
   // Edit Screen
- const renderEditScreen = () => {
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setNewCar({ ...newCar, [name]: value });
-  };
-
-  const handleAddCar = () => {
-    if (!newCar.name.trim()) return;
-    const id = Date.now(); // unique ID
-    const newCarEntry = {
-      id,
-      ...newCar,
-      isCustom: true
-    };
-    setSelectedCars(prev => [...prev, newCarEntry]);
-    setCars(prev => [...prev, newCarEntry]);
-    setNewCar({ name: '', description: '', notes: '' });
-  };
-
-  const openNoteModal = (car) => {
-    setExpandedNoteCarId(car.id);
-    setEditingNote(car.notes || '');
-  };
-
-  const closeNoteModal = () => {
-    setExpandedNoteCarId(null);
-    setEditingNote('');
-  };
-
-  const handleSaveNote = (car) => {
-    updateNote(car.id, editingNote);
-    closeNoteModal();
-  };
-
-  return (
+ const renderEditScreen = () => (
     <div style={{
       padding: '2rem',
       backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
@@ -420,7 +397,7 @@ export default function App() {
             name="name"
             placeholder="Car Name"
             value={newCar.name}
-            onChange={handleChange}
+            onChange={e => setNewCar({ ...newCar, name: e.target.value })}
             style={{
               width: '100%',
               padding: '0.75rem',
@@ -436,7 +413,7 @@ export default function App() {
             name="description"
             placeholder="Description"
             value={newCar.description}
-            onChange={handleChange}
+            onChange={e => setNewCar({ ...newCar, description: e.target.value })}
             style={{
               width: '100%',
               padding: '0.75rem',
@@ -448,7 +425,7 @@ export default function App() {
             }}
           />
           <button
-            onClick={handleAddCar}
+            onClick={handleAddCustomCar}
             disabled={!newCar.name.trim()}
             style={{
               padding: '0.5rem 1rem',
@@ -509,6 +486,7 @@ export default function App() {
               {selectedCars.find(c => c.id === expandedNoteCarId)?.description}
             </p>
             <textarea
+              wrap="off"
               style={{
                 minHeight: 160,
                 padding: '1rem',
@@ -519,7 +497,9 @@ export default function App() {
                 background: darkMode ? '#4a5568' : '#edf2f7',
                 color: darkMode ? 'white' : 'black',
                 marginBottom: '1rem',
-                resize: 'vertical'
+                resize: 'vertical',
+                overflowX: 'auto',
+                whiteSpace: 'pre'
               }}
               value={editingNote}
               onChange={e => setEditingNote(e.target.value)}
@@ -558,8 +538,6 @@ export default function App() {
       )}
     </div>
   );
-};
-
   // Battle screen
   const renderBattleScreen = () => {
     const [left, right] = battles[battleIndex] || [];
