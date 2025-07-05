@@ -606,7 +606,7 @@ export default function App() {
             </p>
             <div style={{ marginTop: '1rem' }}>
               <h4 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Your Notes:</h4>
-              <p style={{ fontStyle: 'italic' }}>
+              <p style={{ fontStyle: 'italic', fontFamily: "'Space Mono', monospace" }}>
                 <span style={{ whiteSpace: 'pre-line' }}>
                 {left.notes || 'No notes added.'}
               </span>
@@ -666,7 +666,7 @@ export default function App() {
                 </p>
                 <div style={{ marginTop: '1rem' }}>
                   <h4 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Your Notes:</h4>
-                  <p style={{ fontStyle: 'italic' }}>
+                  <p style={{ fontStyle: 'italic', fontFamily: "'Space Mono', monospace" }}>
                     <span style={{ whiteSpace: 'pre-line' }}>
                     {right.notes || 'No notes added.'}
                   </span>
@@ -731,7 +731,7 @@ export default function App() {
           <div style={{ marginTop: '1rem' }}>
             <h4 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Your Notes:</h4>
             <p style={{ fontStyle: 'italic' }}>
-              <span style={{ whiteSpace: 'pre-line' }}>
+              <p style={{ fontStyle: 'italic', fontFamily: "'Space Mono', monospace" }}>
                 {winner?.notes || 'No notes added.'}
               </span>
             </p>
