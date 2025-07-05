@@ -787,7 +787,7 @@ export default function App() {
       <header style={{
       backgroundColor: darkMode ? '#2d3748' : 'white',
       boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
-      padding: '0.25rem 0',
+      padding: '1rem 0',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
