@@ -803,7 +803,7 @@ export default function App() {
             alignItems: 'center',
             gap: '0.5rem',
             textDecoration: 'none',
-            marginRight: '1rem',
+            marginLeft: '1rem',
             color: darkMode ? 'white' : '#2d3748' // ← important: set text color
           }}
         >
