@@ -756,7 +756,7 @@ return (
           display: 'flex',
           flexDirection: 'column',
           width: '100%',
-          background: '#232937',
+          background: '#1a202c',
           overflowY: 'auto',
         }}>
         {gameState === 'start' && renderStartScreen()}
