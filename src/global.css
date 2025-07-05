@@ -5,5 +5,5 @@ html, body, #root {
   box-sizing: border-box;
 }
 body {
-  overflow: hidden; /* Hide scroll by default */
+  background: #232937; /* fallback background */
 }
