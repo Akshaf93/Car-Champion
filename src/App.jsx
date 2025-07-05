@@ -707,8 +707,9 @@ const renderStartScreen = () => (
     >
       {darkMode ? '☀️' : '🌙'}
     </button>
-  );
- return (
+  );// ...rest of your code remains unchanged above
+
+  return (
     <div style={{
         fontFamily: "'Righteous', sans-serif'",
         minHeight: '100vh',
@@ -719,19 +720,19 @@ const renderStartScreen = () => (
       <header style={{
         backgroundColor: darkMode ? '#2d3748' : 'white',
         boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
-        padding: '0.25rem 0', // <--- Reduce vertical padding
+        padding: '0.25rem 0', // compact
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        minHeight: '40px', // <--- Ensure header is compact
-        fontSize: '1rem' // <--- Reduce overall font size
+        minHeight: '40px',
+        fontSize: '1rem'
       }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span style={{ fontSize: '1.2rem', marginRight: '0.25rem', paddingLeft: '0.5rem' }}>🚗</span>
           <h1 style={{
             fontWeight: 'bold',
             color: darkMode ? 'white' : 'black',
-            fontSize: '1.1rem', // <--- Reduce title font size
+            fontSize: '1.1rem',
             margin: 0
           }}>Car Champion</h1>
         </div>
@@ -760,17 +761,6 @@ const renderStartScreen = () => (
         {gameState === 'battle' && renderBattleScreen()}
         {gameState === 'results' && renderResultsScreen()}
       </main>
-
-      <footer style={{
-        paddingTop: '1rem',
-        paddingBottom: '1rem',
-        textAlign: 'center',
-        backgroundColor: darkMode ? '#2d3748' : '#edf2f7'
-      }}>
-        <p style={{ fontSize: '0.875rem', color: darkMode ? '#a0aec0' : '#718096', margin: 0 }}>
-          © 2025 Car Champion. All cars are for demonstration purposes only.
-        </p>
-      </footer>
 
       <DarkModeToggle />
     </div>
