@@ -340,7 +340,6 @@ export default function App() {
                 maxWidth: '400px',
                 cursor: 'pointer',
                 transition: 'transform 0.3s, box-shadow 0.3s',
-                fontFamily: "'Space Mono', monospace"
               }}
               onClick={() => openNoteModal(car)}
             >
