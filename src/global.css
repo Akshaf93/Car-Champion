@@ -5,5 +5,5 @@ html, body, #root {
   box-sizing: border-box;
 }
 body {
-  background: #232937; /* fallback background */
+  background: #1a202c; /* fallback background */
 }
