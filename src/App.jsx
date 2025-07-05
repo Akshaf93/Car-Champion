@@ -759,8 +759,12 @@ return (
           background: '#232937',
           overflowY: 'auto',
         }}>
-        {/* Replace this with your own screen logic */}
-        {renderStartScreen()}
+        {gameState === 'start' && renderStartScreen()}
+        {gameState === 'confirmEdit' && renderConfirmEditScreen()}
+        {gameState === 'edit' && renderEditScreen()}
+        {gameState === 'loading' && renderLoadingScreen()}
+        {gameState === 'battle' && renderBattleScreen()}
+        {gameState === 'results' && renderResultsScreen()}
       </main>
 
       {/* Footer */}
