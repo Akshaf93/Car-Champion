@@ -499,7 +499,8 @@ export default function App() {
                 marginBottom: '1rem',
                 resize: 'vertical',
                 overflowX: 'auto',
-                whiteSpace: 'pre'
+                whiteSpace: 'pre',
+                fontFamily: "'Space Mono', Righteous"
               }}
               value={editingNote}
               onChange={e => setEditingNote(e.target.value)}
