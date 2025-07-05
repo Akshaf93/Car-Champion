@@ -541,7 +541,6 @@ export default function App() {
       )}
     </div>
   );
-};
   // Battle screen
   const renderBattleScreen = () => {
     const [left, right] = battles[battleIndex] || [];
