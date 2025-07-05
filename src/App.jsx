@@ -792,13 +792,10 @@ export default function App() {
         fontSize: '1rem'
       }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ fontSize: '1.2rem', marginRight: '0.25rem', paddingLeft: '0.5rem' }}>🚗</span>
-          <h1 style={{
-            fontWeight: 'bold',
-            color: darkMode ? 'white' : 'black',
-            fontSize: '1.1rem',
-            margin: 0
-          }}>Car Champion</h1>
+          <Link to="car-champion.vercel.app/" className="flex items-center gap-2">
+            <img src="/trophy.ico" alt="Logo" className="w-8 h-8" />
+            <h1 className="text-xl font-righteous">Car Champion</h1>
+          </Link>
         </div>
         <button
           onClick={resetGame}
