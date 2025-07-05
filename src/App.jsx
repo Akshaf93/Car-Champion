@@ -752,13 +752,10 @@ return (
       <main
         style={{
           flex: 1,
-          minHeight: 0,
-          display: 'flex',
-          flexDirection: 'column',
           width: '100%',
           background: '#1a202c',
-          overflowY: 'auto',
-        }}>
+        }}
+      >
         {gameState === 'start' && renderStartScreen()}
         {gameState === 'confirmEdit' && renderConfirmEditScreen()}
         {gameState === 'edit' && renderEditScreen()}
