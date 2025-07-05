@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import './global.css';
 import { useState, useEffect } from 'react';
 
@@ -796,10 +795,15 @@ export default function App() {
         fontSize: '1rem'
       }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Link to="car-champion.vercel.app/" className="flex items-center gap-2">
-            <img src="/trophy.ico" alt="Logo" className="w-8 h-8" />
-            <h1 className="text-xl font-righteous">Car Champion</h1>
-          </Link>
+               <a
+                  href="/"                         // ← takes you back to the root
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
+                >
+        <img src="/trophy.ico" alt="Logo" style={{ width: '32px', height: '32px' }} />
+        <h1 style={{ fontFamily: "'Righteous', sans-serif", fontSize: '1.1rem', fontWeight: 'bold', margin: 0 }}>
+          Car Champion
+        </h1>
+      </a>
         </div>
         <button
           onClick={resetGame}
