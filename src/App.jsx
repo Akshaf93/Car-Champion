@@ -708,40 +708,43 @@ const renderStartScreen = () => (
       {darkMode ? '☀️' : '🌙'}
     </button>
   );
-
-return (
-    <div
-      style={{
+ return (
+    <div style={{
+        fontFamily: "'Righteous', sans-serif'",
         minHeight: '100vh',
         display: 'flex',
-        flexDirection: 'column',
-        fontFamily: "'Righteous', sans-serif",
-        background: 'none',
-        width: '100%',
-      }}
-    >
+        flexDirection: 'column'
+      }}>
       {/* Header */}
       <header style={{
-        backgroundColor: '#32394b',
-        color: '#fff',
-        padding: '1rem 0',
+        backgroundColor: darkMode ? '#2d3748' : 'white',
+        boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
+        padding: '0.25rem 0', // <--- Reduce vertical padding
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
+        minHeight: '40px', // <--- Ensure header is compact
+        fontSize: '1rem' // <--- Reduce overall font size
       }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ fontSize: '1.5rem', marginRight: '0.5rem', paddingLeft: '1rem' }}>🚗</span>
-          <h1 style={{ fontWeight: 'bold' }}>Car Champion</h1>
+          <span style={{ fontSize: '1.2rem', marginRight: '0.25rem', paddingLeft: '0.5rem' }}>🚗</span>
+          <h1 style={{
+            fontWeight: 'bold',
+            color: darkMode ? 'white' : 'black',
+            fontSize: '1.1rem', // <--- Reduce title font size
+            margin: 0
+          }}>Car Champion</h1>
         </div>
         <button
+          onClick={resetGame}
           style={{
-            marginRight: '1rem',
-            backgroundColor: '#281940',
-            color: '#cbd5e0',
+            marginRight : '0.5rem',
+            backgroundColor: darkMode ? '#281940' : '#bbd4f0',
+            color: darkMode ? '#cbd5e0' : '#2d3748',
             border: 'none',
             cursor: 'pointer',
-            padding: '0.75rem 1.5rem',
-            borderRadius: '0.5rem',
+            fontSize: '0.9rem',
+            padding: '0.2rem 0.8rem'
           }}
         >
           New Tournament
@@ -749,13 +752,7 @@ return (
       </header>
 
       {/* Main Content */}
-      <main
-        style={{
-          flex: 1,
-          width: '100%',
-          background: '#1a202c',
-        }}
-      >
+      <main style={{ flex: 1, width: '100%' }}>
         {gameState === 'start' && renderStartScreen()}
         {gameState === 'confirmEdit' && renderConfirmEditScreen()}
         {gameState === 'edit' && renderEditScreen()}
@@ -764,18 +761,18 @@ return (
         {gameState === 'results' && renderResultsScreen()}
       </main>
 
-      {/* Footer */}
-      <footer
-        style={{
-          paddingTop: '1rem',
-          paddingBottom: '1rem',
-          textAlign: 'center',
-          backgroundColor: '#32394b',
-          color: '#a0aec0',
-        }}
-      >
-        © 2025 Car Champion. All cars are for demonstration purposes only.
+      <footer style={{
+        paddingTop: '1rem',
+        paddingBottom: '1rem',
+        textAlign: 'center',
+        backgroundColor: darkMode ? '#2d3748' : '#edf2f7'
+      }}>
+        <p style={{ fontSize: '0.875rem', color: darkMode ? '#a0aec0' : '#718096', margin: 0 }}>
+          © 2025 Car Champion. All cars are for demonstration purposes only.
+        </p>
       </footer>
+
+      <DarkModeToggle />
     </div>
   );
 }
