@@ -730,9 +730,10 @@ export default function App() {
           </p>
           <div style={{ marginTop: '1rem' }}>
             <h4 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Your Notes:</h4>
-            <p style={{ fontStyle: 'italic' }}>
               <p style={{ fontStyle: 'italic', fontFamily: "'Space Mono', monospace" }}>
+              <span style={{ whiteSpace: 'pre-line' }}>
                 {winner?.notes || 'No notes added.'}
+              </span>
             </p>
           </div>
           <button
