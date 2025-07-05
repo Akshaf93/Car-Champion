@@ -524,7 +524,221 @@ export default function App() {
     );
   };
 
-  // ...rest of your battle/results screens and header remain unchanged
+  // Battle screen
+  const renderBattleScreen = () => {
+    const [left, right] = battles[battleIndex] || [];
+
+    if (!left) {
+      console.warn("No left car found", { battleIndex, battles });
+      return <p>No cars to compare.</p>;
+    }
+
+    return (
+      <div style={{
+        padding: '2rem',
+        backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+        color: darkMode ? '#cbd5e0' : '#2d3748',
+        transition: 'background-color 0.3s, color 0.3s'
+      }}>
+        <h2 style={{
+          fontSize: '2rem',
+          fontWeight: 'bold',
+          textAlign: 'center',
+          marginBottom: '2rem'
+        }}>
+          Round {Math.round(Math.log2(selectedCars.length / currentRound.length)) + 1}
+        </h2>
+
+        <div style={{
+          display: 'flex',
+          gap: '2rem',
+          flexDirection: 'row',
+          justifyContent: 'center',    // Center the cards horizontally
+          alignItems: 'flex-start'     // Align tops; use 'center' for vertical centering if preferred
+        }}>
+  
+          {/* Left car */}
+          <div
+            onClick={() => selectWinner(left)}
+            style={{
+              cursor: 'pointer',
+              backgroundColor: darkMode ? '#2d3748' : 'white',
+              padding: '1.5rem',
+              borderRadius: '0.5rem',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+              minWidth: '300px',
+              maxWidth: '600px',
+              textAlign: 'center',
+              transition: 'all 0.3s',
+              transform: 'translateY(0)',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'scale(1.03)';
+              e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+            }}
+          >
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
+              {formatCarName(left.name)}
+            </h3>
+            <p style={{ margin: '1rem 0' }}>
+              {left.description}
+            </p>
+            <div style={{ marginTop: '1rem' }}>
+              <h4 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Your Notes:</h4>
+              <p style={{ fontStyle: 'italic' }}>
+                <span style={{ whiteSpace: 'pre-line' }}>
+                {left.notes || 'No notes added.'}
+              </span>
+              </p>
+            </div>
+          </div>
+
+          {/* VS separator */}
+          <div style={{ textAlign: 'center', margin: '2rem 0' }}>
+            <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>VS</div>
+            <div style={{
+              backgroundColor: darkMode ? '#2d3748' : '#edf2f7',
+              padding: '1rem',
+              borderRadius: '0.5rem',
+              textAlign: 'center'
+            }}>
+              <p>Select the better car based on your preferences</p>
+            </div>
+          </div>
+
+          {/* Right car */}
+          <div
+            onClick={() => right && selectWinner(right)}
+            style={{
+              cursor: right ? 'pointer' : 'default',
+              backgroundColor: darkMode ? '#2d3748' : 'white',
+              padding: '1.5rem',
+              borderRadius: '0.5rem',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+              minWidth: '300px',
+              maxWidth: '600px',
+              textAlign: 'center',
+              transition: 'all 0.3s',
+              transform: 'translateY(0)',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+            }}
+            onMouseOver={(e) => {
+              if (right) {
+                e.currentTarget.style.transform = 'scale(1.03)';
+                e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
+              }
+            }}
+            onMouseOut={(e) => {
+              if (right) {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+              }
+            }}
+          >
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
+              {right ? formatCarName(right.name) : 'Bye'}
+            </h3>
+            {right && (
+              <>
+                <p style={{ margin: '1rem 0' }}>
+                  {right.description}
+                </p>
+                <div style={{ marginTop: '1rem' }}>
+                  <h4 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Your Notes:</h4>
+                  <p style={{ fontStyle: 'italic' }}>
+                    <span style={{ whiteSpace: 'pre-line' }}>
+                    {right.notes || 'No notes added.'}
+                  </span>
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Results screen
+  const renderResultsScreen = () => {
+    return (
+      <div style={{
+        padding: '2rem',
+        backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+        color: darkMode ? '#cbd5e0' : '#2d3748',
+        transition: 'background-color 0.3s, color 0.3s'
+      }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <h2 style={{
+            fontSize: '2.5rem',
+            fontWeight: 'bold',
+            marginBottom: '1rem'
+          }}>Tournament Complete!</h2>
+          <p style={{ fontSize: '1.25rem', marginBottom: '2rem' }}>
+            After a fierce competition, we've determined the best car.
+          </p>
+        </div>
+
+        <div style={{
+          backgroundColor: darkMode ? '#2d3748' : 'white',
+          borderRadius: '0.5rem',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+          maxWidth: '600px',
+          margin: '0 auto',
+          padding: '2rem',
+          textAlign: 'center',
+          transition: 'all 0.3s',
+          transform: 'translateY(0)',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.transform = 'scale(1.03)';
+          e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+        }}
+        >
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏆</div>
+          <h3 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+            {formatCarName(winner?.name || 'Unknown')}
+          </h3>
+          <p style={{ marginBottom: '2rem' }}>
+            {winner?.description || 'No car was selected as champion.'}
+          </p>
+          <div style={{ marginTop: '1rem' }}>
+            <h4 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Your Notes:</h4>
+            <p style={{ fontStyle: 'italic' }}>
+              <span style={{ whiteSpace: 'pre-line' }}>
+                {winner?.notes || 'No notes added.'}
+              </span>
+            </p>
+          </div>
+          <button
+            onClick={resetGame}
+            style={{
+              marginTop: '2rem',
+              padding: '0.75rem 1.5rem',
+              backgroundColor: '#6675ef',
+              color: 'white',
+              border: 'none',
+              borderRadius: '0.5rem',
+              cursor: 'pointer'
+            }}
+          >
+            Play Again
+          </button>
+        </div>
+      </div>
+    );
+  };
+
 
   const DarkModeToggle = () => (
     <button
