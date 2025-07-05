@@ -294,235 +294,271 @@ export default function App() {
   );
 
   // Edit Screen
-  const renderEditScreen = () => {
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setNewCar({ ...newCar, [name]: value });
-    };
+ const renderEditScreen = () => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewCar({ ...newCar, [name]: value });
+  };
 
-    const handleSaveNote = (car) => {
-      updateNote(car.id, editingNote);
-      setExpandedNoteCarId(null);
-      setEditingNote('');
+  const handleAddCar = () => {
+    if (!newCar.name.trim()) return;
+    const id = Date.now(); // unique ID
+    const newCarEntry = {
+      id,
+      ...newCar,
+      isCustom: true
     };
+    setSelectedCars(prev => [...prev, newCarEntry]);
+    setCars(prev => [...prev, newCarEntry]);
+    setNewCar({ name: '', description: '', notes: '' });
+  };
 
-    return (
-      <div style={{
-        padding: '2rem',
-        backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
-        color: darkMode ? '#cbd5e0' : '#2d3748',
-        transition: 'background-color 0.3s, color 0.3s'
-      }}>
-        <h2 style={{
-          fontSize: '2rem',
-          fontWeight: 'bold',
-          textAlign: 'center',
-          marginBottom: '2rem'
-        }}>Customize Your Car List</h2>
-        {/* Selected Cars */}
-        <div style={{ marginBottom: '2rem' }}>
-          <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>Selected Cars</h3>
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '1rem',
-            justifyContent: 'center'
-          }}>
-            {selectedCars.map(car => (
-              expandedNoteCarId === car.id ? (
-                <div key={car.id} style={{
-                  backgroundColor: darkMode ? '#2d3748' : 'white',
-                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                  padding: '1rem',
-                  borderRadius: '0.5rem',
-                  minWidth: '300px',
-                  maxWidth: '400px',
-                  cursor: 'default',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'stretch'
-                }}>
-                  <h4 style={{ fontWeight: 'bold', marginBottom: 0 }}>{formatCarName(car.name)}</h4>
-                  <p style={{ margin: '0.5rem 0', fontSize: '1rem' }}>{car.description}</p>
-                  <textarea
-                    placeholder="Add your notes..."
-                    value={editingNote}
-                    onChange={e => setEditingNote(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '1rem',
-                      border: darkMode ? '1px solid #4a5568' : '1px solid #cbd5e0',
-                      borderRadius: '0.375rem',
-                      backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
-                      color: darkMode ? 'white' : 'black',
-                      minHeight: 120,
-                      marginTop: '0.5rem',
-                      fontSize: '1.1rem',
-                      resize: 'vertical'
-                    }}
-                    autoFocus
-                  />
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '0.5rem' }}>
-                    <button
-                      onClick={() => { setExpandedNoteCarId(null); setEditingNote(''); }}
-                      style={{
-                        backgroundColor: '#a0aec0',
-                        color: '#2d3748',
-                        border: 'none',
-                        padding: '0.4rem 1rem',
-                        borderRadius: '0.375rem',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={() => handleSaveNote(car)}
-                      style={{
-                        backgroundColor: '#10b981',
-                        color: 'white',
-                        border: 'none',
-                        padding: '0.4rem 1.1rem',
-                        borderRadius: '0.375rem',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      Save Note
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div key={car.id} style={{
-                  backgroundColor: darkMode ? '#2d3748' : 'white',
-                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                  padding: '1rem',
-                  borderRadius: '0.5rem',
-                  minWidth: '250px',
-                  maxWidth: '400px',
-                  cursor: 'pointer',
-                  transition: 'transform 0.3s, box-shadow 0.3s',
-                  transform: 'translateY(0)'
+  const openNoteModal = (car) => {
+    setExpandedNoteCarId(car.id);
+    setEditingNote(car.notes || '');
+  };
+
+  const closeNoteModal = () => {
+    setExpandedNoteCarId(null);
+    setEditingNote('');
+  };
+
+  const handleSaveNote = (car) => {
+    updateNote(car.id, editingNote);
+    closeNoteModal();
+  };
+
+  return (
+    <div style={{
+      padding: '2rem',
+      backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+      color: darkMode ? '#cbd5e0' : '#2d3748',
+      transition: 'background-color 0.3s, color 0.3s'
+    }}>
+      <h2 style={{
+        fontSize: '2rem',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: '2rem'
+      }}>Customize Your Car List</h2>
+
+      {/* Selected Cars */}
+      <div style={{ marginBottom: '2rem' }}>
+        <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>Selected Cars</h3>
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '1rem',
+          justifyContent: 'center'
+        }}>
+          {selectedCars.map(car => (
+            <div
+              key={car.id}
+              style={{
+                backgroundColor: darkMode ? '#2d3748' : 'white',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                padding: '1rem',
+                borderRadius: '0.5rem',
+                minWidth: '250px',
+                maxWidth: '400px',
+                cursor: 'pointer',
+                transition: 'transform 0.3s, box-shadow 0.3s',
+                transform: 'translateY(0)'
+              }}
+              onClick={() => openNoteModal(car)}
+            >
+              <h4 style={{ fontWeight: 'bold', marginBottom: 0 }}>{formatCarName(car.name)}</h4>
+              <p style={{ margin: '0.5rem 0', fontSize: '1rem' }}>{car.description}</p>
+              <div
+                style={{
+                  background: darkMode ? '#4a5568' : '#edf2f7',
+                  borderRadius: '0.375rem',
+                  color: darkMode ? '#eaeaea' : '#2d3748',
+                  padding: '0.5rem',
+                  minHeight: '38px',
+                  fontSize: '1rem'
                 }}
-                  onClick={() => {
-                    setExpandedNoteCarId(car.id);
-                    setEditingNote(car.notes || '');
+              >
+                <span style={{ opacity: car.notes ? 1 : 0.6 }}>
+                  {car.notes ? car.notes : "Click to add notes"}
+                </span>
+              </div>
+              {car.isCustom && (
+                <button
+                  onClick={e => {
+                    e.stopPropagation();
+                    setSelectedCars(selectedCars.filter(c => c.id !== car.id));
+                    setCars(cars.filter(c => c.id !== car.id));
+                  }}
+                  style={{
+                    marginTop: '0.5rem',
+                    color: '#ef4444',
+                    border: 'none',
+                    backgroundColor: 'transparent',
+                    cursor: 'pointer'
                   }}
                 >
-                  <h4 style={{ fontWeight: 'bold', marginBottom: 0 }}>{formatCarName(car.name)}</h4>
-                  <p style={{ margin: '0.5rem 0', fontSize: '1rem' }}>{car.description}</p>
-                  <div
-                    style={{
-                      background: darkMode ? '#4a5568' : '#edf2f7',
-                      borderRadius: '0.375rem',
-                      color: darkMode ? '#eaeaea' : '#2d3748',
-                      padding: '0.5rem',
-                      minHeight: '38px',
-                      fontSize: '1rem'
-                    }}
-                  >
-                    <span style={{ opacity: car.notes ? 1 : 0.6 }}>
-                      {car.notes ? car.notes : "Click to add notes"}
-                    </span>
-                  </div>
-                  {car.isCustom && (
-                    <button
-                      onClick={e => {
-                        e.stopPropagation();
-                        setSelectedCars(selectedCars.filter(c => c.id !== car.id));
-                        setCars(cars.filter(c => c.id !== car.id));
-                      }}
-                      style={{
-                        marginTop: '0.5rem',
-                        color: '#ef4444',
-                        border: 'none',
-                        backgroundColor: 'transparent',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      Remove
-                    </button>
-                  )}
-                </div>
-              )
-            ))}
-          </div>
+                  Remove
+                </button>
+              )}
+            </div>
+          ))}
         </div>
-        {/* Add New Car Form */}
-        <div style={{ marginBottom: '2rem' }}>
-          <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>Add New Car</h3>
-          <div style={{
-            backgroundColor: darkMode ? '#2d3748' : 'white',
-            padding: '1.5rem',
-            borderRadius: '0.5rem',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-          }}>
-            <input
-              type="text"
-              name="name"
-              placeholder="Car Name"
-              value={newCar.name}
-              onChange={handleChange}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                marginBottom: '1rem',
-                border: darkMode ? '1px solid #4a5568' : '1px solid #cbd5e0',
-                borderRadius: '0.375rem',
-                backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
-                color: darkMode ? 'white' : 'black'
-              }}
-            />
-            <input
-              type="text"
-              name="description"
-              placeholder="Description"
-              value={newCar.description}
-              onChange={handleChange}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                marginBottom: '1rem',
-                border: darkMode ? '1px solid #4a5568' : '1px solid #cbd5e0',
-                borderRadius: '0.375rem',
-                backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
-                color: darkMode ? 'white' : 'black'
-              }}
-            />
-            <button
-              onClick={handleAddCustomCar}
-              disabled={!newCar.name.trim()}
-              style={{
-                padding: '0.5rem 1rem',
-                backgroundColor: '#8b5cf6',
-                color: 'white',
-                border: 'none',
-                borderRadius: '0.375rem',
-                cursor: !newCar.name.trim() ? 'not-allowed' : 'pointer',
-                opacity: !newCar.name.trim() ? 0.5 : 1
-              }}
-            >
-              Add Car
-            </button>
-          </div>
-        </div>
-        <div style={{ textAlign: 'center' }}>
-          <button
-            onClick={beginTournament}
+      </div>
+
+      {/* Add New Car Form */}
+      <div style={{ marginBottom: '2rem' }}>
+        <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>Add New Car</h3>
+        <div style={{
+          backgroundColor: darkMode ? '#2d3748' : 'white',
+          padding: '1.5rem',
+          borderRadius: '0.5rem',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+        }}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Car Name"
+            value={newCar.name}
+            onChange={handleChange}
             style={{
-              padding: '0.75rem 1.5rem',
-              backgroundColor: '#10b981',
+              width: '100%',
+              padding: '0.75rem',
+              marginBottom: '1rem',
+              border: darkMode ? '1px solid #4a5568' : '1px solid #cbd5e0',
+              borderRadius: '0.375rem',
+              backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
+              color: darkMode ? 'white' : 'black'
+            }}
+          />
+          <input
+            type="text"
+            name="description"
+            placeholder="Description"
+            value={newCar.description}
+            onChange={handleChange}
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              marginBottom: '1rem',
+              border: darkMode ? '1px solid #4a5568' : '1px solid #cbd5e0',
+              borderRadius: '0.375rem',
+              backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
+              color: darkMode ? 'white' : 'black'
+            }}
+          />
+          <button
+            onClick={handleAddCar}
+            disabled={!newCar.name.trim()}
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: '#8b5cf6',
               color: 'white',
               border: 'none',
-              borderRadius: '0.5rem',
-              cursor: 'pointer'
+              borderRadius: '0.375rem',
+              cursor: !newCar.name.trim() ? 'not-allowed' : 'pointer',
+              opacity: !newCar.name.trim() ? 0.5 : 1
             }}
           >
-            Start Tournament
+            Add Car
           </button>
         </div>
       </div>
-    );
-  };
+
+      <div style={{ textAlign: 'center' }}>
+        <button
+          onClick={beginTournament}
+          style={{
+            padding: '0.75rem 1.5rem',
+            backgroundColor: '#10b981',
+            color: 'white',
+            border: 'none',
+            borderRadius: '0.5rem',
+            cursor: 'pointer'
+          }}
+        >
+          Start Tournament
+        </button>
+      </div>
+
+      {/* Full-screen note modal */}
+      {expandedNoteCarId && (
+        <div style={{
+          position: 'fixed',
+          top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.7)',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <div style={{
+            background: darkMode ? '#2d3748' : 'white',
+            color: darkMode ? '#cbd5e0' : '#2d3748',
+            borderRadius: '1rem',
+            padding: '2rem',
+            maxWidth: 500,
+            width: '90vw',
+            display: 'flex',
+            flexDirection: 'column',
+          }}>
+            <h2 style={{ marginBottom: '1rem', textAlign: 'center' }}>
+              {formatCarName(selectedCars.find(c => c.id === expandedNoteCarId)?.name)}
+            </h2>
+            <p style={{ marginBottom: '1rem', textAlign: 'center' }}>
+              {selectedCars.find(c => c.id === expandedNoteCarId)?.description}
+            </p>
+            <textarea
+              style={{
+                minHeight: 160,
+                padding: '1rem',
+                fontSize: '1.1rem',
+                width: '100%',
+                border: darkMode ? '1px solid #4a5568' : '1px solid #cbd5e0',
+                borderRadius: '0.5rem',
+                background: darkMode ? '#4a5568' : '#edf2f7',
+                color: darkMode ? 'white' : 'black',
+                marginBottom: '1rem',
+                resize: 'vertical'
+              }}
+              value={editingNote}
+              onChange={e => setEditingNote(e.target.value)}
+              autoFocus
+            />
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+              <button
+                onClick={closeNoteModal}
+                style={{
+                  background: '#a0aec0',
+                  color: '#2d3748',
+                  border: 'none',
+                  borderRadius: '0.375rem',
+                  padding: '0.5rem 1.2rem',
+                  cursor: 'pointer'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleSaveNote(selectedCars.find(c => c.id === expandedNoteCarId))}
+                style={{
+                  background: '#10b981',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '0.375rem',
+                  padding: '0.5rem 1.2rem',
+                  cursor: 'pointer'
+                }}
+              >
+                Save Note
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
   // Battle screen
   const renderBattleScreen = () => {
