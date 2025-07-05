@@ -733,7 +733,6 @@ export default function App() {
             <p style={{ fontStyle: 'italic' }}>
               <p style={{ fontStyle: 'italic', fontFamily: "'Space Mono', monospace" }}>
                 {winner?.notes || 'No notes added.'}
-              </span>
             </p>
           </div>
           <button
