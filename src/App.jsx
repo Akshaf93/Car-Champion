@@ -785,41 +785,57 @@ export default function App() {
       }}>
       {/* Header */}
       <header style={{
-        backgroundColor: darkMode ? '#2d3748' : 'white',
-        boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
-        padding: '0.25rem 0',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        minHeight: '40px',
-        fontSize: '1rem'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-               <a
-                  href="/"                         // ← takes you back to the root
-                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
-                >
-        <img src="/trophy.png" alt="Logo" style={{ width: '32px', height: '32px' }} />
-        <h1 style={{ fontFamily: "'Righteous', sans-serif", fontSize: '1.1rem', fontWeight: 'bold', margin: 0 }}>
-          Car Champion
-        </h1>
-      </a>
-        </div>
-        <button
-          onClick={resetGame}
+      backgroundColor: darkMode ? '#2d3748' : 'white',
+      boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
+      padding: '0.25rem 1rem',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      minHeight: '48px',
+      fontSize: '1rem'
+    }}>
+      {/* Left: Logo and Title */}
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <a
+          href="/"
           style={{
-            marginRight : '0.5rem',
-            backgroundColor: darkMode ? '#281940' : '#bbd4f0',
-            color: darkMode ? '#cbd5e0' : '#2d3748',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: '0.9rem',
-            padding: '0.2rem 0.8rem'
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            textDecoration: 'none',
+            color: darkMode ? 'white' : '#2d3748' // ← important: set text color
           }}
         >
-          New Tournament
-        </button>
-      </header>
+          <img src="/trophy.png" alt="Logo" style={{ width: '32px', height: '32px' }} />
+          <h1 style={{
+            fontFamily: "'Righteous', sans-serif",
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            margin: 0
+          }}>
+            Car Champion
+          </h1>
+        </a>
+      </div>
+    
+      {/* Right: Button */}
+      <button
+        onClick={resetGame}
+        style={{
+          marginRight: '0.5rem',
+          backgroundColor: darkMode ? '#281940' : '#bbd4f0',
+          color: darkMode ? '#cbd5e0' : '#2d3748',
+          border: 'none',
+          cursor: 'pointer',
+          fontSize: '0.9rem',
+          padding: '0.2rem 0.8rem',
+          borderRadius: '4px'
+        }}
+      >
+        New Tournament
+      </button>
+    </header>
+
       {/* Main Content */}
       <main style={{ flex: 1, width: '100%' }}>
         {gameState === 'start' && renderStartScreen()}
