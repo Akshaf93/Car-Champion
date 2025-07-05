@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './global.css';
 import { useState, useEffect } from 'react';
 
@@ -775,10 +776,13 @@ export default function App() {
 
   return (
     <div style={{
-        fontFamily: "'Righteous', sans-serif'",
+        fontFamily: "'Righteous', sans-serif",
         minHeight: '100vh',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+        color: darkMode ? '#cbd5e0' : '#2d3748',
+        transition: 'background-color 0.3s, color 0.3s'
       }}>
       {/* Header */}
       <header style={{
