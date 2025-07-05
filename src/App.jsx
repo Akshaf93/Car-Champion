@@ -340,7 +340,7 @@ export default function App() {
                 maxWidth: '400px',
                 cursor: 'pointer',
                 transition: 'transform 0.3s, box-shadow 0.3s',
-                transform: 'translateY(0)'
+                fontFamily: "'Space Mono', monospace"
               }}
               onClick={() => openNoteModal(car)}
             >
@@ -353,7 +353,8 @@ export default function App() {
                   color: darkMode ? '#eaeaea' : '#2d3748',
                   padding: '0.5rem',
                   minHeight: '38px',
-                  fontSize: '1rem'
+                  fontSize: '1rem',
+                  fontFamily: "'Space Mono', monospace"
                 }}
               >
                 <span style={{ opacity: car.notes ? 1 : 0.6 }}>
@@ -478,6 +479,7 @@ export default function App() {
             width: '90vw',
             display: 'flex',
             flexDirection: 'column',
+            fontFamily: "'Space Mono', monospace"
           }}>
             <h2 style={{ marginBottom: '1rem', textAlign: 'center' }}>
               {formatCarName(selectedCars.find(c => c.id === expandedNoteCarId)?.name)}
@@ -539,6 +541,7 @@ export default function App() {
       )}
     </div>
   );
+};
   // Battle screen
   const renderBattleScreen = () => {
     const [left, right] = battles[battleIndex] || [];
