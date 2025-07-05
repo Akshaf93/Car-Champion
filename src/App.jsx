@@ -709,38 +709,39 @@ const renderStartScreen = () => (
     </button>
   );
 
-  return (
-    <div style={{
-        fontFamily: "'Righteous', sans-serif'",
+return (
+    <div
+      style={{
         minHeight: '100vh',
         display: 'flex',
-        flexDirection: 'column'
-      }}>
+        flexDirection: 'column',
+        fontFamily: "'Righteous', sans-serif",
+        background: 'none',
+        width: '100%',
+      }}
+    >
       {/* Header */}
       <header style={{
-      
-        backgroundColor: darkMode ? '#2d3748' : 'white',
-        boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
+        backgroundColor: '#32394b',
+        color: '#fff',
         padding: '1rem 0',
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
       }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span style={{ fontSize: '1.5rem', marginRight: '0.5rem', paddingLeft: '1rem' }}>🚗</span>
-          <h1 style={{
-            fontWeight: 'bold',
-            color: darkMode ? 'white' : 'black'
-          }}>Car Champion</h1>
+          <h1 style={{ fontWeight: 'bold' }}>Car Champion</h1>
         </div>
         <button
-          onClick={resetGame}
           style={{
-            marginRight : '1rem',
-            backgroundColor: darkMode ? '#281940' : '#bbd4f0',
-            color: darkMode ? '#cbd5e0' : '#2d3748',
+            marginRight: '1rem',
+            backgroundColor: '#281940',
+            color: '#cbd5e0',
             border: 'none',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            padding: '0.75rem 1.5rem',
+            borderRadius: '0.5rem',
           }}
         >
           New Tournament
@@ -748,28 +749,32 @@ const renderStartScreen = () => (
       </header>
 
       {/* Main Content */}
-      <main>
-        {gameState === 'start' && renderStartScreen()}
-        {gameState === 'confirmEdit' && renderConfirmEditScreen()}
-        {gameState === 'edit' && renderEditScreen()}
-        {gameState === 'loading' && renderLoadingScreen()}
-        {gameState === 'battle' && renderBattleScreen()}
-        {gameState === 'results' && renderResultsScreen()}
+      <main
+        style={{
+          flex: 1,
+          minHeight: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          background: '#232937',
+          overflowY: 'auto',
+        }}>
+        {/* Replace this with your own screen logic */}
+        {renderStartScreen()}
       </main>
 
-      <footer style={{
-        marginTop: '2rem',
-        paddingTop: '1rem',
-        paddingBottom: '1rem',
-        textAlign: 'center',
-        backgroundColor: darkMode ? '#2d3748' : '#edf2f7'
-      }}>
-        <p style={{ fontSize: '0.875rem', color: darkMode ? '#a0aec0' : '#718096' }}>
-          © 2025 Car Champion. All cars are for demonstration purposes only.
-        </p>
+      {/* Footer */}
+      <footer
+        style={{
+          paddingTop: '1rem',
+          paddingBottom: '1rem',
+          textAlign: 'center',
+          backgroundColor: '#32394b',
+          color: '#a0aec0',
+        }}
+      >
+        © 2025 Car Champion. All cars are for demonstration purposes only.
       </footer>
-
-      <DarkModeToggle />
     </div>
   );
 }
