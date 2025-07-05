@@ -799,7 +799,7 @@ export default function App() {
                   href="/"                         // ← takes you back to the root
                   style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
                 >
-        <img src="/trophy.ico" alt="Logo" style={{ width: '32px', height: '32px' }} />
+        <img src="/trophy.png" alt="Logo" style={{ width: '32px', height: '32px' }} />
         <h1 style={{ fontFamily: "'Righteous', sans-serif", fontSize: '1.1rem', fontWeight: 'bold', margin: 0 }}>
           Car Champion
         </h1>
