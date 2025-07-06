@@ -75,20 +75,19 @@ export default function App() {
     setGameState('confirmEdit');
   };
 
-  const beginTournament = () => {
-  if (selectedCars.length < 2) {
+ const beginTournament = () => {
+    if (selectedCars.length < 2) {
       alert("Please select at least 2 cars.");
       return;
     }
     const paddedCars = padToNextPowerOfTwo(selectedCars);
     const initialBattles = generateBattles(paddedCars);
-  
+
     setCurrentRound(paddedCars);
     setBattles(initialBattles);
     setBattleIndex(0);
     setRoundWinners([]);
-  
-    setGameState('bracket'); // ⬅️ Show bracket before battle
+    setGameState('battle');
   };
 
   const selectWinner = (car) => {
@@ -750,15 +749,6 @@ export default function App() {
     );
   };
 
-  const renderBracketScreen = () => {
-  const rounds = [];
-  let current = [...currentRound];
-  while (current.length > 1) {
-    const pairs = generateBattles(current);
-    rounds.push(pairs);
-    current = pairs.map(pair => ({ id: Date.now() + Math.random(), name: '?', isPlaceholder: true }));
-  }
-
   return (
     <div style={{
       padding: '2rem',
@@ -904,7 +894,6 @@ export default function App() {
         {gameState === 'loading' && renderLoadingScreen()}
         {gameState === 'battle' && renderBattleScreen()}
         {gameState === 'results' && renderResultsScreen()}
-        {gameState === 'bracket' && renderBracketScreen()}
       </main>
       <DarkModeToggle />
     </div>
