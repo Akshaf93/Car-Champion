@@ -5,9 +5,8 @@ export default function App() {
   // Game states: start → confirmEdit → edit → battle → results
   const [gameState, setGameState] = useState('start');
 
-  // Car data
-  const [cars, setCars] = useState([]);
-  const [selectedCars, setSelectedCars] = useState([]);
+  // Dark mode defaults to true now
+  const [darkMode, setDarkMode] = useState(true);
 
   // Tournament state
   const [currentRound, setCurrentRound] = useState([]);
@@ -16,9 +15,6 @@ export default function App() {
   const [roundWinners, setRoundWinners] = useState([]);
   const [winner, setWinner] = useState(null);
 
-  // Dark mode defaults to true now
-  const [darkMode, setDarkMode] = useState(true);
-
   // Note modal state
   const [expandedNoteCarId, setExpandedNoteCarId] = useState(null);
   const [editingNote, setEditingNote] = useState('');
@@ -26,7 +22,7 @@ export default function App() {
   // Add car state
   const [newCar, setNewCar] = useState({ name: '', description: '', notes: '' });
 
-  // Mock cars
+  // Persisted custom cars from localStorage or default to mockCars
   const mockCars = [
     { id: 1, name: 'Honda BR-V', description: 'Spacious compact SUV with family-friendly features.', notes: '', isCustom: false },
     { id: 2, name: 'Kia Carnival', description: 'Luxury MPV with bold design and premium interior.', notes: '', isCustom: false },
@@ -38,10 +34,14 @@ export default function App() {
     { id: 8, name: 'Chery Tiggo 8 Pro', description: 'Premium SUV with aggressive styling and smart tech.', notes: '', isCustom: false }
   ];
 
+  const [selectedCars, setSelectedCars] = useState(() => {
+    const stored = localStorage.getItem('selectedCars');
+    return stored ? JSON.parse(stored) : [...mockCars];
+  });
+
   useEffect(() => {
-    const savedSelected = JSON.parse(localStorage.getItem('selectedCars')) || [...mockCars];
-    setSelectedCars(savedSelected);
-  }, []);
+    localStorage.setItem('selectedCars', JSON.stringify(selectedCars));
+  }, [selectedCars]);
 
   const formatCarName = (name) =>
     name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
@@ -110,13 +110,6 @@ export default function App() {
   };
 
   const resetGame = () => {
-    const savedSelected = JSON.parse(localStorage.getItem('selectedCars'));
-    if (savedSelected && savedSelected.length > 0) {
-      setSelectedCars(savedSelected);
-    } else {
-      setSelectedCars([...mockCars]);
-    }
-    setCars(mockCars);
     setCurrentRound([]);
     setBattles([]);
     setRoundWinners([]);
@@ -133,11 +126,9 @@ export default function App() {
       isCustom: true
     };
     setSelectedCars(prev => [...prev, newCarEntry]);
-    setCars(prev => [...prev, newCarEntry]);
     setNewCar({ name: '', description: '', notes: '' });
   };
 
-  // Notes modal logic
   const openNoteModal = (car) => {
     setExpandedNoteCarId(car.id);
     setEditingNote(car.notes || '');
@@ -153,16 +144,13 @@ export default function App() {
     closeNoteModal();
   };
 
-  // Update note for a car
   const updateNote = (id, note) => {
     const updated = selectedCars.map(car =>
       car.id === id ? { ...car, notes: note } : car
     );
     setSelectedCars(updated);
-    localStorage.setItem('selectedCars', JSON.stringify(updated));
   };
 
-  // Dark mode toggle
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
   // Render Loading Screen
