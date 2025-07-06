@@ -847,28 +847,35 @@ export default function App() {
       {gameState === 'confirmEdit' && renderConfirmEditScreen()}
       {gameState === 'edit' && renderEditScreen()}
       {gameState === 'loading' && renderLoadingScreen()}
-      {gameState === 'battle' && (
-        <>
-          <Bracket
-            allRounds={allRounds}
-            roundWinners={allRounds.map((round, i) =>
-              i < allRounds.length - 1 ? round.map(c => c.id) : []
+      {(gameState === 'battle' || gameState === 'results') && (
+        <div className="tournament-layout">
+          <div className="battle-section">
+            {gameState === 'battle' && battles[battleIndex] && (
+              <div className="battle-cards">
+                {battles[battleIndex].map((car) => (
+                  <div
+                    key={car.id}
+                    className="car-card"
+                    onClick={() => selectWinner(car)}
+                  >
+                    <h3>{car.name}</h3>
+                    <p>{car.description}</p>
+                  </div>
+                ))}
+              </div>
             )}
-          />
-          {renderBattleScreen()}
-        </>
+          </div>
+          <div className="bracket-section">
+            <Bracket
+              allRounds={allRounds}
+              roundWinners={allRounds.map((round, i) =>
+                i < allRounds.length - 1 ? round.map(c => c.id) : []
+              )}
+            />
+          </div>
+        </div>
       )}
-      {gameState === 'results' && (
-        <>
-          <Bracket
-            allRounds={allRounds}
-            roundWinners={allRounds.map((round, i) =>
-              i < allRounds.length - 1 ? round.map(c => c.id) : []
-            )}
-          />
-          {renderResultsScreen()}
-        </>
-      )}
+
     </main>
       <DarkModeToggle />
     </div>
