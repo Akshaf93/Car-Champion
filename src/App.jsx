@@ -20,18 +20,18 @@ export default function App() {
   const [editingNote, setEditingNote] = useState('');
 
   // Add car state
-  const [newCar, setNewCar] = useState({ name: '', description: '', notes: '' });
+  const [newCar, setNewCar] = useState({ name: '', description: '', notes: '', imageUrl: '' });
 
   // Persisted custom cars from localStorage or default to mockCars
   const mockCars = [
-    { id: 1, name: 'Honda BR-V', description: 'Spacious compact SUV with family-friendly features.', notes: '', isCustom: false },
-    { id: 2, name: 'Kia Carnival', description: 'Luxury MPV with bold design and premium interior.', notes: '', isCustom: false },
-    { id: 3, name: 'Kia Sorento', description: 'Reliable mid-size SUV with hybrid option.', notes: '', isCustom: false },
-    { id: 4, name: 'Toyota Sienna', description: 'Hybrid-powered minivan with advanced tech.', notes: '', isCustom: false },
-    { id: 5, name: 'Oshan X7', description: 'Stylish crossover with modern tech and comfort.', notes: '', isCustom: false },
-    { id: 6, name: 'Nissan Serena', description: 'Smooth-driving commuter van with sliding doors.', notes: '', isCustom: false },
-    { id: 7, name: 'Toyota Prius Alpha', description: 'Eco-friendly hatchback with hybrid efficiency.', notes: '', isCustom: false },
-    { id: 8, name: 'Chery Tiggo 8 Pro', description: 'Premium SUV with aggressive styling and smart tech.', notes: '', isCustom: false }
+    { id: 1, name: 'Honda BR-V', description: 'Spacious compact SUV with family-friendly features.', notes: '', isCustom: false, imageUrl: '' },
+    { id: 2, name: 'Kia Carnival', description: 'Luxury MPV with bold design and premium interior.', notes: '', isCustom: false, imageUrl: '' },
+    { id: 3, name: 'Kia Sorento', description: 'Reliable mid-size SUV with hybrid option.', notes: '', isCustom: false, imageUrl: '' },
+    { id: 4, name: 'Toyota Sienna', description: 'Hybrid-powered minivan with advanced tech.', notes: '', isCustom: false, imageUrl: '' },
+    { id: 5, name: 'Oshan X7', description: 'Stylish crossover with modern tech and comfort.', notes: '', isCustom: false, imageUrl: '' },
+    { id: 6, name: 'Nissan Serena', description: 'Smooth-driving commuter van with sliding doors.', notes: '', isCustom: false, imageUrl: '' },
+    { id: 7, name: 'Toyota Prius Alpha', description: 'Eco-friendly hatchback with hybrid efficiency.', notes: '', isCustom: false, imageUrl: '' },
+    { id: 8, name: 'Chery Tiggo 8 Pro', description: 'Premium SUV with aggressive styling and smart tech.', notes: '', isCustom: false, imageUrl: '' }
   ];
 
   const [selectedCars, setSelectedCars] = useState(() => {
@@ -53,7 +53,8 @@ export default function App() {
       name: 'Bye',
       description: 'Automatically advances to the next round.',
       notes: '',
-      isBye: true
+      isBye: true,
+      imageUrl: ''
     }));
     return [...carList, ...padding];
   };
@@ -117,6 +118,11 @@ export default function App() {
     setGameState('start');
   };
 
+  const resetToDefaultCars = () => {
+    setSelectedCars([...mockCars]);
+    localStorage.removeItem('selectedCars');
+  };
+
   const handleAddCustomCar = () => {
     if (!newCar.name.trim()) return;
     const id = Date.now();
@@ -126,7 +132,7 @@ export default function App() {
       isCustom: true
     };
     setSelectedCars(prev => [...prev, newCarEntry]);
-    setNewCar({ name: '', description: '', notes: '' });
+    setNewCar({ name: '', description: '', notes: '', imageUrl: '' });
   };
 
   const openNoteModal = (car) => {
