@@ -773,72 +773,24 @@ export default function App() {
     </button>
   );
 
-  return (
-    <div style={{
-        fontFamily: "'Righteous', sans-serif",
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
-        color: darkMode ? '#cbd5e0' : '#2d3748',
-        transition: 'background-color 0.3s, color 0.3s'
-      }}>
+return (
+    <div className="font-righteous min-h-screen flex flex-col transition-colors duration-300 bg-slate-900 text-slate-200">
       {/* Header */}
-      <header style={{
-      backgroundColor: darkMode ? '#2d3748' : 'white',
-      boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
-      padding: '1rem 0',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      minHeight: '48px',
-      fontSize: '1rem'
-    }}>
-      {/* Left: Logo and Title */}
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <a
-          href="/"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            textDecoration: 'none',
-            marginLeft: '1rem',
-            color: darkMode ? 'white' : '#2d3748' // ← important: set text color
-          }}
-        >
-          <img src="/trophy.png" alt="Logo" style={{ width: '32px', height: '32px' }} />
-          <h1 style={{
-            fontFamily: "'Righteous', sans-serif",
-            fontSize: '1.1rem',
-            fontWeight: 'bold',
-            margin: 0
-          }}>
-            Car Champion
-          </h1>
+      <header className="bg-slate-800 shadow flex justify-between items-center py-4 px-6 text-sm">
+        <a href="/" className="flex items-center gap-2 no-underline text-white">
+          <img src="/trophy.png" alt="Logo" className="w-8 h-8" />
+          <h1 className="text-lg font-bold">Car Champion</h1>
         </a>
-      </div>
-    
-      {/* Right: Button */}
-      <button
-        onClick={resetGame}
-        style={{
-          marginRight: '0.5rem',
-          backgroundColor: darkMode ? '#281940' : '#bbd4f0',
-          color: darkMode ? '#cbd5e0' : '#2d3748',
-          border: 'none',
-          cursor: 'pointer',
-          fontSize: '0.9rem',
-          padding: '0.2rem 0.8rem',
-          borderRadius: '4px'
-        }}
-      >
-        New Tournament
-      </button>
-    </header>
+        <button
+          onClick={resetGame}
+          className="bg-purple-900 text-white px-3 py-1 rounded text-xs hover:bg-purple-800"
+        >
+          New Tournament
+        </button>
+      </header>
 
-      {/* Main Content */}
-      <main style={{ flex: 1, width: '100%' }}>
+      {/* Main content */}
+      <main className="flex-1 w-full">
         {gameState === 'start' && renderStartScreen()}
         {gameState === 'confirmEdit' && renderConfirmEditScreen()}
         {gameState === 'edit' && renderEditScreen()}
@@ -846,7 +798,14 @@ export default function App() {
         {gameState === 'battle' && renderBattleScreen()}
         {gameState === 'results' && renderResultsScreen()}
       </main>
-      <DarkModeToggle />
+
+      {/* Dark Mode Toggle */}
+      <button
+        onClick={toggleDarkMode}
+        className="fixed bottom-4 right-4 p-3 rounded-full bg-slate-600 hover:bg-slate-500 text-white"
+      >
+        {darkMode ? '☀️' : '🌙'}
+      </button>
     </div>
   );
 }
