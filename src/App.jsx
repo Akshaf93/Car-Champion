@@ -769,25 +769,28 @@ export default function App() {
 
 
 return (
-        <div className="font-righteous min-h-screen flex flex-col transition-colors duration-300 bg-slate-900 text-slate-200">
+        <div className={`font-righteous min-h-screen flex flex-col transition-colors duration-300 ${
+            darkMode ? 'bg-slate-900 text-slate-200' : 'bg-slate-100 text-slate-800'
+          }`}>
+
+          
           {/* Header */}
-          <header className={`w-full px-4 py-3 flex items-center justify-between shadow-md ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`}>
-      {/* Left: Logo and Title */}
-      <a href="/" className="flex items-center gap-2 text-lg font-bold no-underline">
-        <img src="/trophy.png" alt="Logo" className="w-8 h-8" />
-        <h1 className="font-righteous text-xl">Car Champion</h1>
-      </a>
-    
-      {/* Right: New Tournament Button */}
-      <button
-        onClick={resetGame}
-        className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-          darkMode ? 'bg-purple-900 text-white hover:bg-purple-700' : 'bg-blue-200 text-gray-800 hover:bg-blue-300'
-        }`}
-      >
-        New Tournament
-      </button>
-    </header>
+          <header className={`bg-slate-800 text-white shadow flex justify-between items-center px-4 py-3`}>
+            {/* Left: Logo and Title */}
+            <div className="flex items-center gap-2">
+              <img src="/trophy.png" alt="Logo" className="w-8 h-8" />
+              <h1 className="text-xl font-bold font-righteous">Car Champion</h1>
+            </div>
+          
+            {/* Right: Reset Button */}
+            <button
+              onClick={resetGame}
+              className="bg-indigo-500 hover:bg-indigo-600 text-white text-sm px-3 py-1 rounded"
+            >
+              New Tournament
+            </button>
+          </header>
+
 
 
       {/* Main content */}
