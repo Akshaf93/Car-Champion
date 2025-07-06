@@ -1,0 +1,66 @@
+/* bracket.css */
+
+.bracket-container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+  overflow-x: auto;
+  animation: fadeSlideIn 0.6s ease-out;
+}
+
+.bracket-round {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 160px;
+}
+
+.bracket-car {
+  background-color: #f3f4f6;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bracket-car:hover {
+  transform: scale(1.05);
+}
+
+.car-winner {
+  background-color: #4ade80; /* Green highlight */
+  border-color: #16a34a;
+  color: #065f46;
+  animation: winnerPop 0.4s ease;
+}
+
+/* Entry animation */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Winner animation */
+@keyframes winnerPop {
+  0% {
+    transform: scale(0.95);
+    background-color: #bbf7d0;
+  }
+  50% {
+    transform: scale(1.05);
+    background-color: #4ade80;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
