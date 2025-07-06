@@ -769,32 +769,24 @@ export default function App() {
 
 
 return (
-        <div className={`font-righteous min-h-screen flex flex-col transition-colors duration-300 ${
-            darkMode ? 'bg-slate-900 text-slate-200' : 'bg-slate-100 text-slate-800'
-          }`}>
+  <div className={darkMode ? 'dark' : ''}>
+    <div className="font-righteous min-h-screen flex flex-col transition-colors duration-300 bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-200">
+      {/* Header */}
+      <header className="bg-white dark:bg-slate-800 shadow-md py-4 px-6 flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <img src="/trophy.png" alt="Logo" className="w-8 h-8" />
+          <h1 className="text-lg font-bold text-slate-800 dark:text-white">Car Champion</h1>
+        </div>
+        <button
+          onClick={resetGame}
+          className="bg-sky-200 dark:bg-violet-900 text-slate-800 dark:text-slate-200 px-3 py-1 rounded-md text-sm"
+        >
+          New Tournament
+        </button>
+      </header>
 
-          
-          {/* Header */}
-          <header className={`bg-slate-800 text-white shadow flex justify-between items-center px-4 py-3`}>
-            {/* Left: Logo and Title */}
-            <div className="flex items-center gap-2">
-              <img src="/trophy.png" alt="Logo" className="w-8 h-8" />
-              <h1 className="text-xl font-bold font-righteous">Car Champion</h1>
-            </div>
-          
-            {/* Right: Reset Button */}
-            <button
-              onClick={resetGame}
-              className="bg-indigo-500 hover:bg-indigo-600 text-white text-sm px-3 py-1 rounded"
-            >
-              New Tournament
-            </button>
-          </header>
-
-
-
-      {/* Main content */}
-      <main className="flex-1 w-full">
+      {/* Main */}
+      <main className="flex-1">
         {gameState === 'start' && renderStartScreen()}
         {gameState === 'confirmEdit' && renderConfirmEditScreen()}
         {gameState === 'edit' && renderEditScreen()}
@@ -803,5 +795,5 @@ return (
         {gameState === 'results' && renderResultsScreen()}
       </main>
     </div>
-  );
-}
+  </div>
+);
