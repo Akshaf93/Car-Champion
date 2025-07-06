@@ -1,43 +1,28 @@
 import './global.css';
 import { useState, useEffect } from 'react';
-import './bracket.css';
-
-function Bracket({ allRounds, roundWinners }) {
-  return (
-    <div className="bracket-container">
-      {allRounds.map((round, roundIndex) => (
-        <div key={roundIndex} className="bracket-round">
-          {round.map((car, i) => (
-            <div
-              key={car.id || i}
-              className={`bracket-car ${
-                roundIndex < allRounds.length - 1 && roundWinners[roundIndex]?.includes(car.id)
-                  ? 'car-winner'
-                  : ''
-              }`}
-            >
-              {car.name}
-            </div>
-          ))}
-        </div>
-      ))}
-    </div>
-  );
-}
 
 export default function App() {
+  // Game states: start → confirmEdit → edit → battle → results
   const [gameState, setGameState] = useState('start');
+
+  // Dark mode defaults to true now
   const [darkMode, setDarkMode] = useState(true);
+
+  // Tournament state
   const [currentRound, setCurrentRound] = useState([]);
   const [battles, setBattles] = useState([]);
   const [battleIndex, setBattleIndex] = useState(0);
   const [roundWinners, setRoundWinners] = useState([]);
   const [winner, setWinner] = useState(null);
+
+  // Note modal state
   const [expandedNoteCarId, setExpandedNoteCarId] = useState(null);
   const [editingNote, setEditingNote] = useState('');
-  const [newCar, setNewCar] = useState({ name: '', description: '', notes: '', imageUrl: '' });
-  const [allRounds, setAllRounds] = useState([]);
 
+  // Add car state
+  const [newCar, setNewCar] = useState({ name: '', description: '', notes: '', imageUrl: '' });
+
+  // Persisted custom cars from localStorage or default to mockCars
   const mockCars = [
     { id: 1, name: 'Honda BR-V', description: 'Spacious compact SUV with family-friendly features.', notes: '', isCustom: false, imageUrl: '' },
     { id: 2, name: 'Kia Carnival', description: 'Luxury MPV with bold design and premium interior.', notes: '', isCustom: false, imageUrl: '' },
@@ -102,7 +87,6 @@ export default function App() {
     setBattles(initialBattles);
     setBattleIndex(0);
     setRoundWinners([]);
-    setAllRounds([[...paddedCars]]);
     setGameState('battle');
   };
 
@@ -113,7 +97,6 @@ export default function App() {
       setBattleIndex(battleIndex + 1);
     } else {
       const finalWinners = [...updatedWinners];
-      setAllRounds(prev => [...prev, finalWinners]);
       if (finalWinners.length === 1) {
         setWinner(finalWinners[0]);
         setGameState('results');
@@ -132,7 +115,6 @@ export default function App() {
     setBattles([]);
     setRoundWinners([]);
     setWinner(null);
-    setAllRounds([]);
     setGameState('start');
   };
 
@@ -177,8 +159,6 @@ export default function App() {
 
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
-  const shouldShowBracket = gameState === 'battle';
-  
   // Render Loading Screen
   const renderLoadingScreen = () => (
     <div style={{
@@ -631,6 +611,14 @@ export default function App() {
           {/* VS separator */}
           <div style={{ textAlign: 'center', margin: '2rem 0' }}>
             <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>VS</div>
+            <div style={{
+              backgroundColor: darkMode ? '#2d3748' : '#edf2f7',
+              padding: '1rem',
+              borderRadius: '0.5rem',
+              textAlign: 'center'
+            }}>
+              <p>Select the better car based on your preferences</p>
+            </div>
           </div>
 
           {/* Right car */}
@@ -845,34 +833,13 @@ export default function App() {
 
       {/* Main Content */}
       <main style={{ flex: 1, width: '100%' }}>
-      {gameState === 'start' && renderStartScreen()}
-      {gameState === 'confirmEdit' && renderConfirmEditScreen()}
-      {gameState === 'edit' && renderEditScreen()}
-      {gameState === 'loading' && renderLoadingScreen()}
-      {gameState === 'battle' && shouldShowBracket && (
-          <Bracket
-            allRounds={allRounds}
-            roundWinners={allRounds.map((round, i) =>
-              i < allRounds.length - 1 ? round.map(c => c.id) : []
-            )}
-          />
-        )}
-
-        {gameState === 'battle' && battles[battleIndex] && (
-          <div className="battle-cards">
-            {battles[battleIndex].map((car) => (
-              <div
-                key={car.id}
-                className="car-card"
-                onClick={() => selectWinner(car)}
-              >
-                <h3>{car.name}</h3>
-                <p>{car.description}</p>
-              </div>
-            ))}
-          </div>
-        )}
-    </main>
+        {gameState === 'start' && renderStartScreen()}
+        {gameState === 'confirmEdit' && renderConfirmEditScreen()}
+        {gameState === 'edit' && renderEditScreen()}
+        {gameState === 'loading' && renderLoadingScreen()}
+        {gameState === 'battle' && renderBattleScreen()}
+        {gameState === 'results' && renderResultsScreen()}
+      </main>
       <DarkModeToggle />
     </div>
   );
