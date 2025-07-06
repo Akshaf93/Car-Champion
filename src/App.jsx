@@ -540,38 +540,29 @@ export default function App() {
 
   if (!left) return <p>No cars to compare.</p>;
 
-  const sharedCardStyle = {
-    width: '100%',
-    maxWidth: '400px',
-    backgroundColor: darkMode ? '#2d3748' : 'white',
-    padding: '1.5rem',
-    borderRadius: '0.5rem',
-    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+  const cardStyle = {
+    flex: '1 1 100%',
+    backgroundColor: darkMode ? '#2d3748' : '#ffffff',
+    padding: '1rem',
+    borderRadius: '0.75rem',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.08)',
     textAlign: 'center',
-    transition: 'all 0.3s ease',
-    cursor: 'pointer',
+    maxWidth: '100%',
+  };
+
+  const wrapperStyle = {
+    padding: '1.5rem 1rem',
+    backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+    color: darkMode ? '#e2e8f0' : '#2d3748',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   };
 
   return (
-    <div
-      style={{
-        padding: '2rem 1rem',
-        backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
-        color: darkMode ? '#cbd5e0' : '#2d3748',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '2rem',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <h2
-        style={{
-          fontSize: '1.75rem',
-          fontWeight: 'bold',
-          textAlign: 'center',
-        }}
-      >
+    <div style={wrapperStyle}>
+      <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem', textAlign: 'center' }}>
         Round {Math.round(Math.log2(selectedCars.length / currentRound.length)) + 1}
       </h2>
 
@@ -579,67 +570,58 @@ export default function App() {
         style={{
           display: 'flex',
           flexDirection: window.innerWidth < 768 ? 'column' : 'row',
-          gap: '1.5rem',
+          gap: '1.25rem',
           width: '100%',
-          justifyContent: 'center',
-          alignItems: 'stretch',
+          maxWidth: '600px',
         }}
       >
-        {/* Left Car */}
+        {/* Left Card */}
         <div
-          style={sharedCardStyle}
+          style={cardStyle}
           onClick={() => selectWinner(left)}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'scale(1.02)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
-          }}
         >
-          <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold' }}>{formatCarName(left.name)}</h3>
-          <p style={{ margin: '1rem 0' }}>{left.description}</p>
-          <h4 style={{ fontWeight: 'bold' }}>Your Notes:</h4>
-          <p style={{ fontStyle: 'italic', fontFamily: "'Space Mono', monospace", whiteSpace: 'pre-line' }}>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>{formatCarName(left.name)}</h3>
+          <p style={{ margin: '0.5rem 0' }}>{left.description}</p>
+          <h4>Your Notes:</h4>
+          <p style={{
+            fontFamily: 'monospace',
+            fontSize: '0.9rem',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word'
+          }}>
             {left.notes || 'No notes added.'}
           </p>
         </div>
 
-        {/* VS Box */}
-        <div
-          style={{
-            alignSelf: 'center',
-            fontSize: '1.5rem',
-            fontWeight: 'bold',
-            color: darkMode ? '#a0aec0' : '#4a5568',
-          }}
-        >
+        {/* VS */}
+        <div style={{
+          alignSelf: 'center',
+          fontWeight: 'bold',
+          fontSize: '1.2rem',
+          textAlign: 'center',
+        }}>
           VS
         </div>
 
-        {/* Right Car */}
-        <div
-          style={{ ...sharedCardStyle, cursor: right ? 'pointer' : 'default' }}
-          onClick={() => right && selectWinner(right)}
-          onMouseOver={(e) => {
-            if (right) e.currentTarget.style.transform = 'scale(1.02)';
-          }}
-          onMouseOut={(e) => {
-            if (right) e.currentTarget.style.transform = 'scale(1)';
-          }}
-        >
-          <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold' }}>
-            {right ? formatCarName(right.name) : 'Bye'}
-          </h3>
-          {right && (
-            <>
-              <p style={{ margin: '1rem 0' }}>{right.description}</p>
-              <h4 style={{ fontWeight: 'bold' }}>Your Notes:</h4>
-              <p style={{ fontStyle: 'italic', fontFamily: "'Space Mono', monospace", whiteSpace: 'pre-line' }}>
-                {right.notes || 'No notes added.'}
-              </p>
-            </>
-          )}
-        </div>
+        {/* Right Card */}
+        {right && (
+          <div
+            style={cardStyle}
+            onClick={() => selectWinner(right)}
+          >
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>{formatCarName(right.name)}</h3>
+            <p style={{ margin: '0.5rem 0' }}>{right.description}</p>
+            <h4>Your Notes:</h4>
+            <p style={{
+              fontFamily: 'monospace',
+              fontSize: '0.9rem',
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word'
+            }}>
+              {right.notes || 'No notes added.'}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
