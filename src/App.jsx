@@ -629,14 +629,6 @@ export default function App() {
           {/* VS separator */}
           <div style={{ textAlign: 'center', margin: '2rem 0' }}>
             <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>VS</div>
-            <div style={{
-              backgroundColor: darkMode ? '#2d3748' : '#edf2f7',
-              padding: '1rem',
-              borderRadius: '0.5rem',
-              textAlign: 'center'
-            }}>
-              <p>Select the better car based on your preferences</p>
-            </div>
           </div>
 
           {/* Right car */}
@@ -851,33 +843,33 @@ export default function App() {
 
       {/* Main Content */}
       <main style={{ flex: 1, width: '100%' }}>
-  {gameState === 'start' && renderStartScreen()}
-  {gameState === 'confirmEdit' && renderConfirmEditScreen()}
-  {gameState === 'edit' && renderEditScreen()}
-  {gameState === 'loading' && renderLoadingScreen()}
-  {gameState === 'battle' && (
-    <>
-      <Bracket
-        allRounds={allRounds}
-        roundWinners={allRounds.map((round, i) =>
-          i < allRounds.length - 1 ? round.map(c => c.id) : []
-        )}
-      />
-      {renderBattleScreen()}
-    </>
-  )}
-  {gameState === 'results' && (
-    <>
-      <Bracket
-        allRounds={allRounds}
-        roundWinners={allRounds.map((round, i) =>
-          i < allRounds.length - 1 ? round.map(c => c.id) : []
-        )}
-      />
-      {renderResultsScreen()}
-    </>
-  )}
-</main>
+      {gameState === 'start' && renderStartScreen()}
+      {gameState === 'confirmEdit' && renderConfirmEditScreen()}
+      {gameState === 'edit' && renderEditScreen()}
+      {gameState === 'loading' && renderLoadingScreen()}
+      {gameState === 'battle' && (
+        <>
+          <Bracket
+            allRounds={allRounds}
+            roundWinners={allRounds.map((round, i) =>
+              i < allRounds.length - 1 ? round.map(c => c.id) : []
+            )}
+          />
+          {renderBattleScreen()}
+        </>
+      )}
+      {gameState === 'results' && (
+        <>
+          <Bracket
+            allRounds={allRounds}
+            roundWinners={allRounds.map((round, i) =>
+              i < allRounds.length - 1 ? round.map(c => c.id) : []
+            )}
+          />
+          {renderResultsScreen()}
+        </>
+      )}
+    </main>
       <DarkModeToggle />
     </div>
   );
