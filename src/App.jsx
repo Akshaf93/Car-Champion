@@ -2,7 +2,7 @@ import './global.css';
 import { useState, useEffect } from 'react';
 
 export default function App() {
-  // Game states: start → confirmEdit → edit → battle → results
+  // Game states: start → confirmEdit → edit → bracket → battle → results
   const [gameState, setGameState] = useState('start');
 
   // Dark mode defaults to true now
@@ -76,18 +76,19 @@ export default function App() {
   };
 
   const beginTournament = () => {
-    if (selectedCars.length < 2) {
+  if (selectedCars.length < 2) {
       alert("Please select at least 2 cars.");
       return;
     }
     const paddedCars = padToNextPowerOfTwo(selectedCars);
     const initialBattles = generateBattles(paddedCars);
-
+  
     setCurrentRound(paddedCars);
     setBattles(initialBattles);
     setBattleIndex(0);
     setRoundWinners([]);
-    setGameState('battle');
+  
+    setGameState('bracket'); // ⬅️ Show bracket before battle
   };
 
   const selectWinner = (car) => {
@@ -749,6 +750,70 @@ export default function App() {
     );
   };
 
+  const renderBracketScreen = () => {
+  const rounds = [];
+  let current = [...currentRound];
+  while (current.length > 1) {
+    const pairs = generateBattles(current);
+    rounds.push(pairs);
+    current = pairs.map(pair => ({ id: Date.now() + Math.random(), name: '?', isPlaceholder: true }));
+  }
+
+  return (
+    <div style={{
+      padding: '2rem',
+      textAlign: 'center',
+      backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+      color: darkMode ? '#cbd5e0' : '#2d3748',
+      transition: 'background-color 0.3s, color 0.3s'
+    }}>
+      <h2 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '2rem' }}>Tournament Bracket</h2>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        gap: '2rem',
+        overflowX: 'auto',
+        paddingBottom: '2rem'
+      }}>
+        {rounds.map((round, i) => (
+          <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <h4 style={{ marginBottom: '0.5rem' }}>Round {i + 1}</h4>
+            {round.map((pair, j) => (
+              <div key={j} style={{
+                padding: '1rem',
+                backgroundColor: darkMode ? '#2d3748' : 'white',
+                borderRadius: '0.5rem',
+                minWidth: '160px',
+                textAlign: 'center',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+              }}>
+                <div>{pair[0]?.name || 'TBD'}</div>
+                <div style={{ margin: '0.5rem 0' }}>vs</div>
+                <div>{pair[1]?.name || 'TBD'}</div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <button
+        onClick={() => setGameState('battle')}
+        style={{
+          marginTop: '2rem',
+          padding: '0.75rem 1.5rem',
+          backgroundColor: '#10b981',
+          color: 'white',
+          border: 'none',
+          borderRadius: '0.5rem',
+          cursor: 'pointer'
+        }}
+      >
+        Begin Battle
+      </button>
+    </div>
+  );
+};
+
+
 
   const DarkModeToggle = () => (
     <button
@@ -839,6 +904,7 @@ export default function App() {
         {gameState === 'loading' && renderLoadingScreen()}
         {gameState === 'battle' && renderBattleScreen()}
         {gameState === 'results' && renderResultsScreen()}
+        {gameState === 'bracket' && renderBracketScreen()}
       </main>
       <DarkModeToggle />
     </div>
