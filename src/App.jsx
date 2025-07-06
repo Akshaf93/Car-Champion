@@ -757,37 +757,38 @@ export default function App() {
 
 
   const DarkModeToggle = () => (
-    <button
-      onClick={toggleDarkMode}
-      style={{
-        position: 'fixed',
-        bottom: '1rem',
-        right: '1rem',
-        padding: '0.75rem',
-        borderRadius: '9999px',
-        backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
-        cursor: 'pointer'
-      }}
-    >
-      {darkMode ? '☀️' : '🌙'}
-    </button>
-  );
+  <button
+    onClick={toggleDarkMode}
+    className={`fixed bottom-4 right-4 p-3 rounded-full transition-colors z-50 ${
+      darkMode ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+    }`}
+  >
+    {darkMode ? '☀️' : '🌙'}
+  </button>
+);
+
 
 return (
-    <div className="font-righteous min-h-screen flex flex-col transition-colors duration-300 bg-slate-900 text-slate-200">
-      {/* Header */}
-      <header className="bg-slate-800 shadow flex justify-between items-center py-4 px-6 text-sm">
-        <a href="/" className="flex items-center gap-2 no-underline text-white">
-          <img src="/trophy.png" alt="Logo" className="w-8 h-8" />
-          <h1 className="text-lg font-bold">Car Champion</h1>
-        </a>
-        <button
-          onClick={resetGame}
-          className="bg-purple-900 text-white px-3 py-1 rounded text-xs hover:bg-purple-800"
-        >
-          New Tournament
-        </button>
-      </header>
+        <div className="font-righteous min-h-screen flex flex-col transition-colors duration-300 bg-slate-900 text-slate-200">
+          {/* Header */}
+          <header className={`w-full px-4 py-3 flex items-center justify-between shadow-md ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`}>
+      {/* Left: Logo and Title */}
+      <a href="/" className="flex items-center gap-2 text-lg font-bold no-underline">
+        <img src="/trophy.png" alt="Logo" className="w-8 h-8" />
+        <h1 className="font-righteous text-xl">Car Champion</h1>
+      </a>
+    
+      {/* Right: New Tournament Button */}
+      <button
+        onClick={resetGame}
+        className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+          darkMode ? 'bg-purple-900 text-white hover:bg-purple-700' : 'bg-blue-200 text-gray-800 hover:bg-blue-300'
+        }`}
+      >
+        New Tournament
+      </button>
+    </header>
+
 
       {/* Main content */}
       <main className="flex-1 w-full">
@@ -798,14 +799,6 @@ return (
         {gameState === 'battle' && renderBattleScreen()}
         {gameState === 'results' && renderResultsScreen()}
       </main>
-
-      {/* Dark Mode Toggle */}
-      <button
-        onClick={toggleDarkMode}
-        className="fixed bottom-4 right-4 p-3 rounded-full bg-slate-600 hover:bg-slate-500 text-white"
-      >
-        {darkMode ? '☀️' : '🌙'}
-      </button>
     </div>
   );
 }
