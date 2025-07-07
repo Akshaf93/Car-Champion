@@ -617,9 +617,9 @@ export default function App() {
         </div>
 
         {/* Right Card */}
-        {right && (
-          style={cardStyle}
-            onClick={() => selectWinner(Right)}
+           <div
+            style={cardStyle}
+            onClick={() => selectWinner(left)}
             onMouseOver={(e) => {
               e.currentTarget.style.transform = 'scale(1.03)';
               e.currentTarget.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
