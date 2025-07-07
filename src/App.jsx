@@ -641,8 +641,7 @@ export default function App() {
       </div>
     </div>
   );
-};
-  // Results screen
+    // Results screen
   const renderResultsScreen = () => {
     return (
       <div style={{
