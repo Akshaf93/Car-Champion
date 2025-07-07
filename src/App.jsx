@@ -546,27 +546,27 @@ export default function App() {
     transition: 'transform 0.2s ease, box-shadow 0.2s ease',
   };
 
-  const wrapperStyle = {
+   const wrapperStyle = {
     padding: '2rem 1rem',
     backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
     color: darkMode ? '#e2e8f0' : '#2d3748',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    minHeight: '100%',
+    justifyContent: 'center', // change from 'flex-start' to 'center'
+    minHeight: '100vh',       // fix the vertical centering!
     boxSizing: 'border-box',
     overflowY: 'auto',
   };
-  
+
   const battleAreaStyle = {
     display: 'flex',
-    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center', // <--- this is key for vertical centering
-    gap: '3rem', // spacing between left card, VS, and right card
-    minHeight: '400px', // make sure there's enough height to center within
-    position: 'relative',
+    alignItems: 'center',
+    gap: '2rem',
+    flexWrap: 'wrap',
+    width: '100%',
+    maxWidth: '1000px',
   };
 
   return (
