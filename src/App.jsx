@@ -681,26 +681,26 @@ export default function App() {
           </p>
         </div>
 
-        <div style={{
-          backgroundColor: darkMode ? '#2d3748' : 'white',
-          borderRadius: '0.5rem',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-          maxWidth: '600px',
-          margin: '0 auto',
-          padding: '2rem',
-          textAlign: 'center',
-          transition: 'all 0.3s',
-          transform: 'translateY(0)',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-        }}
-        onMouseOver={(e) => {
-          e.currentTarget.style.transform = 'scale(1.03)';
-          e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
-        }}
-        onMouseOut={(e) => {
-          e.currentTarget.style.transform = 'scale(1)';
-          e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
-        }}
+        <div
+          style={{
+            backgroundColor: darkMode ? '#2d3748' : 'white',
+            borderRadius: '0.5rem',
+            boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+            maxWidth: '600px',
+            margin: '0 auto',
+            padding: '2rem',
+            textAlign: 'center',
+            transition: 'all 0.3s',
+            transform: 'translateY(0)',
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'scale(1.03)';
+            e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+          }}
         >
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏆</div>
           <h3 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
