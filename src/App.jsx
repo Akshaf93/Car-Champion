@@ -49,7 +49,7 @@ export default function App() {
   const padToNextPowerOfTwo = (carList) => {
     const nextPower = Math.pow(2, Math.ceil(Math.log2(carList.length)));
     const padding = Array.from({ length: nextPower - carList.length }).map((_, i) => ({
-      id: bye-${i},
+      id: `bye-${i}`,
       name: 'Bye',
       description: 'Automatically advances to the next round.',
       notes: '',
