@@ -790,7 +790,8 @@ export default function App() {
         flexDirection: 'column',
         backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
         color: darkMode ? '#cbd5e0' : '#2d3748',
-        transition: 'background-color 0.3s, color 0.3s'
+        transition: 'background-color 0.3s, color 0.3s',
+        overflowY: 'auto'
       }}>
       {/* Header */}
       <header style={{
