@@ -545,19 +545,21 @@ export default function App() {
     cursor: 'pointer',
     transition: 'transform 0.2s ease, box-shadow 0.2s ease',
   };
-
-   const wrapperStyle = {
-    padding: '3rem 1.5rem', // more breathing space
+    
+  const wrapperStyle = {
+    height: '100vh', // fills full viewport height
+    overflowY: 'auto', // only this scrolls
+    padding: '3rem 1.5rem',
     backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
     color: darkMode ? '#e2e8f0' : '#2d3748',
     boxSizing: 'border-box',
-    minHeight: '100vh',
-    overflowY: 'auto',
-    WebkitOverflowScrolling: 'touch', // fixes mobile scroll jitter
-    scrollBehavior: 'smooth',         // smooth scroll on anchors etc
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    scrollBehavior: 'smooth',
+    WebkitOverflowScrolling: 'touch',
   };
 
-    
   const battleAreaStyle = {
     display: 'flex',
     flexDirection: 'row',
