@@ -1,3 +1,4 @@
+You said:
 import './global.css';
 import { useState, useEffect } from 'react';
 
@@ -7,8 +8,6 @@ export default function App() {
 
   // Dark mode defaults to true now
   const [darkMode, setDarkMode] = useState(true);
-
-  const [hoveredCard, setHoveredCard] = useState(null);
 
   // Tournament state
   const [currentRound, setCurrentRound] = useState([]);
@@ -51,7 +50,7 @@ export default function App() {
   const padToNextPowerOfTwo = (carList) => {
     const nextPower = Math.pow(2, Math.ceil(Math.log2(carList.length)));
     const padding = Array.from({ length: nextPower - carList.length }).map((_, i) => ({
-      id: `bye-${i}`,
+      id: bye-${i},
       name: 'Bye',
       description: 'Automatically advances to the next round.',
       notes: '',
@@ -179,11 +178,11 @@ export default function App() {
         marginBottom: '1rem'
       }}></div>
       <p>Loading tournament...</p>
-      <style>{`
+      <style>{
         @keyframes spin {
           to { transform: rotate(360deg); }
         }
-      `}</style>
+      }</style>
     </div>
   );
 
@@ -542,117 +541,112 @@ export default function App() {
 
   if (!left) return <p>No cars to compare.</p>;
 
-  const baseCardStyle = {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 'auto',
+  const cardStyle = {
+    display: 'inline-flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: darkMode ? '#2d3748' : '#ffffff',
     padding: '1.5rem',
-    borderRadius: '0.75rem',
-    boxShadow: '0 4px 8px rgba(0,0,0,0.08)',
+    borderRadius: '1rem',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
     textAlign: 'center',
-    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-    cursor: 'pointer',
+    minWidth: 'fit-content',
     maxWidth: '100%',
+    marginBottom: '1rem',
     wordBreak: 'break-word',
+    whiteSpace: 'normal',
+    overflowWrap: 'break-word',
+    cursor: 'pointer',
+    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+  };
+
+  const wrapperStyle = {
+    padding: '2rem 1rem',
+    backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+    color: darkMode ? '#e2e8f0' : '#2d3748',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    minHeight: '100%',
+    boxSizing: 'border-box',
+    overflowY: 'auto',
+  };
+  
+  const battleAreaStyle = {
+    display: 'flex',
+    flexDirection: window.innerWidth < 768 ? 'column' : 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    flexWrap: 'wrap',
+    gap: '2rem',
+    width: '100%',
+    maxWidth: '90vw',
   };
 
   return (
-    <div
-      style={{
-        padding: '2rem 1rem',
-        backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
-        color: darkMode ? '#e2e8f0' : '#2d3748',
-        animation: 'fadeIn 0.4s ease-in-out',
-        width: '100%',
-        minHeight: '100vh',
-        boxSizing: 'border-box'
-      }}
-    >
-      <h2 style={{
-        fontSize: '1.8rem',
-        fontWeight: 700,
-        textAlign: 'center',
-        marginBottom: '2rem'
-      }}>
+    <div style={wrapperStyle}>
+      <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1.5rem', textAlign: 'center' }}>
         Round {Math.round(Math.log2(selectedCars.length / currentRound.length)) + 1}
       </h2>
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: window.innerWidth < 768 ? 'column' : 'row',
-          justifyContent: 'center',
-          gap: '2rem',
-          width: '100%',
-          maxWidth: '1200px',
-          margin: '0 auto',
-        }}
-      >
+      <div style={battleAreaStyle}>
         {/* Left Card */}
-        <div
-          style={{
-            ...baseCardStyle,
-            transform:
-              hoveredCard === left.id ? 'translateY(-6px) scale(1.02)' : 'none',
-            boxShadow:
-              hoveredCard === left.id
-                ? '0 8px 16px rgba(0,0,0,0.15)'
-                : '0 4px 8px rgba(0,0,0,0.08)'
-          }}
-          onClick={() => selectWinner(left)}
-          onMouseEnter={() => setHoveredCard(left.id)}
-          onMouseLeave={() => setHoveredCard(null)}
-        >
+        <div style={cardStyle} onClick={() => selectWinner(left)}>
+          onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'scale(1.03)';
+              e.currentTarget.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+            }}
+
           <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>{formatCarName(left.name)}</h3>
-          <p style={{ margin: '0.75rem 0' }}>{left.description}</p>
+          <p style={{ margin: '0.5rem 0' }}>{left.description}</p>
           <h4>Your Notes:</h4>
           <p style={{
             fontFamily: 'monospace',
             fontSize: '0.9rem',
             whiteSpace: 'pre-wrap',
-            wordBreak: 'break-word'
+            wordBreak: 'break-word',
+            maxWidth: '100%',
           }}>
             {left.notes || 'No notes added.'}
           </p>
         </div>
 
-        {/* VS Label */}
+        {/* VS Divider */}
         <div style={{
           alignSelf: 'center',
-          fontSize: '1.5rem',
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          fontSize: '1.2rem',
+          textAlign: 'center',
         }}>
           VS
         </div>
 
         {/* Right Card */}
         {right && (
-          <div
-            style={{
-              ...baseCardStyle,
-              transform:
-                hoveredCard === right.id ? 'translateY(-6px) scale(1.02)' : 'none',
-              boxShadow:
-                hoveredCard === right.id
-                  ? '0 8px 16px rgba(0,0,0,0.15)'
-                  : '0 4px 8px rgba(0,0,0,0.08)'
+          <div style={cardStyle} onClick={() => selectWinner(right)}>
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'scale(1.03)';
+              e.currentTarget.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
             }}
-            onClick={() => selectWinner(right)}
-            onMouseEnter={() => setHoveredCard(right.id)}
-            onMouseLeave={() => setHoveredCard(null)}
-          >
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+            }}
             <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>{formatCarName(right.name)}</h3>
-            <p style={{ margin: '0.75rem 0' }}>{right.description}</p>
+            <p style={{ margin: '0.5rem 0' }}>{right.description}</p>
             <h4>Your Notes:</h4>
             <p style={{
               fontFamily: 'monospace',
               fontSize: '0.9rem',
               whiteSpace: 'pre-wrap',
-              wordBreak: 'break-word'
+              wordBreak: 'break-word',
+              maxWidth: '100%',
             }}>
               {right.notes || 'No notes added.'}
             </p>
@@ -665,77 +659,77 @@ export default function App() {
     // Results screen
   const renderResultsScreen = () => {
     return (
-        <div style={{
-          padding: '2rem',
-          backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
-          color: darkMode ? '#cbd5e0' : '#2d3748',
-          transition: 'background-color 0.3s, color 0.3s'
-        }}>
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h2 style={{
-              fontSize: '2.5rem',
-              fontWeight: 'bold',
-              marginBottom: '1rem'
-            }}>Tournament Complete!</h2>
-            <p style={{ fontSize: '1.25rem', marginBottom: '2rem' }}>
-              After a fierce competition, we've determined the best car.
-            </p>
-          </div>
-  
-          <div style={{
-            backgroundColor: darkMode ? '#2d3748' : 'white',
-            borderRadius: '0.5rem',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-            maxWidth: '600px',
-            margin: '0 auto',
-            padding: '2rem',
-            textAlign: 'center',
-            transition: 'all 0.3s',
-            transform: 'translateY(0)',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'scale(1.03)';
-            e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
-          }}
-          >
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏆</div>
-            <h3 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-              {formatCarName(winner?.name || 'Unknown')}
-            </h3>
-            <p style={{ marginBottom: '2rem' }}>
-              {winner?.description || 'No car was selected as champion.'}
-            </p>
-            <div style={{ marginTop: '1rem' }}>
-              <h4 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Your Notes:</h4>
-                <p style={{ fontStyle: 'italic', fontFamily: "'Space Mono', monospace" }}>
-                <span style={{ whiteSpace: 'pre-line' }}>
-                  {winner?.notes || 'No notes added.'}
-                </span>
-              </p>
-            </div>
-            <button
-              onClick={resetGame}
-              style={{
-                marginTop: '2rem',
-                padding: '0.75rem 1.5rem',
-                backgroundColor: '#6675ef',
-                color: 'white',
-                border: 'none',
-                borderRadius: '0.5rem',
-                cursor: 'pointer'
-              }}
-            >
-              Play Again
-            </button>
-          </div>
+      <div style={{
+        padding: '2rem',
+        backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+        color: darkMode ? '#cbd5e0' : '#2d3748',
+        transition: 'background-color 0.3s, color 0.3s'
+      }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <h2 style={{
+            fontSize: '2.5rem',
+            fontWeight: 'bold',
+            marginBottom: '1rem'
+          }}>Tournament Complete!</h2>
+          <p style={{ fontSize: '1.25rem', marginBottom: '2rem' }}>
+            After a fierce competition, we've determined the best car.
+          </p>
         </div>
-      );
-    };
+
+        <div style={{
+          backgroundColor: darkMode ? '#2d3748' : 'white',
+          borderRadius: '0.5rem',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+          maxWidth: '600px',
+          margin: '0 auto',
+          padding: '2rem',
+          textAlign: 'center',
+          transition: 'all 0.3s',
+          transform: 'translateY(0)',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.transform = 'scale(1.03)';
+          e.currentTarget.style.boxShadow = '0 8px 12px rgba(0,0,0,0.2)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+        }}
+        >
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏆</div>
+          <h3 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+            {formatCarName(winner?.name || 'Unknown')}
+          </h3>
+          <p style={{ marginBottom: '2rem' }}>
+            {winner?.description || 'No car was selected as champion.'}
+          </p>
+          <div style={{ marginTop: '1rem' }}>
+            <h4 style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Your Notes:</h4>
+              <p style={{ fontStyle: 'italic', fontFamily: "'Space Mono', monospace" }}>
+              <span style={{ whiteSpace: 'pre-line' }}>
+                {winner?.notes || 'No notes added.'}
+              </span>
+            </p>
+          </div>
+          <button
+            onClick={resetGame}
+            style={{
+              marginTop: '2rem',
+              padding: '0.75rem 1.5rem',
+              backgroundColor: '#6675ef',
+              color: 'white',
+              border: 'none',
+              borderRadius: '0.5rem',
+              cursor: 'pointer'
+            }}
+          >
+            Play Again
+          </button>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div style={{
@@ -809,28 +803,17 @@ export default function App() {
       {darkMode ? '☀️' : '🌙'}
     </button>
   );
-  
-    <style>
-  {`
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  `}
-  </style>
-  
+
   return (
     <div style={{
         fontFamily: "'Righteous', sans-serif",
-        minHeight: '100%',
+        minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
         color: darkMode ? '#cbd5e0' : '#2d3748',
-        transition: 'background-color 0.3s, color 0.3s',
-        boxSizing: 'border-box'
+        transition: 'background-color 0.3s, color 0.3s'
       }}>
-          
       {/* Header */}
       <header style={{
       backgroundColor: darkMode ? '#2d3748' : 'white',
