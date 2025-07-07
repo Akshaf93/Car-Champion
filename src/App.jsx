@@ -540,29 +540,38 @@ export default function App() {
 
   if (!left) return <p>No cars to compare.</p>;
 
-  const cardStyle = {
-    flex: '1 1 100%',
-    backgroundColor: darkMode ? '#2d3748' : '#ffffff',
-    padding: '1rem',
-    borderRadius: '0.75rem',
-    boxShadow: '0 4px 8px rgba(0,0,0,0.08)',
+  const sharedCardStyle = {
+    width: '100%',
+    maxWidth: '400px',
+    backgroundColor: darkMode ? '#2d3748' : 'white',
+    padding: '1.5rem',
+    borderRadius: '0.5rem',
+    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
     textAlign: 'center',
-    maxWidth: '100%',
-  };
-
-  const wrapperStyle = {
-    padding: '1.5rem 1rem',
-    backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
-    color: darkMode ? '#e2e8f0' : '#2d3748',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+    transition: 'all 0.3s ease',
+    cursor: 'pointer',
   };
 
   return (
-    <div style={wrapperStyle}>
-      <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem', textAlign: 'center' }}>
+    <div
+      style={{
+        padding: '2rem 1rem',
+        backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+        color: darkMode ? '#cbd5e0' : '#2d3748',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '2rem',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <h2
+        style={{
+          fontSize: '1.75rem',
+          fontWeight: 'bold',
+          textAlign: 'center',
+        }}
+      >
         Round {Math.round(Math.log2(selectedCars.length / currentRound.length)) + 1}
       </h2>
 
@@ -570,58 +579,67 @@ export default function App() {
         style={{
           display: 'flex',
           flexDirection: window.innerWidth < 768 ? 'column' : 'row',
-          gap: '1.25rem',
+          gap: '1.5rem',
           width: '100%',
-          maxWidth: '600px',
+          justifyContent: 'center',
+          alignItems: 'stretch',
         }}
       >
-        {/* Left Card */}
+        {/* Left Car */}
         <div
-          style={cardStyle}
+          style={sharedCardStyle}
           onClick={() => selectWinner(left)}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'scale(1.02)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
         >
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>{formatCarName(left.name)}</h3>
-          <p style={{ margin: '0.5rem 0' }}>{left.description}</p>
-          <h4>Your Notes:</h4>
-          <p style={{
-            fontFamily: 'monospace',
-            fontSize: '0.9rem',
-            whiteSpace: 'pre-wrap',
-            wordBreak: 'break-word'
-          }}>
+          <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold' }}>{formatCarName(left.name)}</h3>
+          <p style={{ margin: '1rem 0' }}>{left.description}</p>
+          <h4 style={{ fontWeight: 'bold' }}>Your Notes:</h4>
+          <p style={{ fontStyle: 'italic', fontFamily: "'Space Mono', monospace", whiteSpace: 'pre-line' }}>
             {left.notes || 'No notes added.'}
           </p>
         </div>
 
-        {/* VS */}
-        <div style={{
-          alignSelf: 'center',
-          fontWeight: 'bold',
-          fontSize: '1.2rem',
-          textAlign: 'center',
-        }}>
+        {/* VS Box */}
+        <div
+          style={{
+            alignSelf: 'center',
+            fontSize: '1.5rem',
+            fontWeight: 'bold',
+            color: darkMode ? '#a0aec0' : '#4a5568',
+          }}
+        >
           VS
         </div>
 
-        {/* Right Card */}
-        {right && (
-          <div
-            style={cardStyle}
-            onClick={() => selectWinner(right)}
-          >
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>{formatCarName(right.name)}</h3>
-            <p style={{ margin: '0.5rem 0' }}>{right.description}</p>
-            <h4>Your Notes:</h4>
-            <p style={{
-              fontFamily: 'monospace',
-              fontSize: '0.9rem',
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-word'
-            }}>
-              {right.notes || 'No notes added.'}
-            </p>
-          </div>
-        )}
+        {/* Right Car */}
+        <div
+          style={{ ...sharedCardStyle, cursor: right ? 'pointer' : 'default' }}
+          onClick={() => right && selectWinner(right)}
+          onMouseOver={(e) => {
+            if (right) e.currentTarget.style.transform = 'scale(1.02)';
+          }}
+          onMouseOut={(e) => {
+            if (right) e.currentTarget.style.transform = 'scale(1)';
+          }}
+        >
+          <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold' }}>
+            {right ? formatCarName(right.name) : 'Bye'}
+          </h3>
+          {right && (
+            <>
+              <p style={{ margin: '1rem 0' }}>{right.description}</p>
+              <h4 style={{ fontWeight: 'bold' }}>Your Notes:</h4>
+              <p style={{ fontStyle: 'italic', fontFamily: "'Space Mono', monospace", whiteSpace: 'pre-line' }}>
+                {right.notes || 'No notes added.'}
+              </p>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -757,36 +775,88 @@ export default function App() {
 
 
   const DarkModeToggle = () => (
-  <button
-    onClick={toggleDarkMode}
-    className={`fixed bottom-4 right-4 p-3 rounded-full transition-colors z-50 ${
-      darkMode ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-    }`}
-  >
-    {darkMode ? '☀️' : '🌙'}
-  </button>
-);
+    <button
+      onClick={toggleDarkMode}
+      style={{
+        position: 'fixed',
+        bottom: '1rem',
+        right: '1rem',
+        padding: '0.75rem',
+        borderRadius: '9999px',
+        backgroundColor: darkMode ? '#4a5568' : '#edf2f7',
+        cursor: 'pointer'
+      }}
+    >
+      {darkMode ? '☀️' : '🌙'}
+    </button>
+  );
 
-
-return (
-  <div className={darkMode ? 'dark' : ''}>
-    <div className="font-righteous min-h-screen flex flex-col transition-colors duration-300 bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-200">
+  return (
+    <div style={{
+        fontFamily: "'Righteous', sans-serif",
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+        color: darkMode ? '#cbd5e0' : '#2d3748',
+        transition: 'background-color 0.3s, color 0.3s'
+      }}>
       {/* Header */}
-      <header className="bg-white dark:bg-slate-800 shadow-md py-4 px-6 flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <img src="/trophy.png" alt="Logo" className="w-8 h-8" />
-          <h1 className="text-lg font-bold text-slate-800 dark:text-white">Car Champion</h1>
-        </div>
-        <button
-          onClick={resetGame}
-          className="bg-sky-200 dark:bg-violet-900 text-slate-800 dark:text-slate-200 px-3 py-1 rounded-md text-sm"
+      <header style={{
+      backgroundColor: darkMode ? '#2d3748' : 'white',
+      boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
+      padding: '1rem 0',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      minHeight: '48px',
+      fontSize: '1rem'
+    }}>
+      {/* Left: Logo and Title */}
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <a
+          href="/"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            textDecoration: 'none',
+            marginLeft: '1rem',
+            color: darkMode ? 'white' : '#2d3748' // ← important: set text color
+          }}
         >
-          New Tournament
-        </button>
-      </header>
+          <img src="/trophy.png" alt="Logo" style={{ width: '32px', height: '32px' }} />
+          <h1 style={{
+            fontFamily: "'Righteous', sans-serif",
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            margin: 0
+          }}>
+            Car Champion
+          </h1>
+        </a>
+      </div>
+    
+      {/* Right: Button */}
+      <button
+        onClick={resetGame}
+        style={{
+          marginRight: '0.5rem',
+          backgroundColor: darkMode ? '#281940' : '#bbd4f0',
+          color: darkMode ? '#cbd5e0' : '#2d3748',
+          border: 'none',
+          cursor: 'pointer',
+          fontSize: '0.9rem',
+          padding: '0.2rem 0.8rem',
+          borderRadius: '4px'
+        }}
+      >
+        New Tournament
+      </button>
+    </header>
 
-      {/* Main */}
-      <main className="flex-1">
+      {/* Main Content */}
+      <main style={{ flex: 1, width: '100%' }}>
         {gameState === 'start' && renderStartScreen()}
         {gameState === 'confirmEdit' && renderConfirmEditScreen()}
         {gameState === 'edit' && renderEditScreen()}
@@ -794,7 +864,7 @@ return (
         {gameState === 'battle' && renderBattleScreen()}
         {gameState === 'results' && renderResultsScreen()}
       </main>
+      <DarkModeToggle />
     </div>
-  </div>
-);
-};
+  );
+}
