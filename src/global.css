@@ -1,15 +1,13 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Optional: Your custom styles below */
+/* ==== GLOBAL RESET & SCROLL ==== */
 html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /* always allow vertical scroll if content is taller than viewport */
+  overflow-y: auto;
+  -webkit-font-smoothing: antialiased;
 }
 
-body {
-  background: #1a202c; /* fallback background for dark mode */
-}
+/* keeps background consistent even when content scrolls */
+body { background: #1a202c; }
