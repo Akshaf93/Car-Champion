@@ -5,7 +5,7 @@ html, body, #root {
   padding: 0;
   box-sizing: border-box;
   /* always allow vertical scroll if content is taller than viewport */
-  overflow-y: auto;
+  overflow-y: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
