@@ -561,92 +561,81 @@ export default function App() {
   
   const battleAreaStyle = {
     display: 'flex',
-    flexDirection: window.innerWidth < 768 ? 'column' : 'row',
+    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'flex-start',
-    flexWrap: 'wrap',
-    gap: '2rem',
-    width: '100%',
-    maxWidth: '90vw',
+    alignItems: 'center', // <--- this is key for vertical centering
+    gap: '3rem', // spacing between left card, VS, and right card
+    minHeight: '400px', // make sure there's enough height to center within
+    position: 'relative',
   };
 
   return (
-    <div style={wrapperStyle}>
-      <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1.5rem', textAlign: 'center' }}>
-        Round {Math.round(Math.log2(selectedCars.length / currentRound.length)) + 1}
-      </h2>
+  <div style={wrapperStyle}>
+    <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1.5rem', textAlign: 'center' }}>
+      Round {Math.round(Math.log2(selectedCars.length / currentRound.length)) + 1}
+    </h2>
 
-      <div style={battleAreaStyle}>
-        {/* Left Card */}
-       <div
-            style={cardStyle}
-            onClick={() => selectWinner(left)}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'scale(1.03)';
-              e.currentTarget.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-            }}
-          >
-
-
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>{formatCarName(left.name)}</h3>
-          <p style={{ margin: '0.5rem 0' }}>{left.description}</p>
-          <h4>Your Notes:</h4>
-          <p style={{
-            fontFamily: 'monospace',
-            fontSize: '0.9rem',
-            whiteSpace: 'pre-wrap',
-            wordBreak: 'break-word',
-            maxWidth: '100%',
-          }}>
-            {left.notes || 'No notes added.'}
-          </p>
-        </div>
-
-        {/* VS Divider */}
-        <div style={{
-          alignSelf: 'center',
-          fontWeight: 'bold',
-          fontSize: '1.2rem',
-          textAlign: 'center',
+    <div style={battleAreaStyle}>
+      {/* Left Card */}
+      <div
+        style={cardStyle}
+        onClick={() => selectWinner(left)}
+        onMouseOver={(e) => {
+          e.currentTarget.style.transform = 'scale(1.03)';
+          e.currentTarget.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+        }}
+      >
+        <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>{formatCarName(left.name)}</h3>
+        <p style={{ margin: '0.5rem 0' }}>{left.description}</p>
+        <h4>Your Notes:</h4>
+        <p style={{
+          fontFamily: 'monospace',
+          fontSize: '0.9rem',
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+          maxWidth: '100%',
         }}>
-          VS
-        </div>
+          {left.notes || 'No notes added.'}
+        </p>
+      </div>
 
-        {/* Right Card */}
-           <div
-            style={cardStyle}
-            onClick={() => selectWinner(left)}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'scale(1.03)';
-              e.currentTarget.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-            }}
-          >
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>{formatCarName(right.name)}</h3>
-            <p style={{ margin: '0.5rem 0' }}>{right.description}</p>
-            <h4>Your Notes:</h4>
-            <p style={{
-              fontFamily: 'monospace',
-              fontSize: '0.9rem',
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-word',
-              maxWidth: '100%',
-            }}>
-              {right.notes || 'No notes added.'}
-            </p>
-          </div>
-        )}
+      {/* VS Separator */}
+      <div style={{ fontSize: '2rem', fontWeight: 'bold', userSelect: 'none' }}>VS</div>
+
+      {/* Right Card */}
+      <div
+        style={cardStyle}
+        onClick={() => selectWinner(right)}
+        onMouseOver={(e) => {
+          e.currentTarget.style.transform = 'scale(1.03)';
+          e.currentTarget.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+        }}
+      >
+        <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>{formatCarName(right.name)}</h3>
+        <p style={{ margin: '0.5rem 0' }}>{right.description}</p>
+        <h4>Your Notes:</h4>
+        <p style={{
+          fontFamily: 'monospace',
+          fontSize: '0.9rem',
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+          maxWidth: '100%',
+        }}>
+          {right.notes || 'No notes added.'}
+        </p>
       </div>
     </div>
-  );
-
+  </div>
+);
+    
     // Results screen
   const renderResultsScreen = () => {
     return (
