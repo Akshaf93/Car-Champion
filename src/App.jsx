@@ -592,8 +592,10 @@ export default function App() {
 
       <div style={battleAreaStyle}>
         {/* Left Card */}
-        <div style={cardStyle} onClick={() => selectWinner(left)}>
-          onMouseOver={(e) => {
+       <div
+            style={cardStyle}
+            onClick={() => selectWinner(left)}
+            onMouseOver={(e) => {
               e.currentTarget.style.transform = 'scale(1.03)';
               e.currentTarget.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
             }}
@@ -601,6 +603,8 @@ export default function App() {
               e.currentTarget.style.transform = 'scale(1)';
               e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
             }}
+          >
+
 
           <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>{formatCarName(left.name)}</h3>
           <p style={{ margin: '0.5rem 0' }}>{left.description}</p>
@@ -628,7 +632,8 @@ export default function App() {
 
         {/* Right Card */}
         {right && (
-          <div style={cardStyle} onClick={() => selectWinner(right)}>
+          style={cardStyle}
+            onClick={() => selectWinner(Right)}
             onMouseOver={(e) => {
               e.currentTarget.style.transform = 'scale(1.03)';
               e.currentTarget.style.boxShadow = '0 6px 18px rgba(0,0,0,0.2)';
@@ -637,6 +642,7 @@ export default function App() {
               e.currentTarget.style.transform = 'scale(1)';
               e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
             }}
+          >
             <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>{formatCarName(right.name)}</h3>
             <p style={{ margin: '0.5rem 0' }}>{right.description}</p>
             <h4>Your Notes:</h4>
