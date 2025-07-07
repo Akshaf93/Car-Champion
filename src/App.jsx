@@ -553,11 +553,12 @@ export default function App() {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center', // change from 'flex-start' to 'center'
-    minHeight: '100vh',       // fix the vertical centering!
+    justifyContent: 'center',
+    minHeight: '100vh',
     boxSizing: 'border-box',
     overflowY: 'auto',
   };
+  
 
   const battleAreaStyle = {
     display: 'flex',
