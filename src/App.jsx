@@ -543,30 +543,41 @@ export default function App() {
   if (!left) return <p>No cars to compare.</p>;
 
   const baseCardStyle = {
-    flex: window.innerWidth < 768 ? '1 1 100%' : '1 1 45%',
-    minWidth: 0,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 'auto',
     backgroundColor: darkMode ? '#2d3748' : '#ffffff',
-    padding: '1rem',
+    padding: '1.5rem',
     borderRadius: '0.75rem',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.08)',
     textAlign: 'center',
     transition: 'transform 0.2s ease, box-shadow 0.2s ease',
     cursor: 'pointer',
-    wordBreak: 'break-word'
+    maxWidth: '100%',
+    wordBreak: 'break-word',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   };
 
   return (
     <div
       style={{
-        padding: '1.5rem 1rem',
+        padding: '2rem 1rem',
         backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
         color: darkMode ? '#e2e8f0' : '#2d3748',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        animation: 'fadeIn 0.4s ease-in-out'
+        animation: 'fadeIn 0.4s ease-in-out',
+        width: '100%',
+        minHeight: '100vh',
+        boxSizing: 'border-box'
       }}
     >
-      <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem', textAlign: 'center' }}>
+      <h2 style={{
+        fontSize: '1.8rem',
+        fontWeight: 700,
+        textAlign: 'center',
+        marginBottom: '2rem'
+      }}>
         Round {Math.round(Math.log2(selectedCars.length / currentRound.length)) + 1}
       </h2>
 
@@ -574,12 +585,14 @@ export default function App() {
         style={{
           display: 'flex',
           flexDirection: window.innerWidth < 768 ? 'column' : 'row',
-          gap: '1.25rem',
+          justifyContent: 'center',
+          gap: '2rem',
           width: '100%',
-          maxWidth: '900px'
+          maxWidth: '1200px',
+          margin: '0 auto',
         }}
       >
-        {/* LEFT CARD */}
+        {/* Left Card */}
         <div
           style={{
             ...baseCardStyle,
@@ -595,7 +608,7 @@ export default function App() {
           onMouseLeave={() => setHoveredCard(null)}
         >
           <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>{formatCarName(left.name)}</h3>
-          <p style={{ margin: '0.5rem 0' }}>{left.description}</p>
+          <p style={{ margin: '0.75rem 0' }}>{left.description}</p>
           <h4>Your Notes:</h4>
           <p style={{
             fontFamily: 'monospace',
@@ -607,17 +620,16 @@ export default function App() {
           </p>
         </div>
 
-        {/* VS TEXT */}
+        {/* VS Label */}
         <div style={{
           alignSelf: 'center',
-          fontWeight: 'bold',
-          fontSize: '1.2rem',
-          textAlign: 'center'
+          fontSize: '1.5rem',
+          fontWeight: 'bold'
         }}>
           VS
         </div>
 
-        {/* RIGHT CARD */}
+        {/* Right Card */}
         {right && (
           <div
             style={{
@@ -634,7 +646,7 @@ export default function App() {
             onMouseLeave={() => setHoveredCard(null)}
           >
             <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>{formatCarName(right.name)}</h3>
-            <p style={{ margin: '0.5rem 0' }}>{right.description}</p>
+            <p style={{ margin: '0.75rem 0' }}>{right.description}</p>
             <h4>Your Notes:</h4>
             <p style={{
               fontFamily: 'monospace',
