@@ -161,30 +161,16 @@ export default function App() {
 
   // Render Loading Screen
   const renderLoadingScreen = () => (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}>
-      <div style={{
-        width: '16px',
-        height: '16px',
-        border: '2px solid #7c3aed',
-        borderTop: '2px solid transparent',
-        borderRadius: '50%',
-        animation: 'spin 1s linear infinite',
-        marginBottom: '1rem'
-      }}></div>
-      <p>Loading tournament...</p>
-      <style>{
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      }</style>
-    </div>
-  );
-
+  <div style={{
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '2rem'
+  }}>
+    <p style={{ fontSize: '1.25rem' }}>Loading tournament...</p>
+  </div>
+);
   // Start screen
   const renderStartScreen = () => (
     <div style={{
