@@ -565,11 +565,12 @@ export default function App() {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: '100vh',
+    justifyContent: 'flex-start',
+    minHeight: '100%',
     boxSizing: 'border-box',
+    overflowY: 'auto',
   };
-
+  
   const battleAreaStyle = {
     display: 'flex',
     flexDirection: window.innerWidth < 768 ? 'column' : 'row',
