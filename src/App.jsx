@@ -547,13 +547,16 @@ export default function App() {
   };
 
    const wrapperStyle = {
-    padding: '2rem 1rem',
+    padding: '3rem 1.5rem', // more breathing space
     backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
     color: darkMode ? '#e2e8f0' : '#2d3748',
     boxSizing: 'border-box',
     minHeight: '100vh',
     overflowY: 'auto',
+    WebkitOverflowScrolling: 'touch', // fixes mobile scroll jitter
+    scrollBehavior: 'smooth',         // smooth scroll on anchors etc
   };
+
     
   const battleAreaStyle = {
     display: 'flex',
