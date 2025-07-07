@@ -1,4 +1,3 @@
-You said:
 import './global.css';
 import { useState, useEffect } from 'react';
 
