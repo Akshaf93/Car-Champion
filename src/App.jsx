@@ -540,106 +540,92 @@ export default function App() {
 
   if (!left) return <p>No cars to compare.</p>;
 
-  const isMobile = window.innerWidth < 768;
-
-  const wrapperStyle = {
-    minHeight: '100vh',
-    paddingTop: '5rem',       // Push cards away from header
-    paddingBottom: '5rem',    // Give room at bottom
-    paddingLeft: '1rem',
-    paddingRight: '1rem',
-    backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
-    color: darkMode ? '#e2e8f0' : '#2d3748',
-    display: 'flex',
+  const cardStyle = {
+    display: 'inline-flex',
     flexDirection: 'column',
     alignItems: 'center',
-    overflowY: 'auto',
-    boxSizing: 'border-box'
-  };
-
-  const cardContainerStyle = {
-    display: 'flex',
-    flexDirection: isMobile ? 'column' : 'row',
-    alignItems: 'center',
     justifyContent: 'center',
-    gap: '2rem',
-    width: '100%',
-    maxWidth: '800px',
-  };
-
-  const cardStyle = {
-    flex: '1',
     backgroundColor: darkMode ? '#2d3748' : '#ffffff',
     padding: '1.5rem',
     borderRadius: '1rem',
     boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
     textAlign: 'center',
-    maxWidth: '360px',
-    width: '100%',
-    marginBottom: '1rem', // ← ensures space between card and bottom
+    minWidth: 'fit-content',
+    maxWidth: '100%',
+    marginBottom: '1rem',
+    wordBreak: 'break-word',
+    whiteSpace: 'normal',
+    overflowWrap: 'break-word',
+  };
+
+  const wrapperStyle = {
+    padding: '2rem 1rem',
+    backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
+    color: darkMode ? '#e2e8f0' : '#2d3748',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '100vh',
     boxSizing: 'border-box',
-    overflow: 'hidden',
   };
 
-    
-  const handleCardHover = (e, scale = 1.05) => {
-    e.currentTarget.style.transform = `scale(${scale})`;
-    e.currentTarget.style.boxShadow = '0 6px 14px rgba(0,0,0,0.15)';
-  };
-
-  const resetHover = (e) => {
-    e.currentTarget.style.transform = 'scale(1)';
-    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+  const battleAreaStyle = {
+    display: 'flex',
+    flexDirection: window.innerWidth < 768 ? 'column' : 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    flexWrap: 'wrap',
+    gap: '2rem',
+    width: '100%',
+    maxWidth: '90vw',
   };
 
   return (
     <div style={wrapperStyle}>
-      <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '2rem' }}>
+      <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1.5rem', textAlign: 'center' }}>
         Round {Math.round(Math.log2(selectedCars.length / currentRound.length)) + 1}
       </h2>
 
-      <div style={cardContainerStyle}>
-        {/* Left Car */}
-        <div
-          style={cardStyle}
-          onClick={() => selectWinner(left)}
-          onMouseEnter={handleCardHover}
-          onMouseLeave={resetHover}
-        >
-          <h3 style={{ fontSize: '1.3rem', fontWeight: 600 }}>{formatCarName(left.name)}</h3>
+      <div style={battleAreaStyle}>
+        {/* Left Card */}
+        <div style={cardStyle} onClick={() => selectWinner(left)}>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>{formatCarName(left.name)}</h3>
           <p style={{ margin: '0.5rem 0' }}>{left.description}</p>
-          <h4 style={{ marginTop: '1rem' }}>Your Notes</h4>
+          <h4>Your Notes:</h4>
           <p style={{
             fontFamily: 'monospace',
-            fontSize: '0.95rem',
+            fontSize: '0.9rem',
             whiteSpace: 'pre-wrap',
-            wordBreak: 'break-word'
+            wordBreak: 'break-word',
+            maxWidth: '100%',
           }}>
             {left.notes || 'No notes added.'}
           </p>
         </div>
 
-        {/* VS Text */}
-        <div style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
+        {/* VS Divider */}
+        <div style={{
+          alignSelf: 'center',
+          fontWeight: 'bold',
+          fontSize: '1.2rem',
+          textAlign: 'center',
+        }}>
           VS
         </div>
 
-        {/* Right Car (optional in odd case) */}
+        {/* Right Card */}
         {right && (
-          <div
-            style={cardStyle}
-            onClick={() => selectWinner(right)}
-            onMouseEnter={handleCardHover}
-            onMouseLeave={resetHover}
-          >
-            <h3 style={{ fontSize: '1.3rem', fontWeight: 600 }}>{formatCarName(right.name)}</h3>
+          <div style={cardStyle} onClick={() => selectWinner(right)}>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 600 }}>{formatCarName(right.name)}</h3>
             <p style={{ margin: '0.5rem 0' }}>{right.description}</p>
-            <h4 style={{ marginTop: '1rem' }}>Your Notes</h4>
+            <h4>Your Notes:</h4>
             <p style={{
               fontFamily: 'monospace',
-              fontSize: '0.95rem',
+              fontSize: '0.9rem',
               whiteSpace: 'pre-wrap',
-              wordBreak: 'break-word'
+              wordBreak: 'break-word',
+              maxWidth: '100%',
             }}>
               {right.notes || 'No notes added.'}
             </p>
@@ -648,6 +634,7 @@ export default function App() {
       </div>
     </div>
   );
+
     // Results screen
   const renderResultsScreen = () => {
     return (
