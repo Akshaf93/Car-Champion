@@ -550,24 +550,18 @@ export default function App() {
     padding: '2rem 1rem',
     backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
     color: darkMode ? '#e2e8f0' : '#2d3748',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: '100vh',
     boxSizing: 'border-box',
+    minHeight: '100vh',
     overflowY: 'auto',
   };
-  
-
+    
   const battleAreaStyle = {
     display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center', // vertical center of the shorter card
     gap: '2rem',
-    flexWrap: 'wrap',
-    width: '100%',
-    maxWidth: '1000px',
+    flexWrap: 'wrap', // good for mobile responsiveness
   };
 
   return (
