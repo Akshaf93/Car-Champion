@@ -817,6 +817,8 @@ export default function App() {
         color: darkMode ? '#cbd5e0' : '#2d3748',
         transition: 'background-color 0.3s, color 0.3s',
         boxSizing: 'border-box'
+      }}>
+          
       {/* Header */}
       <header style={{
       backgroundColor: darkMode ? '#2d3748' : 'white',
