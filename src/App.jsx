@@ -543,7 +543,7 @@ export default function App() {
   const isMobile = window.innerWidth < 768;
 
   const wrapperStyle = {
-    padding: '2rem 1rem',
+    padding: '2rem 1rem 4rem', // extra bottom padding
     backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
     color: darkMode ? '#e2e8f0' : '#2d3748',
     display: 'flex',
@@ -551,7 +551,9 @@ export default function App() {
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: '100vh',
-    transition: 'background-color 0.3s, color 0.3s'
+    transition: 'background-color 0.3s, color 0.3s',
+    boxSizing: 'border-box',
+    overflowY: 'auto',
   };
 
   const cardContainerStyle = {
@@ -573,8 +575,11 @@ export default function App() {
     textAlign: 'center',
     cursor: 'pointer',
     transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+    maxWidth: '360px',
+    width: '100%',
+    boxSizing: 'border-box',
   };
-
+    
   const handleCardHover = (e, scale = 1.05) => {
     e.currentTarget.style.transform = `scale(${scale})`;
     e.currentTarget.style.boxShadow = '0 6px 14px rgba(0,0,0,0.15)';
