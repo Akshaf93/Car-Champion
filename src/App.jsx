@@ -39,6 +39,11 @@ export default function App() {
     return stored ? JSON.parse(stored) : [...mockCars];
   });
 
+  const [mockCarsRemoved, setMockCarsRemoved] = useState(0);
+
+  const [editingCar, setEditingCar] = useState({ name: '', description: '' });
+
+
   useEffect(() => {
     localStorage.setItem('selectedCars', JSON.stringify(selectedCars));
   }, [selectedCars]);
@@ -138,22 +143,35 @@ export default function App() {
   const openNoteModal = (car) => {
     setExpandedNoteCarId(car.id);
     setEditingNote(car.notes || '');
+    setEditingCar({
+      name: car.name,
+      description: car.description
+    });
   };
+
 
   const closeNoteModal = () => {
     setExpandedNoteCarId(null);
     setEditingNote('');
+    setEditingCar({ name: '', description: '' });
   };
 
   const handleSaveNote = (car) => {
-    updateNote(car.id, editingNote);
-    closeNoteModal();
-  };
+  updateCarDetails(car.id, editingNote, editingCar.name, editingCar.description);
+  closeNoteModal();
+};
+  
+  const updateCarDetails = (id, note, name, description) => {
+  const updated = selectedCars.map(car =>
+    car.id === id ? { ...car, notes: note, name, description } : car
+  );
+  setSelectedCars(updated);
+};
 
   const updateNote = (id, note) => {
     const updated = selectedCars.map(car =>
       car.id === id ? { ...car, notes: note } : car
-    );
+      );
     setSelectedCars(updated);
   };
 
@@ -341,11 +359,12 @@ export default function App() {
                 </span>
               </div>
               {car.isCustom && (
+                {(car.isCustom || (!car.isCustom && mockCarsRemoved < 4)) ? (
                 <button
-                  onClick={e => {
+                  onClick={(e) => {
                     e.stopPropagation();
-                    setSelectedCars(selectedCars.filter(c => c.id !== car.id));
-                    setCars(cars.filter(c => c.id !== car.id));
+                    if (!car.isCustom) setMockCarsRemoved(prev => prev + 1);
+                    setSelectedCars(prev => prev.filter(c => c.id !== car.id));
                   }}
                   style={{
                     marginTop: '0.5rem',
@@ -354,9 +373,14 @@ export default function App() {
                     backgroundColor: 'transparent',
                     cursor: 'pointer'
                   }}
+                  title={car.isCustom ? 'Remove custom car' : 'Remove default car (up to 4 allowed)'}
                 >
                   Remove
                 </button>
+              ) : (
+                <div style={{ marginTop: '0.5rem', color: '#718096', fontSize: '0.85rem' }}>
+                  ❌ Limit reached
+                </div>
               )}
             </div>
           ))}
@@ -460,12 +484,41 @@ export default function App() {
             flexDirection: 'column',
             fontFamily: "'Space Mono', monospace"
           }}>
-            <h2 style={{ marginBottom: '1rem', textAlign: 'center' }}>
-              {formatCarName(selectedCars.find(c => c.id === expandedNoteCarId)?.name)}
-            </h2>
-            <p style={{ marginBottom: '1rem', textAlign: 'center' }}>
-              {selectedCars.find(c => c.id === expandedNoteCarId)?.description}
-            </p>
+            <input
+            type="text"
+            value={editingCar.name}
+            onChange={(e) => setEditingCar({ ...editingCar, name: e.target.value })}
+            placeholder="Car Name"
+            style={{
+              fontSize: '1.2rem',
+              fontWeight: 'bold',
+              marginBottom: '1rem',
+              padding: '0.5rem',
+              width: '100%',
+              border: darkMode ? '1px solid #4a5568' : '1px solid #cbd5e0',
+              borderRadius: '0.5rem',
+              background: darkMode ? '#4a5568' : '#edf2f7',
+              color: darkMode ? 'white' : 'black'
+            }}
+          />
+          
+          <textarea
+            value={editingCar.description}
+            onChange={(e) => setEditingCar({ ...editingCar, description: e.target.value })}
+            placeholder="Car Description"
+            rows={2}
+            style={{
+              marginBottom: '1rem',
+              padding: '0.5rem',
+              width: '100%',
+              fontSize: '1rem',
+              border: darkMode ? '1px solid #4a5568' : '1px solid #cbd5e0',
+              borderRadius: '0.5rem',
+              background: darkMode ? '#4a5568' : '#edf2f7',
+              color: darkMode ? 'white' : 'black'
+            }}
+          />
+
             <textarea
               wrap="off"
               style={{
