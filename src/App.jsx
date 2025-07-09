@@ -358,7 +358,6 @@ export default function App() {
                   {car.notes ? car.notes : "Click to add notes"}
                 </span>
               </div>
-              {car.isCustom && (
                 {(car.isCustom || (!car.isCustom && mockCarsRemoved < 4)) ? (
                 <button
                   onClick={(e) => {
