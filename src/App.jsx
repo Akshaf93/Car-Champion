@@ -584,7 +584,7 @@ export default function App() {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: darkMode ? '#2d3748' : '#ffffff',
-    padding: '1.5rem',
+    padding: '2.5rem',
     borderRadius: '1rem',
     boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
     textAlign: 'center',
@@ -601,7 +601,7 @@ export default function App() {
   const wrapperStyle = {
     height: '100vh', // fills full viewport height
     overflowY: 'auto', // only this scrolls
-    padding: '3rem 1.5rem',
+    padding: '4rem 2rem',
     backgroundColor: darkMode ? '#1a202c' : '#f7fafc',
     color: darkMode ? '#e2e8f0' : '#2d3748',
     boxSizing: 'border-box',
